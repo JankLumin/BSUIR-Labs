@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="app_253504_Frolenko.UI.Pages.BrigadePage"
+             xmlns:converters="clr-namespace:app_253504_Frolenko.UI.ValueConverters"
+             xmlns:models="clr-namespace:app_253504_Frolenko.UI.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:entities="clr-namespace:app_253504_Frolenko.Domain.Entities;assembly=app_253504_Frolenko.Domain"
+             x:DataType="models:BrigadesViewModel">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Appearing"
+                                        Command="{Binding UpdateBrigadesListCommand}"/>
+    </ContentPage.Behaviors>
+    <ContentPage.Resources>
+        <converters:PositionToColorValueConverter x:Key="PositionToColor"/>
+        <converters:ValueToBooleanConverter x:Key="IsNotNull"/>
+        <converters:IdToImageSourceConverter x:Key="IdToImageSource"/>
+    </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Edit" Command="{Binding UpdateBrigadeCommand}" />
+        <ToolbarItem Text="Delete" Command="{Binding DeleteBrigadeCommand}" />
+        <ToolbarItem Text="Add" Command="{Binding AddBrigadeCommand}" />
+        <ToolbarItem Text="Add" Command="{Binding AddWorkCommand}" />
+    </ContentPage.ToolbarItems>
+     <StackLayout Margin="10" Spacing="15">
+        <Label Text="{Binding ErrorText}" />
+        <HorizontalStackLayout HorizontalOptions="CenterAndExpand">
+            <Picker
+                ItemsSource="{Binding Brigades}"
+                ItemDisplayBinding="{Binding Name}"
+                Title="Brigade"
+                SelectedItem="{Binding SelectedBrigade}"
+                FontSize="20">
+                <Picker.Behaviors>
+                    <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+                                                    Command="{Binding UpdateWorksListCommand}"/>
+                </Picker.Behaviors>
+            </Picker>
+        </HorizontalStackLayout>
+
+        <Frame BackgroundColor="PaleTurquoise" IsVisible="{Binding SelectedBrigade, Converter={StaticResource IsNotNull}}">
+            <VerticalStackLayout>
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Label Text="{Binding SelectedBrigade.Name, StringFormat='Бригада: {0}'}"/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Label Text="{Binding SelectedBrigade.Description, StringFormat='Описание: {0}'}"/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Label Text="{Binding SelectedBrigade.Works.Count, StringFormat='Количество работ: {0}'}"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Frame>
+        <CollectionView  ItemsSource="{Binding Works}" VerticalOptions="FillAndExpand">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="entities:Work">
+                    <Frame Margin="5" Padding="5" BackgroundColor="{Binding Quality, Converter={StaticResource PositionToColor}}">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer 
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type models:BrigadesViewModel}},
+                                Path=ShowDetailsCommand}" 
+                                CommandParameter="{Binding}"/>
+                        </Frame.GestureRecognizers>
+                        <HorizontalStackLayout Spacing="3">
+                            <Frame Margin="5"
+                                   BorderColor="Black"
+                                   CornerRadius="50"
+                                   HeightRequest="110"
+                                   WidthRequest="110"
+                                   IsClippedToBounds="True" 
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center">
+                                <Image
+                                    Aspect="AspectFill"
+                                    HeightRequest="70"
+                                    WidthRequest="70"
+                                Source="{Binding Id, Converter={StaticResource IdToImageSource}}"></Image>
+                            </Frame>
+                            <VerticalStackLayout VerticalOptions="Center" Spacing="15">
+                                <Label Text="{Binding Name}" />
+                                <Label Text="{Binding Description, StringFormat='Описание:{0}'}" />
+                                <Label Text="{Binding Quality, StringFormat='Качество:{0}'}" />
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>
+</ContentPage>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Lab1.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Lab1"
+    ForegroundColor="Black"
+    Shell.FlyoutBehavior="Flyout"
+    xmlns:pages="clr-namespace:Lab1">
+    <FlyoutItem Title="SQL" FlyoutDisplayOptions="AsSingleItem">
+        <ShellContent Route="SQLPage" ContentTemplate="{DataTemplate local:SQL}" />
+    </FlyoutItem>
+    <FlyoutItem Title = "Конвертер" FlyoutDisplayOptions="AsSingleItem">
+        <ShellContent Route="ConverterPage" ContentTemplate="{DataTemplate local:CurrencyConverter}" />
+    </FlyoutItem>
+    <FlyoutItem Title="Интеграл" FlyoutDisplayOptions="AsSingleItem">
+        <ShellContent Route="IntegralPage" ContentTemplate="{DataTemplate local:Integral}" />
+    </FlyoutItem>
+    <FlyoutItem Title="Калькулятор" FlyoutDisplayOptions="AsSingleItem">
+        <ShellContent Route="CalculatorPage" ContentTemplate="{DataTemplate local:Calculator}" />
+    </FlyoutItem>
+</Shell>

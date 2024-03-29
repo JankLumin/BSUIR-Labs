@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="app_253504_Frolenko.UI.Pages.AddOrUpdateWorkPage"
+             xmlns:converters="clr-namespace:app_253504_Frolenko.UI.ValueConverters"
+             xmlns:models="clr-namespace:app_253504_Frolenko.UI.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:DataType="models:AddOrUpdateWorkViewModel"
+             Title="Add or update work">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Loaded"
+            Command="{Binding UpdateBrigadesListCommand }"/>
+    </ContentPage.Behaviors>
+    <ContentPage.Resources>
+        <converters:ValueToBooleanConverter x:Key="IsNotNull"/>
+    </ContentPage.Resources>
+    <StackLayout Margin="10" Spacing="15">
+        <VerticalStackLayout>
+            <Button Text="Pick a png image!" Command="{Binding PickImageCommand}"/>
+            <Label Text="Succesfully added" IsVisible="{Binding Image, Converter={StaticResource IsNotNull}}"/>
+        </VerticalStackLayout>
+        <VerticalStackLayout>
+            <Label Text="Name"/>
+            <Entry Text="{Binding Request.Work.Name}" Placeholder="Name"/>
+        </VerticalStackLayout>
+        <VerticalStackLayout>
+            <Label Text="Description"/>
+            <Entry Text="{Binding Request.Work.Description}" Placeholder="Description"/>
+        </VerticalStackLayout>
+        <VerticalStackLayout>
+            <Label Text="Quality"/>
+            <Entry Text="{Binding Request.Work.Quality}" Placeholder="Quality"/>
+        </VerticalStackLayout>
+        <VerticalStackLayout>
+            <Label Text="Brigade"/>
+            <Picker
+                ItemsSource="{Binding  Brigades}"
+                ItemDisplayBinding="{Binding Name}"
+                SelectedItem="{Binding Brigade}">
+            </Picker>
+        </VerticalStackLayout>
+        <Button Text="Save" Command="{Binding AddOrUpdateWorkCommand}"/>
+        <Label Text="{Binding ErrText}" />
+    </StackLayout>
+</ContentPage>
