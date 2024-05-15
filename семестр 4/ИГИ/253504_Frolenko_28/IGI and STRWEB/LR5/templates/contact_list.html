@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Список контактов</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Описание</th>
+            <th>Телефон</th>
+            <th>Email</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contact in object_list %}
+        <tr>
+            <td>{{ contact.description }}</td>
+            <td>{{ contact.phone }}</td>
+            <td>{{ contact.email }}</td>
+            <td>
+                <a href="{% url 'contact-detail' contact.id %}" class="btn btn-primary">Подробнее</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Список статей</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Заголовок</th>
+            <th>Дата публикации (Местное время)</th>
+            <th>Дата публикации (UTC)</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for article in object_list %}
+        <tr>
+            <td>{{ article.title }}</td>
+            <td>{{ article.get_local_time }}</td>
+            <td>{{ article.get_utc_time }}</td>
+            <td>
+                <a href="{% url 'article-detail' year=article.publish_date.year month=article.publish_date.month day=article.publish_date.day pk=article.id %}" class="btn btn-primary">Подробнее</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

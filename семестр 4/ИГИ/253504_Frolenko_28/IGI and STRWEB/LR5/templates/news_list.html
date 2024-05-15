@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Список новостей</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Заголовок</th>
+            <th>Краткое описание</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for news in object_list %}
+        <tr>
+            <td>{{ news.title }}</td>
+            <td>{{ news.summary }}</td>
+            <td>
+                <a href="{% url 'news-detail' news.id %}" class="btn btn-primary">Подробнее</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
