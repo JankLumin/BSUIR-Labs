@@ -1,0 +1,47 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            app:startDestination="@id/cardFragment">
+
+    <fragment
+            android:id="@+id/cardFragment"
+            android:name="com.example.financewatcher.presentation.ui.card.CardFragment"
+            tools:layout="@layout/fragment_card">
+        <action
+                android:id="@+id/action_cardFragment_to_financialOperationFragment"
+                app:destination="@id/financialOperationFragment">
+            <argument
+                    android:name="cardId"
+                    app:argType="string" />
+        </action>
+    </fragment>
+
+    <fragment
+            android:id="@+id/financialOperationFragment"
+            android:name="com.example.financewatcher.presentation.ui.operation.FinancialOperationFragment"
+            tools:layout="@layout/fragment_financial_operation">
+        <argument
+                android:name="cardId"
+                app:argType="string" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/settingsFragment"
+            android:name="com.example.financewatcher.presentation.ui.settings.SettingsFragment"
+            tools:layout="@layout/fragment_settings" />
+
+    <fragment
+            android:id="@+id/currencyConverterFragment"
+            android:name="com.example.financewatcher.presentation.ui.currencyconverter.CurrencyConverterFragment"
+            tools:layout="@layout/fragment_currency_converter" />
+
+    <fragment
+            android:id="@+id/allFinancialOperationsFragment"
+            android:name="com.example.financewatcher.presentation.ui.operation.AllFinancialOperationsFragment"
+            tools:layout="@layout/fragment_all_financial_operations" />
+
+    <fragment
+            android:id="@+id/budgetFragment"
+            android:name="com.example.financewatcher.presentation.ui.budget.BudgetFragment"
+            tools:layout="@layout/fragment_budget" />
+</navigation>

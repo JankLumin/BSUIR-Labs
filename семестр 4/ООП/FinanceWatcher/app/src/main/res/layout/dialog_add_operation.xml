@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+    </data>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="?android:colorBackground">
+
+        <RadioGroup
+                android:id="@+id/operationTypeRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <RadioButton
+                    android:id="@+id/radioIncome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/income"
+                    android:checked="true"
+                    android:textColor="?android:textColorPrimary" />
+
+            <RadioButton
+                    android:id="@+id/radioExpense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/expense"
+                    android:textColor="?android:textColorPrimary" />
+
+        </RadioGroup>
+
+        <EditText
+                android:id="@+id/operationAmountEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/operation_amount"
+                android:inputType="numberDecimal"
+                android:autofillHints=""
+                android:textColor="?android:textColorPrimary"
+                android:backgroundTint="?attr/colorControlNormal" />
+
+        <Spinner
+                android:id="@+id/operationCategorySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:backgroundTint="?attr/colorControlNormal" />
+
+    </LinearLayout>
+</layout>

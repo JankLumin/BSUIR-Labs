@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/navigation_cards"
+            android:icon="@drawable/ic_cards"
+            android:title="@string/cards" />
+    <item
+            android:id="@+id/navigation_currency_converter"
+            android:icon="@drawable/ic_currency_converter"
+            android:title="@string/currency_converter" />
+    <item
+            android:id="@+id/navigation_all_operations"
+            android:icon="@drawable/ic_all_operations"
+            android:title="@string/all_operations" />
+    <item
+            android:id="@+id/navigation_budget"
+            android:icon="@drawable/ic_budget"
+            android:title="@string/budget" />
+    <item
+            android:id="@+id/navigation_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/settings" />
+</menu>
