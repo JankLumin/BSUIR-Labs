@@ -1,4 +1,4 @@
-### [Третий семестр (2023)](https://github.com/JankerPlay/BSUIR-Labs/tree/semester-3)
+### Третий семестр (2023)
 - [Курсовая работа ПЗМА](https://github.com/JankerPlay/BSUIR-Labs/tree/semester-3/PZMA/%20course_work) (Анисимов В.Я.)
 - [ПЗМА](https://github.com/JankerPlay/BSUIR-Labs/tree/semester-3/PZMA) (Калугина М.А.)
 - [МЧА](https://github.com/JankerPlay/BSUIR-Labs/tree/semester-3/MCHA) (Анисимов В.Я.)
