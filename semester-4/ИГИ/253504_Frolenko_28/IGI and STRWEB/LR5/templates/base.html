@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Агентство Недвижимости</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="icon" type="image/png" href="{% static 'images/image.png' %}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="navbar-text">
+        {{ current_time }}
+    </div>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'article-list' %}">Статьи</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'news-list' %}">Новости</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'vacancy-list' %}">Вакансии</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'contact-list' %}">Контакты</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'property-list' %}">Недвижимость</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'currency-rates' %}">Курсы валют</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'map-view' %}">Карта</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'statistics' %}">Статистика</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'article-statistics' %}">График</a>
+            </li>
+
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            {% if request.user.is_authenticated %}
+            <li class="nav-item">
+                <form action="{% url 'logout' %}" method="post" class="form-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-link nav-link" style="display: inline; padding: 0; background: none; border: none;">Выход</button>
+                </form>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'signup' %}">Регистрация</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Вход</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<footer class="footer bg-light py-3 mt-auto">
+    <div class="container">
+        <span class="text-muted">© 2024 Агентство Недвижимости</span>
+    </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Контакт: {{ contact.description }}</h2>
+<p>Телефон: {{ contact.phone }}</p>
+<p>Email: {{ contact.email }}</p>
+{% if contact.photo %}
+    <img src="{{ contact.photo.url }}" alt="Фото">
+{% endif %}
+<a href="{% url 'contact-list' %}" class="btn btn-secondary">Назад к списку контактов</a>
+{% endblock %}

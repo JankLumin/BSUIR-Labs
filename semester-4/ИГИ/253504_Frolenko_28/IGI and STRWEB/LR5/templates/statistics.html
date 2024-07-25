@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Статистика</h1>
+
+<div>
+    <h2>Статистика по возрасту пользователей</h2>
+    <p>Средний возраст: {{ average_age }}</p>
+    <p>Медианный возраст: {{ median_age }}</p>
+
+    <h2>Типы недвижимости</h2>
+    <p>Наиболее популярный тип: {{ most_popular_type.name }} ({{ most_popular_type.count }} единиц)</p>
+    <p>Наиболее прибыльный тип: {{ most_profitable_type.name }} ({{ most_profitable_type.total_income }} суммарно)</p>
+</div>
+
+{% endblock %}

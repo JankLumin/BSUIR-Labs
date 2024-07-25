@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Регистрация</h2>
+  <form method="post" id="userCreationForm">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Зарегистрироваться</button>
+  </form>
+
+  <script>
+    document.getElementById('id_birth_date').addEventListener('change', function() {
+      const birthDate = new Date(this.value);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      if (age < 18) {
+        alert('You must be at least 18 years old to register.');
+        this.value = ''; // Clear the input if not valid
+      }
+    });
+  </script>
+{% endblock %}
