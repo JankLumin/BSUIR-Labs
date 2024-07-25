@@ -1,4 +1,4 @@
-### [Четвертый семестр (2024)](https://github.com/JankerPlay/BSUIR-Labs/tree/semester-4)
+### Четвертый семестр (2024)
 - [ИГИ](https://github.com/JankerPlay/BSUIR-Labs/tree/semester-4/IGI) (Жвакина А.В.)
 - [ИСП](https://github.com/JankerPlay/BSUIR-Labs/tree/semester-4/ISP) (Гламаздин И.И.)
 - [Метрология](https://github.com/JankerPlay/BSUIR-Labs/tree/semester-4/Metrology) (Болтак С.В.)
