@@ -1,0 +1,19 @@
+<resources>
+    <!-- Light Theme Colors -->
+    <color name="soft_purple">#B39DDB</color> <!-- soft purple -->
+    <color name="deep_purple">#512DA8</color> <!-- deep purple -->
+    <color name="soft_teal">#80CBC4</color> <!-- soft teal -->
+    <color name="deep_teal">#004D40</color> <!-- deep teal -->
+    <color name="soft_white">#F5F5F5</color> <!-- soft white -->
+
+    <!-- Dark Theme Colors -->
+    <color name="soft_purple_dark">#9575CD</color> <!-- softer purple for dark theme -->
+    <color name="soft_teal_dark">#4DB6AC</color> <!-- softer teal for dark theme -->
+    <color name="soft_dark_gray">#303030</color> <!-- soft dark gray -->
+    <color name="light_gray">#B3B3B3</color> <!-- light gray -->
+
+    <!-- Common Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray">#808080</color>
+</resources>

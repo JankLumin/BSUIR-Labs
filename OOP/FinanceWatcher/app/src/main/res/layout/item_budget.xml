@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+                name="budget"
+                type="com.example.financewatcher.data.model.Budget" />
+    </data>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+        <TextView
+                android:id="@+id/budgetCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Category"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:paddingBottom="8dp" />
+
+        <TextView
+                android:id="@+id/budgetPeriod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Period"
+        android:textSize="16sp"
+        android:paddingBottom="8dp" />
+
+        <TextView
+                android:id="@+id/usedAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0 / 0"
+                android:textSize="16sp"
+                android:paddingBottom="8dp" />
+
+        <ProgressBar
+                android:id="@+id/budgetProgressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:max="100" />
+
+        <Button
+                android:id="@+id/deleteButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/delete" />
+    </LinearLayout>
+</layout>

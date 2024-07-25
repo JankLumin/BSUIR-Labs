@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.model.SettingsTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2024-06-06T06:52:21" hostname="JANKER" time="0.002">
+  <properties/>
+  <testcase name="testGetTheme" classname="com.example.model.SettingsTest" time="0.001"/>
+  <testcase name="testSetLanguage" classname="com.example.model.SettingsTest" time="0.0"/>
+  <testcase name="testGetLanguage" classname="com.example.model.SettingsTest" time="0.0"/>
+  <testcase name="testIsNotificationsEnabled" classname="com.example.model.SettingsTest" time="0.0"/>
+  <testcase name="testSetNotificationsEnabled" classname="com.example.model.SettingsTest" time="0.0"/>
+  <testcase name="testSetTheme" classname="com.example.model.SettingsTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

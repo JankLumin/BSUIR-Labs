@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.model.CurrencyRateTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2024-06-06T06:52:21" hostname="JANKER" time="0.003">
+  <properties/>
+  <testcase name="testGetExchangeRate" classname="com.example.model.CurrencyRateTest" time="0.001"/>
+  <testcase name="testGetId" classname="com.example.model.CurrencyRateTest" time="0.0"/>
+  <testcase name="testSetId" classname="com.example.model.CurrencyRateTest" time="0.001"/>
+  <testcase name="testSetExchangeRate" classname="com.example.model.CurrencyRateTest" time="0.0"/>
+  <testcase name="testGetCode" classname="com.example.model.CurrencyRateTest" time="0.0"/>
+  <testcase name="testGetName" classname="com.example.model.CurrencyRateTest" time="0.001"/>
+  <testcase name="testSetCode" classname="com.example.model.CurrencyRateTest" time="0.0"/>
+  <testcase name="testSetName" classname="com.example.model.CurrencyRateTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
