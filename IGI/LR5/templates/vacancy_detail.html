@@ -1,7 +1,0 @@
-{% extends 'base.html' %}
-
-{% block content %}
-<h2>{{ vacancy.title }}</h2>
-<p>{{ vacancy.description }}</p>
-<a href="{% url 'vacancy-list' %}" class="btn btn-secondary">Назад к списку вакансий</a>
-{% endblock %}
