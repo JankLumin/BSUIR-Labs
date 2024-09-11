@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\BSUIR_Labs\\SPPR\\WEB_253504_Frolenko\\WEB_253504_Frolenko.UI\\WEB_253504_Frolenko.UI.csproj",
+      "projectUniqueName": "C:\\BSUIR_Labs\\SPPR\\Lab1\\WEB_253504_Frolenko\\WEB_253504_Frolenko.UI\\WEB_253504_Frolenko.UI.csproj",
       "projectName": "WEB_253504_Frolenko.UI",
-      "projectPath": "C:\\BSUIR_Labs\\SPPR\\WEB_253504_Frolenko\\WEB_253504_Frolenko.UI\\WEB_253504_Frolenko.UI.csproj",
+      "projectPath": "C:\\BSUIR_Labs\\SPPR\\Lab1\\WEB_253504_Frolenko\\WEB_253504_Frolenko.UI\\WEB_253504_Frolenko.UI.csproj",
       "packagesPath": "C:\\Users\\kira1\\.nuget\\packages\\",
-      "outputPath": "C:\\BSUIR_Labs\\SPPR\\WEB_253504_Frolenko\\WEB_253504_Frolenko.UI\\obj\\",
+      "outputPath": "C:\\BSUIR_Labs\\SPPR\\Lab1\\WEB_253504_Frolenko\\WEB_253504_Frolenko.UI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
