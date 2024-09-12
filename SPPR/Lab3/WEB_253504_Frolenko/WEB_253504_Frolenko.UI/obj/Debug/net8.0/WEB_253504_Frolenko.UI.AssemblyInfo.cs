@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WEB_253504_Frolenko.UI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4c6ecb5f7f77766ab6a22a672b95ea5f2d10be10")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f292ec8e0cacb4affa55dbeeb9b919928b4fb572")]
 [assembly: System.Reflection.AssemblyProductAttribute("WEB_253504_Frolenko.UI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WEB_253504_Frolenko.UI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
