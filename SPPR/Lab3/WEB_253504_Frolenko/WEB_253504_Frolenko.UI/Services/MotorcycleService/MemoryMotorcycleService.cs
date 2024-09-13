@@ -136,22 +136,18 @@ namespace WEB_253504_Frolenko.UI.Services.MotorcycleService
             // Получаем размер страницы из конфигурации
             var itemsPerPage = _configuration.GetValue<int>("PageSettings:ItemsPerPage");
 
-            // Фильтруем список мотоциклов по категории
             var filteredItems = _motorcycles
                 .Where(m => categoryNormalizedName == null || (m.Category != null && m.Category.NormalizedName.Equals(categoryNormalizedName)))
                 .ToList();
 
-            // Вычисляем общее количество страниц
             int totalItems = filteredItems.Count;
             int totalPages = (int)Math.Ceiling((double)totalItems / itemsPerPage);
 
-            // Выполняем выборку нужной страницы
             var pagedItems = filteredItems
-                .Skip((pageNo - 1) * itemsPerPage)  // Пропускаем элементы для предыдущих страниц
-                .Take(itemsPerPage)  // Берём элементы для текущей страницы
+                .Skip((pageNo - 1) * itemsPerPage)  
+                .Take(itemsPerPage) 
                 .ToList();
 
-            // Формируем результат
             var result = new ListModel<Motorcycle>
             {
                 Items = pagedItems,

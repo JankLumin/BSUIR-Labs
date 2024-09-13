@@ -1,4 +1,4 @@
-1. User (Пользователь)
+1. App_User (Пользователь)
    Id: serial (PK)
    Name: varchar(255) NOT NULL
    Email: varchar(255) NOT NULL UNIQUE
@@ -11,7 +11,7 @@
    Связи: Многие ко многим с User через UserRole.
 
 3. UserProfile (Профиль пользователя)
-   User_Id: integer (PK, FK на User)
+   User_Id: integer (FK на User)
    Phone: varchar(15)
    Address: varchar(255)
    Date_Of_Birth: date
