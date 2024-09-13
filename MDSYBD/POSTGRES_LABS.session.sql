@@ -73,12 +73,12 @@ CREATE TABLE deadline (
     id SERIAL PRIMARY KEY,
     due_date TIMESTAMP NOT NULL,
     type VARCHAR(50) NOT NULL,
-    task_id INTEGER REFERENCES task(id),
-    project_id INTEGER REFERENCES project(id)
+    task_id INTEGER REFERENCES task(id)
 );
 
 CREATE TABLE userrole (
     user_id INTEGER,
     role_id INTEGER,
+    role_name VARCHAR(255) NOT NULL, 
     PRIMARY KEY (user_id, role_id)
 );
