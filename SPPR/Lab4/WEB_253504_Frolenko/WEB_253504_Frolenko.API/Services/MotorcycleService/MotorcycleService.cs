@@ -24,7 +24,6 @@ namespace WEB_253504_Frolenko.API.Services.MotorcycleService
             var query = _context.Motorcycles.Include(m => m.Category).AsQueryable();
             var dataList = new ListModel<Motorcycle>();
 
-            // Если категория не указана, не применяем фильтр по категории
             if (!string.IsNullOrEmpty(categoryNormalizedName))
             {
                 query = query.Where(d => d.Category.NormalizedName.Equals(categoryNormalizedName));

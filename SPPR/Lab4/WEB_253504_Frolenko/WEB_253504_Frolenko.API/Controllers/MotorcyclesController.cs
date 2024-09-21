@@ -7,7 +7,7 @@ namespace WEB_253504_Frolenko.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MotorcyclesController : ControllerBase
+    public class MotorcyclesController : Controlle      rBase
     {
         private readonly IMotorcycleService _motorcycleService;
 
