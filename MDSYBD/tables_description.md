@@ -1,7 +1,7 @@
 1. Users (Пользователи)
    Id: serial (PK)
    Name: varchar(255) NOT NULL
-   Email: varchar(255) NOT NULL, UNIQUE
+   Email: varchar(255) NOT NULL UNIQUE
    Password: varchar(255) NOT NULL
 
    Один ко многим:
@@ -10,14 +10,11 @@
    - TaskComments;
    - Logs;
    - Notifications.
+   - UserRoles.
 
    Один к одному:
 
    - UserProfiles.
-
-   Один ко многим:
-
-   - UserRoles.
 
 2. Roles (Роли)
    Id: serial (PK)
@@ -87,7 +84,6 @@
 
    - Tasks;
    - ProjectResources;
-   - Deadlines.
 
 7. ProjectResources (Ресурсы проектов)
    Id: serial (PK)
@@ -112,10 +108,9 @@
 9. Notifications (Уведомления)
    Id: serial (PK)
    Message: text NOT NULL
-   Read: boolean NOT NULL DEFAULT false
    Date: timestamp NOT NULL
-   User_Id: integer (FK на Users)
-   Project_Id: integer (FK на Project)
+   User_Id: integer (FK на Users, NULLABLE)
+   Project_Id: integer (FK на Projects, NULLABLE)
 
    Многие к одному:
 
@@ -127,18 +122,20 @@
     Due_Date: timestamp NOT NULL
     Type: varchar(50) NOT NULL
     Task_Id: integer (FK на Task), UNIQUE
-    Project_Id: integer (FK на Project)
 
     Один к одному:
 
     - Tasks.
 
-    Многие к одному:
-
-    - Projects.
-
 11. UserRoles (Роли пользователей)
-    User_Id: integer (FK на Users), UNIQUE
-    Role_Id: integer (FK на Role), UNIQUE
-    Project_Id: integer (FK на Project)
-    Один пользователь — одна роль в проекте.
+
+    - User_Id: integer (FK на Users)
+    - Role_Id: integer (FK на Roles)
+    - Project_Id: integer (FK на Projects)
+
+    - Ограничения:
+
+      - UNIQUE (User_Id, Project_Id)
+
+    - Связи:
+      - Один пользователь — одна роль в проекте.
