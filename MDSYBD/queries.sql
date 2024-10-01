@@ -105,7 +105,7 @@ SELECT tasks.id,
     tasks.title,
     projects.title AS project_title
 FROM tasks
-    JOIN projects ON tasks.project_id = projects.id;
+    INNER JOIN projects ON tasks.project_id = projects.id;
 -----
 TRUNCATE TABLE userroles,
 taskcomments,
