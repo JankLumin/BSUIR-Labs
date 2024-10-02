@@ -79,36 +79,23 @@ namespace WEB_253504_Frolenko.UI.TagHelpers
 
             string? url = null;
 
-            if (Admin)
-            {
-                var values = new RouteValueDictionary
+
+            var values = new RouteValueDictionary
                 {
                     { "pageNo", page }
                 };
 
-                url = _linkGenerator.GetPathByPage(
-                    page: "/Admin/Index",
-                    values: values,
-                    pathBase: httpContext.Request.PathBase);
-            }
-            else
+            if (!string.IsNullOrEmpty(Category))
             {
-                var values = new RouteValueDictionary
-                {
-                    { "pageNo", page }
-                };
-
-                if (!string.IsNullOrEmpty(Category))
-                {
-                    values["category"] = Category;
-                }
-
-                url = _linkGenerator.GetPathByAction(
-                    action: "Index",
-                    controller: "Product",
-                    values: values,
-                    httpContext: httpContext);
+                values["category"] = Category;
             }
+
+            url = _linkGenerator.GetPathByAction(
+                action: "Index",
+                controller: "Product",
+                values: values,
+                httpContext: httpContext);
+
 
             return url ?? "#";
         }
