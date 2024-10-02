@@ -52,7 +52,7 @@ namespace WEB_253504_Frolenko.UI.Controllers
 
             if (Request.IsAjaxRequest())
             {
-                return PartialView("_MotorcyclesListPartial", motorcyclesResponse.Data);
+                return PartialView("~/Views/Shared/Components/Product/_ProductsListPartial.cshtml", motorcyclesResponse.Data);
             }
 
             return View(motorcyclesResponse.Data);

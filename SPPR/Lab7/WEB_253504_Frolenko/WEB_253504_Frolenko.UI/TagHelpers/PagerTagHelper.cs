@@ -35,19 +35,16 @@ namespace WEB_253504_Frolenko.UI.TagHelpers
             output.TagName = "ul";
             output.Attributes.Add("class", "pagination justify-content-center");
 
-            // Создаем кнопку "Предыдущая"
             if (CurrentPage > 1)
             {
                 output.Content.AppendHtml(CreatePageItem(CurrentPage - 1, "Предыдущая"));
             }
 
-            // Создаем кнопки для всех страниц
             for (int i = 1; i <= TotalPages; i++)
             {
                 output.Content.AppendHtml(CreatePageItem(i, i.ToString()));
             }
 
-            // Создаем кнопку "Следующая"
             if (CurrentPage < TotalPages)
             {
                 output.Content.AppendHtml(CreatePageItem(CurrentPage + 1, "Следующая"));
@@ -84,7 +81,6 @@ namespace WEB_253504_Frolenko.UI.TagHelpers
 
             if (Admin)
             {
-                // Генерируем ссылку на страницу (например, для Razor Pages)
                 var values = new RouteValueDictionary
                 {
                     { "pageNo", page }
@@ -97,7 +93,6 @@ namespace WEB_253504_Frolenko.UI.TagHelpers
             }
             else
             {
-                // Генерируем ссылку на действие контроллера
                 var values = new RouteValueDictionary
                 {
                     { "pageNo", page }
