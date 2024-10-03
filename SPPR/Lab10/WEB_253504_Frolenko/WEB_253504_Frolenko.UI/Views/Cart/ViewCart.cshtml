@@ -1,0 +1,56 @@
+@model WEB_253504_Frolenko.Domain.Models.Cart
+
+@{
+    ViewData["Title"] = "Ваша корзина";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (Model.CartItems.Any())
+{
+    <div style="margin: 5px;">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Изображение</th>
+                    <th>Название</th>
+                    <th>Описание</th>
+                    <th>Количество</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CartItems.Values)
+                {
+                    <tr>
+                        <td>
+                            <img src="@item.Motorcycle.ImagePath" alt="@item.Motorcycle.Name" style="height: 100px;">
+                        </td>
+                        <td>@item.Motorcycle.Name</td>
+                        <td>@item.Motorcycle.Description</td>
+                        <td>@item.Quantity</td>
+                        <td>
+                            <a asp-controller="Cart" asp-action="Remove" asp-route-id="@item.Motorcycle.Id"
+                                asp-route-returnurl="@Url.Action("ViewCart", "Cart")" class="btn btn-danger">
+                                Удалить
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between align-items-center mt-4" style="margin: 25px;">
+            <p class="h5"><strong>Общее количество товаров:</strong> @Model.Count</p>
+            <a asp-controller="Cart" asp-action="Clear" asp-route-returnurl="@Url.Action("ViewCart", "Cart")"
+                class="btn btn-outline-danger btn-lg">
+                Очистить корзину
+                <i class="fa-solid fa-trash"></i>
+            </a>
+        </div>
+    </div>
+}
+else
+{
+    <p>Ваша корзина пуста.</p>
+}

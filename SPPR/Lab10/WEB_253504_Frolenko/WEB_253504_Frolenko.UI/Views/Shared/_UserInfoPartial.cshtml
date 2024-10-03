@@ -1,0 +1,42 @@
+@{
+    var isAuthenticated = User.Identity.IsAuthenticated;
+    var name = User.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value ?? "User";
+    var avatar = User.Claims.FirstOrDefault(c => c.Type == "avatar")?.Value ??
+    Url.Content("~/images/default-profile-picture.jpg");
+}
+
+@if (!isAuthenticated)
+{
+    <a asp-area="" asp-controller="Account" asp-action="Register" asp-protocol="https" asp-host="localhost:7001"
+        class="btn btn-secondary">Зарегистрироваться</a>
+    <a asp-area="" asp-controller="Account" asp-action="Login" asp-protocol="https" asp-host="localhost:7001"
+        class="btn btn-primary">Войти</a>
+}
+else
+{
+    @await Component.InvokeAsync("Cart")
+    <div class="dropdown ms-4">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            @name
+            <img src="@avatar" width="30" alt="User" class="rounded" />
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li>
+                <span class="dropdown-item-text">
+                    <img src="@avatar" width="50" alt="User" class="rounded" />
+                    @name
+                </span>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li>
+                <form asp-area="" asp-controller="Account" asp-action="Logout" asp-protocol="https"
+                    asp-host="localhost:7001" method="post" class="d-inline">
+                    <button type="submit" class="nav-link btn btn-link text-dark">Выйти</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+}
