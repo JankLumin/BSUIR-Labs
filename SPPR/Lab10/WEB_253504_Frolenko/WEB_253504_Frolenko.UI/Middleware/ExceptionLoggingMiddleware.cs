@@ -21,14 +21,14 @@ namespace WEB_253504_Frolenko.UI.Middleware
             {
                 await _next(context);
 
-                if (context.Response.StatusCode < 200 || context.Response.StatusCode >= 300)
+                if ((context.Response.StatusCode < 200 || context.Response.StatusCode >= 300) && context.Response.StatusCode != 500)
                 {
                     _logger.LogInformation("---> request {Url} returns {StatusCode}", context.Request.Path, context.Response.StatusCode);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogError(ex, "Ошибка при обработке запроса {Url}", context.Request.Path);
+                _logger.LogInformation("---> request {Url} returns {StatusCode}", context.Request.Path, 500);
 
                 throw;
             }

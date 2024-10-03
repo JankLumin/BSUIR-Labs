@@ -17,7 +17,10 @@ Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
 
-builder.Host.UseSerilog();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddSerilog();
+
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
