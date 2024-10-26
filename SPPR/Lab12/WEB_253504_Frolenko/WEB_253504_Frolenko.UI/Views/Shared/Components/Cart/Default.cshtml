@@ -1,0 +1,11 @@
+﻿@model WEB_253504_Frolenko.Domain.Models.Cart
+
+@{
+    var totalCount = Model?.Count ?? 0;
+    var totalWeight = Model?.TotalWeight ?? 0.0;
+}
+
+<a asp-controller="Cart" asp-action="ViewCart" class="navbar-text">
+    @totalWeight кг
+    <i class="fa-solid fa-cart-shopping"></i> (@totalCount)
+</a>

@@ -1,0 +1,15 @@
+@{
+    var area = ViewContext.RouteData.Values["area"]?.ToString()?.ToLower() ?? string.Empty;
+    var page = ViewContext.RouteData.Values["page"]?.ToString()?.ToLower() ?? string.Empty;
+}
+
+<a class="navbar-brand" asp-controller="Home" asp-action="Index" asp-area="">Web_253504_Frolenko</a>
+<div class="navbar-nav">
+    <a class="nav-item nav-link @(area == "" && page == "/index" ? "active" : "")" asp-controller="Home"
+        asp-action="Index" asp-area="">ЛР 1</a>
+    <a class="nav-item nav-link @(area == "" && page == "/product/index" ? "active" : "")" asp-controller="Product"
+        asp-action="Index" asp-area="">Каталог</a>
+    <a class="nav-item nav-link @(area == "admin" && page == "/motorcycles/index" ? "active" : "")" asp-area="Admin"
+        asp-page="/Motorcycles/Index">Администрирование</a>
+</div>
+<div class="flex-grow-1"></div>

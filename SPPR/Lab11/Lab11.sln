@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WEB_253504_Frolenko", "WEB_253504_Frolenko", "{9DA08298-8AC4-41BD-BB22-300585729E45}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEB_253504_Frolenko.API", "WEB_253504_Frolenko\WEB_253504_Frolenko.API\WEB_253504_Frolenko.API.csproj", "{5ED2192E-8D06-4F43-9775-D449100F598D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEB_253504_Frolenko.Blazor.SSR", "WEB_253504_Frolenko\WEB_253504_Frolenko.Blazor.SSR\WEB_253504_Frolenko.Blazor.SSR.csproj", "{B5113726-BC81-4E7F-B413-C49509FA3F66}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEB_253504_Frolenko.Domain", "WEB_253504_Frolenko\WEB_253504_Frolenko.Domain\WEB_253504_Frolenko.Domain.csproj", "{C08D539E-DD41-43FD-B4F9-0F4F56E4C211}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEB_253504_Frolenko.Tests", "WEB_253504_Frolenko\WEB_253504_Frolenko.Tests\WEB_253504_Frolenko.Tests.csproj", "{D5F49876-BE3B-4D44-BFE0-9CBA4BD3C962}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEB_253504_Frolenko.UI", "WEB_253504_Frolenko\WEB_253504_Frolenko.UI\WEB_253504_Frolenko.UI.csproj", "{658C139C-EEAD-4254-986C-775F0CCD2328}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5ED2192E-8D06-4F43-9775-D449100F598D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ED2192E-8D06-4F43-9775-D449100F598D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ED2192E-8D06-4F43-9775-D449100F598D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ED2192E-8D06-4F43-9775-D449100F598D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5113726-BC81-4E7F-B413-C49509FA3F66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5113726-BC81-4E7F-B413-C49509FA3F66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5113726-BC81-4E7F-B413-C49509FA3F66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5113726-BC81-4E7F-B413-C49509FA3F66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C08D539E-DD41-43FD-B4F9-0F4F56E4C211}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C08D539E-DD41-43FD-B4F9-0F4F56E4C211}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C08D539E-DD41-43FD-B4F9-0F4F56E4C211}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C08D539E-DD41-43FD-B4F9-0F4F56E4C211}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5F49876-BE3B-4D44-BFE0-9CBA4BD3C962}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5F49876-BE3B-4D44-BFE0-9CBA4BD3C962}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5F49876-BE3B-4D44-BFE0-9CBA4BD3C962}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5F49876-BE3B-4D44-BFE0-9CBA4BD3C962}.Release|Any CPU.Build.0 = Release|Any CPU
+		{658C139C-EEAD-4254-986C-775F0CCD2328}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{658C139C-EEAD-4254-986C-775F0CCD2328}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{658C139C-EEAD-4254-986C-775F0CCD2328}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{658C139C-EEAD-4254-986C-775F0CCD2328}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5ED2192E-8D06-4F43-9775-D449100F598D} = {9DA08298-8AC4-41BD-BB22-300585729E45}
+		{B5113726-BC81-4E7F-B413-C49509FA3F66} = {9DA08298-8AC4-41BD-BB22-300585729E45}
+		{C08D539E-DD41-43FD-B4F9-0F4F56E4C211} = {9DA08298-8AC4-41BD-BB22-300585729E45}
+		{D5F49876-BE3B-4D44-BFE0-9CBA4BD3C962} = {9DA08298-8AC4-41BD-BB22-300585729E45}
+		{658C139C-EEAD-4254-986C-775F0CCD2328} = {9DA08298-8AC4-41BD-BB22-300585729E45}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FB96D77A-7DCF-4B48-9C38-B5C36E0450D6}
+	EndGlobalSection
+EndGlobal

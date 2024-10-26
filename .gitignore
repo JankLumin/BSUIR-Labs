@@ -54,4 +54,4 @@ dist/
 *.exe
 *.cache
 *.json
-**/wwwroot/
+**/wwwroot/"OSISP/Lab2/database.dat" 
