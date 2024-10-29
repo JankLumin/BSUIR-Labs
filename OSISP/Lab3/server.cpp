@@ -40,7 +40,6 @@ void HandleClient(HANDLE hPipe)
             logfile << "[" << timestamp << "] " << buffer << endl;
             logfile.flush();
         }
-
         cout << "Получено сообщение: " << buffer << endl;
     }
 
