@@ -20,15 +20,9 @@
 *.nupkg
 *.snupkg
 
-project.lock.json
-project.fragment.lock.json
 artifacts/
 
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 
 ScaffoldingReadMe.txt
 
@@ -42,22 +36,14 @@ appsettings.Development.json
 appsettings.Production.json
 appsettings.Staging.json
 
-wwwroot/
-node_modules/
-bower_components/
-dist/
-
 **/obj/
 **/bin/
 *.dll
 *.pdb
 *.exe
 *.cache
-*.json
 **/wwwroot/"OSISP/Lab2/database.dat"
 
 .pio
 .vscode/.browse.c_cpp.db*
-.vscode/c_cpp_properties.json
-.vscode/launch.json
 .vscode/ipch
