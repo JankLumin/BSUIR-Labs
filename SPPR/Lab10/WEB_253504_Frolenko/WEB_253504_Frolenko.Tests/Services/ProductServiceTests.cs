@@ -24,6 +24,44 @@ namespace WEB_253504_Frolenko.Tests.Services
         }
 
         [Fact]
+        public async Task GetProductListAsync_ReturnsFirstPageWithThreeItemsAndCalculatesTotalPagesCorrectly()
+        {
+            var context = CreateInMemoryDbContext();
+
+            var categories = new List<Category>
+            {
+                new Category { Name = "Городские мотоциклы", NormalizedName = "urban-bikes" },
+                new Category { Name = "Спортивные мотоциклы", NormalizedName = "sport-bikes" },
+                new Category { Name = "Приключенческие мотоциклы", NormalizedName = "adventure-bikes" }
+            };
+
+            await context.Categories.AddRangeAsync(categories);
+            await context.SaveChangesAsync();
+
+            context.Motorcycles.AddRange(
+                new Motorcycle { Name = "Motorcycle 1", Description = "Description 1", Weight = 200, Category = categories[0] },
+                new Motorcycle { Name = "Motorcycle 2", Description = "Description 2", Weight = 210, Category = categories[1] },
+                new Motorcycle { Name = "Motorcycle 3", Description = "Description 3", Weight = 220, Category = categories[1] },
+                new Motorcycle { Name = "Motorcycle 4", Description = "Description 4", Weight = 230, Category = categories[2] },
+                new Motorcycle { Name = "Motorcycle 5", Description = "Description 5", Weight = 240, Category = categories[0] },
+                new Motorcycle { Name = "Motorcycle 6", Description = "Description 6", Weight = 250, Category = categories[1] }
+            );
+
+            await context.SaveChangesAsync();
+
+            var service = new MotorcycleService(context);
+
+            var result = await service.GetProductListAsync(null);
+
+            Assert.True(result.Successfull);
+            Assert.NotNull(result.Data);
+            Assert.Equal(3, result.Data.Items.Count);
+
+            int totalPages = (int)Math.Ceiling(6 / (double)3);
+            Assert.Equal(totalPages, result.Data.TotalPages);
+        }
+
+        [Fact]
         public async Task GetProductListAsync_ReturnsCorrectPage_WhenSpecificPageIsRequested()
         {
             var context = CreateInMemoryDbContext();

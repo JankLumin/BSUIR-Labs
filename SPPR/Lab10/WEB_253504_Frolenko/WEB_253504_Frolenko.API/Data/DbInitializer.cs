@@ -52,6 +52,7 @@ namespace WEB_253504_Frolenko.API.Data
 
             await context.Motorcycles.AddRangeAsync(motorcycles);
             await context.SaveChangesAsync();
+            Console.WriteLine("РАБОТАЕТ");
         }
     }
 }

@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WEB_253504_Frolenko.Domain.Models;
 using WEB_253504_Frolenko.UI.Services.MotorcycleService;
 
 namespace WEB_253504_Frolenko.UI.Controllers
 {
-    [Authorize]
     public class CartController : Controller
     {
         private readonly IMotorcycleService _motorcycleService;

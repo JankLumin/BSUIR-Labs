@@ -19,7 +19,7 @@ namespace WEB_253504_Frolenko.UI.Areas.Admin.Pages.Motorcycles
 
         public async Task OnGetAsync()
         {
-            var response = await _motorcycleService.GetProductListAsync(null, 1, 1000);
+            var response = await _motorcycleService.GetProductListAsync(null, 1);
             if (response.Successfull && response.Data != null)
             {
                 Motorcycle = response.Data.Items;

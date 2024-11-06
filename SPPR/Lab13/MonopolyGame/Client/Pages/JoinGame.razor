@@ -1,0 +1,40 @@
+@page "/join-game"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>Присоединиться к игре</h3>
+
+<EditForm Model="joinGameModel" OnValidSubmit="HandleJoinGame">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>ID игры:</label>
+        <InputText @bind-Value="joinGameModel.GameId" />
+    </div>
+    <button type="submit">Присоединиться к игре</button>
+</EditForm>
+
+@code {
+    private JoinGameModel joinGameModel = new JoinGameModel();
+
+    private async Task HandleJoinGame()
+    {
+        var response = await Http.PostAsJsonAsync($"api/game/join/{joinGameModel.GameId}", null);
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo($"/game/{joinGameModel.GameId}");
+        }
+        else
+        {
+            // Обработка ошибок (например, игра не найдена или уже началась)
+        }
+    }
+
+    public class JoinGameModel
+    {
+        [Required]
+        public string GameId { get; set; }
+    }
+}

@@ -1,0 +1,40 @@
+@page "/available-games"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<h3>Доступные игры</h3>
+
+@if (availableGames == null)
+{
+    <p>Загрузка...</p>
+}
+else if (availableGames.Count == 0)
+{
+    <p>Нет доступных игр.</p>
+}
+else
+{
+    <ul>
+        @foreach (var game in availableGames)
+        {
+            <li>
+                <span>ID игры: @game.GameId</span>
+                <button @onclick="() => JoinGame(game.GameId)">Присоединиться</button>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<GameSession> availableGames;
+
+    protected override async Task OnInitializedAsync()
+    {
+        availableGames = await Http.GetFromJsonAsync<List<GameSession>>("api/game/available");
+    }
+
+    private void JoinGame(string gameId)
+    {
+        Navigation.NavigateTo($"/game/{gameId}");
+    }
+}

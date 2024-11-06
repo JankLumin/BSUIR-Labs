@@ -16,7 +16,7 @@ namespace WEB_253504_Frolenko.API.Services.MotorcycleService
             _context = context;
         }
         public async Task<ResponseData<ListModel<Motorcycle>>> GetProductListAsync(
-     string? categoryNormalizedName, int pageNo = 1, int pageSize = 20)
+     string? categoryNormalizedName, int pageNo = 1, int pageSize = 3)
         {
             try
             {

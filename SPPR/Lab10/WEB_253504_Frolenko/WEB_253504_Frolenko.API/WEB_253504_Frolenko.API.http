@@ -1,4 +1,4 @@
-@WEB_253504_Frolenko.API_HostAddress = http://localhost:5205
+@WEB_253504_Frolenko.API_HostAddress = http://localhost:5114
 
 GET {{WEB_253504_Frolenko.API_HostAddress}}/weatherforecast/
 Accept: application/json
