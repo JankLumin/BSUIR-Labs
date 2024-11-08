@@ -13,9 +13,10 @@ CREATE TABLE IF NOT EXISTS projects (
     end_date DATE,
     CONSTRAINT check_dates CHECK (
         end_date IS NULL
-        OR end_date > start_date
+        OR end_date >= start_date
     )
 );
+
 CREATE TABLE IF NOT EXISTS tasks (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -23,7 +24,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     status VARCHAR(50) NOT NULL,
     creation_date TIMESTAMP NOT NULL,
     completion_date TIMESTAMP,
-    project_id INTEGER REFERENCES projects(id),
+    project_id INTEGER NOT NULL REFERENCES projects(id),
     executor_id INTEGER REFERENCES users(id),
     CONSTRAINT check_status CHECK (
         status IN (
@@ -38,6 +39,7 @@ CREATE TABLE IF NOT EXISTS tasks (
         OR completion_date > creation_date
     )
 );
+
 CREATE TABLE IF NOT EXISTS taskcomments (
     id SERIAL PRIMARY KEY,
     text TEXT NOT NULL,

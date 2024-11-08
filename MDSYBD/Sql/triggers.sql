@@ -112,13 +112,15 @@ EXECUTE FUNCTION log_project_delete();
 CREATE OR REPLACE FUNCTION notify_on_assignment()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND NEW.executor_id IS DISTINCT FROM OLD.executor_id) THEN
+    IF (TG_OP = 'INSERT' OR (TG_OP = 'UPDATE' AND NEW.executor_id IS DISTINCT FROM OLD.executor_id))
+       AND NEW.executor_id IS NOT NULL THEN
         INSERT INTO notifications (message, date, user_ids)
         VALUES ('You have been assigned to task: ' || NEW.title, CURRENT_TIMESTAMP, ARRAY[NEW.executor_id]);
     END IF;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE TRIGGER trigger_notify_on_assignment
 AFTER INSERT OR UPDATE ON tasks
@@ -128,13 +130,14 @@ EXECUTE FUNCTION notify_on_assignment();
 CREATE OR REPLACE FUNCTION notify_on_status_change()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF TG_OP = 'UPDATE' AND NEW.status IS DISTINCT FROM OLD.status THEN
+    IF TG_OP = 'UPDATE' AND NEW.status IS DISTINCT FROM OLD.status AND NEW.executor_id IS NOT NULL THEN
         INSERT INTO notifications (message, date, user_ids)
         VALUES ('Status of your task "' || NEW.title || '" has been changed to ' || NEW.status, CURRENT_TIMESTAMP, ARRAY[NEW.executor_id]);
     END IF;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE TRIGGER trigger_notify_on_status_change
 AFTER UPDATE ON tasks
