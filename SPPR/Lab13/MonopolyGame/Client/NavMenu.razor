@@ -1,0 +1,84 @@
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILocalStorageService LocalStorage
+@inject ApiAuthenticationStateProvider ApiAuthStateProvider
+@inject NavigationManager Navigation
+
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">MonopolyGame</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="">
+                <span class="oi oi-home" aria-hidden="true"></span> Главная
+            </NavLink>
+        </li>
+        @if (!isAuthenticated)
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="login">
+                    <span class="oi oi-account-login" aria-hidden="true"></span> Войти
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="register">
+                    <span class="oi oi-person" aria-hidden="true"></span> Регистрация
+                </NavLink>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="create-game">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Создать игру
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="available-games">
+                    <span class="oi oi-list" aria-hidden="true"></span> Доступные игры
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <button class="nav-link btn btn-link" @onclick="Logout">
+                    <span class="oi oi-account-logout" aria-hidden="true"></span> Выйти
+                </button>
+            </li>
+        }
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private bool isAuthenticated;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        isAuthenticated = authState.User.Identity.IsAuthenticated;
+
+        AuthenticationStateProvider.AuthenticationStateChanged += async (task) =>
+        {
+            var state = await task;
+            isAuthenticated = state.User.Identity.IsAuthenticated;
+            StateHasChanged();
+        };
+    }
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        ApiAuthStateProvider.NotifyUserLogout();
+        Navigation.NavigateTo("/login");
+    }
+}
