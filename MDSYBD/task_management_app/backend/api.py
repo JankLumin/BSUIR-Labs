@@ -1,4 +1,13 @@
+# api.py
+
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import (
+    create_access_token,
+    get_jwt,
+    get_jwt_identity,
+    jwt_required,
+)
+from decorators import role_required
 from models import (
     Deadlines,
     Logs,
@@ -10,6 +19,7 @@ from models import (
     Tasks,
     Users,
 )
+
 
 api_deadlines = Namespace("deadlines", description="Операции с дедлайнами")
 
@@ -50,16 +60,19 @@ class DeadlinesList(Resource):
     @api_deadlines.expect(get_deadlines_parser)
     @api_deadlines.doc("Получить все дедлайны по задаче")
     @api_deadlines.marshal_list_with(deadline_output_model)
+    @jwt_required()
     def get(self):
-        """Получает все дедлайны, связанные с задачей."""
+        """Получает все дедлайны, связанные с задачей (авторизация)."""
         args = get_deadlines_parser.parse_args()
         task_id = args.get("task_id")
         return Deadlines.get_by_task(task_id)
 
     @api_deadlines.doc("Создать новый дедлайн")
     @api_deadlines.expect(deadline_create_model, validate=True)
+    @jwt_required()
+    @role_required(["admin", "manager"])
     def post(self):
-        """Создает новый дедлайн."""
+        """Создает новый дедлайн(admin, manager)."""
         data = api_deadlines.payload
         Deadlines.create(
             due_date=data["due_date"],
@@ -73,15 +86,19 @@ class DeadlinesList(Resource):
 @api_deadlines.param("deadline_id", "Идентификатор дедлайна")
 class Deadline(Resource):
     @api_deadlines.doc("Удалить дедлайн")
+    @jwt_required()
+    @role_required(["admin", "manager"])
     def delete(self, deadline_id):
-        """Удаляет дедлайн по его идентификатору."""
+        """Удаляет дедлайн по его идентификатору (admin, manager)."""
         Deadlines.delete(deadline_id)
         return {"message": "Дедлайн удален успешно"}, 204
 
     @api_deadlines.doc("Обновить дедлайн")
     @api_deadlines.expect(deadline_update_model, validate=True)
+    @jwt_required()
+    @role_required(["admin", "manager"])
     def put(self, deadline_id):
-        """Обновляет дедлайн (без изменения task_id)."""
+        """Обновляет дедлайн (admin, manager)."""
         data = api_deadlines.payload
         Deadlines.update(
             deadline_id=deadline_id,
@@ -109,8 +126,10 @@ log_output_model = api_logs.model(
 class LogsList(Resource):
     @api_logs.doc("Получить все записи журнала")
     @api_logs.marshal_list_with(log_output_model)
+    @jwt_required()
+    @role_required(["admin"])
     def get(self):
-        """Получает все записи журнала событий."""
+        """Получает все записи журнала событий(admin)."""
         return Logs.get_all()
 
 
@@ -152,8 +171,10 @@ get_notifications_parser.add_argument(
 class NotificationsList(Resource):
     @api_notifications.doc("Создать уведомление")
     @api_notifications.expect(notification_create_model, validate=True)
+    @jwt_required()
+    @role_required(["admin", "manager"])
     def post(self):
-        """Создает новое уведомление."""
+        """Создает новое уведомление(admin, manager)."""
         data = api_notifications.payload
         Notifications.create(
             message=data["message"],
@@ -168,10 +189,15 @@ class NotificationsUser(Resource):
     @api_notifications.expect(get_notifications_parser)
     @api_notifications.doc("Получить уведомления для пользователя")
     @api_notifications.marshal_list_with(notification_output_model)
+    @jwt_required()
     def get(self):
-        """Получает уведомления для конкретного пользователя."""
+        """Получает уведомления для конкретного пользователя(admin, manager и свои)."""
         args = get_notifications_parser.parse_args()
         user_id = args.get("user_id")
+        current_user_id = get_jwt().get("sub")
+        current_user_role = get_jwt().get("role")
+        if current_user_role not in ["admin", "manager"] and current_user_id != user_id:
+            api_notifications.abort(403, "Доступ запрещен: недостаточно прав")
         return Notifications.get_for_user(user_id)
 
 
@@ -209,8 +235,10 @@ get_resources_parser.add_argument(
 class ProjectResourcesList(Resource):
     @api_project_resources.doc("Создать ресурс проекта")
     @api_project_resources.expect(resource_create_model, validate=True)
+    @jwt_required()
+    @role_required(["admin", "manager"])
     def post(self):
-        """Создает новый ресурс для проекта."""
+        """Создает новый ресурс для проекта(admin, manager)."""
         data = api_project_resources.payload
         ProjectResources.create(
             description=data["description"],
@@ -225,8 +253,10 @@ class ProjectResourcesByProject(Resource):
     @api_project_resources.expect(get_resources_parser)
     @api_project_resources.doc("Получить ресурсы по проекту")
     @api_project_resources.marshal_list_with(resource_output_model)
+    @jwt_required()
+    @role_required(["admin", "manager"])
     def get(self):
-        """Получает ресурсы по идентификатору проекта."""
+        """Получает ресурсы по идентификатору проекта(admin, manager)."""
         args = get_resources_parser.parse_args()
         project_id = args.get("project_id")
         return ProjectResources.get_by_project(project_id)
@@ -236,8 +266,10 @@ class ProjectResourcesByProject(Resource):
 @api_project_resources.param("resource_id", "Идентификатор ресурса")
 class ProjectResource(Resource):
     @api_project_resources.doc("Удалить ресурс проекта")
+    @jwt_required()
+    @role_required(["admin", "manager"])
     def delete(self, resource_id):
-        """Удаляет ресурс по его идентификатору."""
+        """Удаляет ресурс по его идентификатору(admin, manager)."""
         ProjectResources.delete(resource_id)
         return {"message": "Ресурс проекта удален успешно"}, 204
 
@@ -270,14 +302,17 @@ project_output_model = api_projects.model(
 class ProjectsList(Resource):
     @api_projects.doc("Получить все проекты")
     @api_projects.marshal_list_with(project_output_model)
+    @jwt_required()
     def get(self):
-        """Получает список всех проектов."""
+        """Получает список всех проектов(авторизация)."""
         return Projects.get_all()
 
     @api_projects.doc("Создать новый проект")
     @api_projects.expect(project_input_model, validate=True)
+    @jwt_required()
+    @role_required(["admin", "manager"])
     def post(self):
-        """Создает новый проект."""
+        """Создает новый проект(admin, manager)."""
         data = api_projects.payload
         project_id = Projects.create(
             title=data["title"],
@@ -292,15 +327,19 @@ class ProjectsList(Resource):
 @api_projects.param("project_id", "Идентификатор проекта")
 class Project(Resource):
     @api_projects.doc("Удалить проект")
+    @jwt_required()
+    @role_required(["admin", "manager"])
     def delete(self, project_id):
-        """Удаляет проект по его идентификатору."""
+        """Удаляет проект по его идентификатору(admin, manager)."""
         Projects.delete(project_id)
         return {"message": "Проект удален успешно"}, 204
 
     @api_projects.doc("Обновить проект")
     @api_projects.expect(project_input_model, validate=True)
+    @jwt_required()
+    @role_required(["admin", "manager"])
     def put(self, project_id):
-        """Обновляет информацию о проекте."""
+        """Обновляет информацию о проекте(admin, manager)."""
         data = api_projects.payload
         Projects.update(
             project_id=project_id,
@@ -334,14 +373,18 @@ role_output_model = api_roles.model(
 class RolesList(Resource):
     @api_roles.doc("Получить все роли")
     @api_roles.marshal_list_with(role_output_model)
+    @jwt_required()
+    @role_required(["admin"])
     def get(self):
-        """Возвращает список всех ролей в системе."""
+        """Возвращает список всех ролей в системе(admin)."""
         return Roles.get_all()
 
     @api_roles.doc("Добавить новую роль")
     @api_roles.expect(role_input_model, validate=True)
+    @jwt_required()
+    @role_required(["admin"])
     def post(self):
-        """Добавляет новую роль в систему."""
+        """Добавляет новую роль в систему(admin)."""
         data = api_roles.payload
         Roles.add(data["role_name"])
         return {"message": "Роль добавлена успешно"}, 201
@@ -351,8 +394,10 @@ class RolesList(Resource):
 @api_roles.param("role_id", "Идентификатор роли")
 class Role(Resource):
     @api_roles.doc("Удалить роль")
+    @jwt_required()
+    @role_required(["admin"])
     def delete(self, role_id):
-        """Удаляет роль по её идентификатору."""
+        """Удаляет роль по её идентификатору(admin)."""
         Roles.delete(role_id)
         return {"message": "Роль удалена успешно"}, 204
 
@@ -367,7 +412,6 @@ comment_input_model = api_task_comments.model(
         "text": fields.String(description="Текст комментария", required=True),
         "creation_date": fields.DateTime(description="Дата создания", required=True),
         "task_id": fields.Integer(description="Идентификатор задачи", required=True),
-        "author_id": fields.Integer(description="Идентификатор автора", required=True),
     },
 )
 
@@ -391,14 +435,16 @@ get_comments_parser.add_argument(
 class TaskCommentsList(Resource):
     @api_task_comments.doc("Создать комментарий к задаче")
     @api_task_comments.expect(comment_input_model, validate=True)
+    @jwt_required()
     def post(self):
-        """Создает новый комментарий к задаче."""
+        """Создает новый комментарий к задаче (авторизация)."""
         data = api_task_comments.payload
+        current_user_id = get_jwt_identity()
         TaskComments.create(
             text=data["text"],
             creation_date=data["creation_date"],
             task_id=data["task_id"],
-            author_id=data["author_id"],
+            author_id=current_user_id,
         )
         return {"message": "Комментарий создан успешно"}, 201
 
@@ -408,8 +454,9 @@ class TaskCommentsByTask(Resource):
     @api_task_comments.expect(get_comments_parser)
     @api_task_comments.doc("Получить комментарии по задаче")
     @api_task_comments.marshal_list_with(comment_output_model)
+    @jwt_required()
     def get(self):
-        """Получает все комментарии, связанные с задачей."""
+        """Получает все комментарии, связанные с задачей(авторизация)."""
         args = get_comments_parser.parse_args()
         task_id = args.get("task_id")
         return TaskComments.get_by_task(task_id)
@@ -419,8 +466,19 @@ class TaskCommentsByTask(Resource):
 @api_task_comments.param("comment_id", "Идентификатор комментария")
 class TaskComment(Resource):
     @api_task_comments.doc("Удалить комментарий")
+    @jwt_required()
     def delete(self, comment_id):
-        """Удаляет комментарий по его идентификатору."""
+        """Удаляет комментарий по его идентификатору(admin, создатель)."""
+        current_user_id = get_jwt_identity()
+        comment = TaskComments.get(comment_id)
+
+        if comment is None:
+            api_task_comments.abort(404, "Комментарий не найден")
+
+        current_user_role = get_jwt().get("role", "")
+        if current_user_role != "admin" and comment["author_id"] != current_user_id:
+            api_task_comments.abort(403, "Доступ запрещен: недостаточно прав")
+
         TaskComments.delete(comment_id)
         return {"message": "Комментарий удален успешно"}, 204
 
@@ -488,10 +546,11 @@ get_tasks_parser.add_argument(
 @api_tasks.route("/")
 class TasksList(Resource):
     @api_tasks.expect(get_tasks_parser)
-    @api_tasks.doc("Получить задачи по проекту или исполнителю")
+    @api_tasks.doc("Получить задачи по проекту или исполнителю(авторизация)")
     @api_tasks.marshal_list_with(task_output_model)
+    @jwt_required()
     def get(self):
-        """Получает задачи по проекту или исполнителю."""
+        """Получает задачи по проекту или исполнителю(авторизация)."""
         args = get_tasks_parser.parse_args()
         project_id = args.get("project_id")
         executor_id = args.get("executor_id")
@@ -505,8 +564,10 @@ class TasksList(Resource):
 
     @api_tasks.doc("Создать новую задачу")
     @api_tasks.expect(task_create_model, validate=True)
+    @jwt_required()
+    @role_required(["admin", "manager"])
     def post(self):
-        """Создает новую задачу."""
+        """Создает новую задачу(admin, manager)."""
         data = api_tasks.payload
         Tasks.create(
             title=data["title"],
@@ -524,23 +585,33 @@ class TasksList(Resource):
 @api_tasks.param("task_id", "Идентификатор задачи")
 class Task(Resource):
     @api_tasks.doc("Удалить задачу")
+    @jwt_required()
+    @role_required(["admin", "manager"])
     def delete(self, task_id):
-        """Удаляет задачу по её идентификатору."""
+        """Удаляет задачу по её идентификатору(admin, manager)."""
         Tasks.delete(task_id)
         return {"message": "Задача удалена успешно"}, 204
 
     @api_tasks.doc("Обновить задачу")
     @api_tasks.expect(task_update_model, validate=True)
+    @jwt_required()
     def put(self, task_id):
-        """Обновляет информацию о задаче (без изменения project_id и executor_id)."""
+        """Обновляет информацию о задаче (admin, manager, исполнитель)."""
         data = api_tasks.payload
-        Tasks.update(
-            task_id=task_id,
-            title=data["title"],
-            description=data["description"],
-            status=data["status"],
-            completion_date=data.get("completion_date"),
-        )
+        current_user_id = get_jwt().get("sub")
+        current_user_role = get_jwt().get("role")
+
+        task = Tasks.get(task_id)
+        if not task:
+            api_tasks.abort(404, "Задача не найдена")
+
+        if (
+            current_user_role not in ["admin", "manager"]
+            and task["executor_id"] != current_user_id
+        ):
+            api_tasks.abort(403, "Доступ запрещен: недостаточно прав")
+
+        Tasks.update(task_id, **data)
         return {"message": "Задача обновлена успешно"}, 200
 
 
@@ -586,6 +657,18 @@ user_output_model = api_users.model(
         "address": fields.String(description="Адрес"),
         "date_of_birth": fields.Date(description="Дата рождения"),
         "profile_picture": fields.String(description="URL аватарки"),
+        "role_id": fields.Integer(description="Идентификатор роли пользователя"),
+        "role_name": fields.String(description="Название роли пользователя"),
+        "project_id": fields.Integer(description="Идентификатор проекта пользователя"),
+        "project_title": fields.String(description="Название проекта пользователя"),
+    },
+)
+
+auth_model = api_users.model(
+    "Auth",
+    {
+        "email": fields.String(required=True, description="Email пользователя"),
+        "password": fields.String(required=True, description="Пароль пользователя"),
     },
 )
 
@@ -594,8 +677,10 @@ user_output_model = api_users.model(
 class UsersList(Resource):
     @api_users.doc("Создать нового пользователя")
     @api_users.expect(user_create_model, validate=True)
+    @jwt_required()
+    @role_required(["admin"])
     def post(self):
-        """Создает нового пользователя с профилем и ролью."""
+        """Создает нового пользователя с профилем и ролью(admin)."""
         data = api_users.payload
         user_id = Users.create(
             name=data["name"],
@@ -614,10 +699,15 @@ class UsersList(Resource):
 @api_users.route("/<int:user_id>")
 @api_users.param("user_id", "Идентификатор пользователя")
 class User(Resource):
-    @api_users.doc("Получить информацию о пользователе")
+    @api_users.doc("Получить информацию о пользователе(admin, владелец)")
     @api_users.marshal_with(user_output_model)
+    @jwt_required()
     def get(self, user_id):
-        """Получает информацию о пользователе."""
+        """Получает информацию о пользовател(admin, владелец)."""
+        current_user_id = get_jwt().get("sub")
+        current_user_role = get_jwt().get("role")
+        if current_user_role != "admin" and current_user_id != user_id:
+            api_users.abort(403, "Доступ запрещен: недостаточно прав")
         user = Users.get(user_id)
         if user:
             return user
@@ -625,15 +715,22 @@ class User(Resource):
             api_users.abort(404, "Пользователь не найден")
 
     @api_users.doc("Удалить пользователя")
+    @jwt_required()
+    @role_required(["admin"])
     def delete(self, user_id):
-        """Удаляет пользователя и все связанные с ним данные."""
+        """Удаляет пользователя и все связанные с ним данные(admin)."""
         Users.delete(user_id)
         return {"message": "Пользователь удален успешно"}, 204
 
     @api_users.doc("Обновить информацию о пользователе")
     @api_users.expect(user_update_model, validate=True)
+    @jwt_required()
     def put(self, user_id):
-        """Обновляет информацию о пользователе (без изменения проекта и роли)."""
+        """Обновляет информацию о пользователе (admin, владелец)."""
+        current_user_id = get_jwt().get("sub")
+        current_user_role = get_jwt().get("role")
+        if current_user_role != "admin" and current_user_id != user_id:
+            api_users.abort(403, "Доступ запрещен: недостаточно прав")
         data = api_users.payload
         Users.update(
             user_id=user_id,
@@ -648,24 +745,22 @@ class User(Resource):
         return {"message": "Пользователь обновлен успешно"}, 200
 
 
-auth_model = api_users.model(
-    "Auth",
-    {
-        "email": fields.String(required=True, description="Email пользователя"),
-        "password": fields.String(required=True, description="Пароль пользователя"),
-    },
-)
-
-
 @api_users.route("/authenticate")
 class UserAuthentication(Resource):
     @api_users.doc("Аутентифицировать пользователя")
     @api_users.expect(auth_model, validate=True)
     def post(self):
-        """Аутентифицирует пользователя по email и паролю."""
+        """Аутентифицирует пользователя по email и паролю(кто угодно)."""
         data = api_users.payload
         user = Users.authenticate(email=data["email"], password=data["password"])
         if user:
-            return {"message": "Аутентификация успешна", "user": user}, 200
+            additional_claims = {"role": user.get("role_name")}
+            access_token = create_access_token(
+                identity=user["user_id"], additional_claims=additional_claims
+            )
+            return {
+                "message": "Аутентификация успешна",
+                "access_token": access_token,
+            }, 200
         else:
             api_users.abort(401, "Неверные учетные данные")
