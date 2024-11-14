@@ -1,4 +1,16 @@
-Bearer "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMTIzNTY5OCwianRpIjoiOGNlOGFjMmYtMmIxZS00MjkyLWFjN2EtMTJmNWRhYjhmNDVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MTEsIm5iZiI6MTczMTIzNTY5OCwiY3NyZiI6Ijc1NTI4NTQ3LTVlZDItNGE2Zi05OTg5LTliZjFkY2M3NTA4OCIsImV4cCI6MTczMTIzOTI5OCwicm9sZSI6ImFkbWluIn0.8QtkWKqbDOcSfq5xIStS8rYiVPF0e2nRkRkP9itoeos
+Версия ОС: 10.0 (Build 22631)
 
+Архитектура процессора: x64 (AMD или Intel)
+Количество логических процессоров: 22
 
-Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTczMTIzMzU4OCwianRpIjoiZDEzMzYyNjctYzBjYS00YzVhLWI2YTYtYTE1NTRkNjEzYTM0IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MTIsIm5iZiI6MTczMTIzMzU4OCwiY3NyZiI6IjkzNDQ2ZWNmLTc5MTctNDg2Ni04MGFmLWRmMjg2MTY0NmNkNSIsImV4cCI6MTczMTIzNzE4OCwicm9sZSI6Im1hbmFnZXIifQ.qqDpBA5nLm78KjuiDjLc-7J0oHHu0YXNajU5IOAjvsc
+Модель процессора: Intel(R) Core(TM) Ultra 9 185H
+
+Общая физическая память: 32126 МБ
+Доступная физическая память: 22288 МБ
+
+Системный каталог: C:\Windows\system32
+
+Текущий пользователь: ASUS
+
+Имя компьютера: DESKTOP-E69D6EA
+

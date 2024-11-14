@@ -7,7 +7,8 @@
 !Logs/*.txt
 
 *.vscode/
-
+.idea/
+__pycache__/
 .vs/
 
 .omnisharp/
