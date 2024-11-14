@@ -65,3 +65,6 @@ yarn-debug.log*
 yarn-error.log*
 migrations/
 videos/
+
+STRweb/Lab4/back/.env
+STRweb/Lab4/front/src/components/CatImage.js
