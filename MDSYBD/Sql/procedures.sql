@@ -234,6 +234,29 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION get_task_comment(
+    v_comment_id INTEGER
+)
+RETURNS TABLE(
+    comment_id INTEGER,
+    comment_text TEXT,
+    comment_creation_date TIMESTAMP,
+    author_id INTEGER
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        tc.id,
+        tc.text,
+        tc.creation_date,
+        tc.author_id
+    FROM
+        taskcomments tc
+    WHERE
+        tc.id = v_comment_id;
+END;
+$$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION delete_task_comment(
     v_comment_id INTEGER
@@ -282,9 +305,52 @@ CREATE OR REPLACE FUNCTION delete_task(
 )
 RETURNS void AS $$
 BEGIN
-    DELETE FROM tasks WHERE id = v_task_id;
+    BEGIN
+        DELETE FROM taskcomments WHERE task_id = v_task_id;
+        DELETE FROM deadlines WHERE task_id = v_task_id;
+        DELETE FROM tasks WHERE id = v_task_id;
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'Задача с id % не найдена', v_task_id;
+        END IF;
+    EXCEPTION
+        WHEN others THEN
+            RAISE;
+    END;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_task(
+    v_task_id INTEGER
+)
+RETURNS TABLE(
+    task_id INTEGER,
+    task_title VARCHAR,
+    task_description TEXT,
+    task_status VARCHAR,
+    creation_date TIMESTAMP,
+    completion_date TIMESTAMP,
+    project_id INTEGER,
+    executor_id INTEGER
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        t.id,
+        t.title,
+        t.description,
+        t.status,
+        t.creation_date,
+        t.completion_date,
+        t.project_id,
+        t.executor_id
+    FROM
+        tasks t
+    WHERE
+        t.id = v_task_id;
+END;
+$$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION update_task(
     v_task_id INTEGER,
@@ -381,31 +447,39 @@ RETURNS TABLE(
     phone VARCHAR,
     address VARCHAR,
     date_of_birth DATE,
-    profile_picture TEXT
-) AS $$
-BEGIN
-    RETURN QUERY
-    SELECT u.id, u.name, u.email, p.phone, p.address, p.date_of_birth, p.profile_picture
-    FROM users u
-    LEFT JOIN userprofiles p ON u.id = p.user_id
-    WHERE u.id = v_user_id;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION get_user_roles(
-    v_user_id INTEGER
-)
-RETURNS TABLE(
-    project_id INTEGER,
+    profile_picture TEXT,
     role_id INTEGER,
-    role_name VARCHAR
+    role_name VARCHAR,
+    project_id INTEGER,
+    project_title VARCHAR
 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT ur.project_id, ur.role_id, r.role_name
-    FROM userroles ur
-    JOIN roles r ON ur.role_id = r.id
-    WHERE ur.user_id = v_user_id;
+    SELECT
+        u.id,
+        u.name,
+        u.email,
+        p.phone,
+        p.address,
+        p.date_of_birth,
+        p.profile_picture,
+        ur.role_id,
+        r.role_name,
+        ur.project_id,
+        pr.title AS project_title
+    FROM
+        users u
+    LEFT JOIN
+        userprofiles p ON u.id = p.user_id
+    LEFT JOIN
+        userroles ur ON u.id = ur.user_id
+    LEFT JOIN
+        roles r ON ur.role_id = r.id
+    LEFT JOIN
+        projects pr ON ur.project_id = pr.id
+    WHERE
+        u.id = v_user_id
+    LIMIT 1;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -453,23 +527,27 @@ CREATE OR REPLACE FUNCTION authenticate_user(
 )
 RETURNS TABLE(
     user_id INTEGER,
-    user_name VARCHAR
+    user_name VARCHAR,
+    role_name VARCHAR
 ) AS $$
 DECLARE
     stored_password TEXT;
-    user_id INTEGER;
+    retrieved_user_id INTEGER;
 BEGIN
-    SELECT id, password INTO user_id, stored_password
+    SELECT id, password INTO retrieved_user_id, stored_password
     FROM users
     WHERE email = v_email;
 
-    IF user_id IS NOT NULL AND stored_password = crypt(v_password, stored_password) THEN
-        RETURN QUERY SELECT user_id, (SELECT name FROM users WHERE id = user_id);
+    IF retrieved_user_id IS NOT NULL AND stored_password = crypt(v_password, stored_password) THEN
+        RETURN QUERY
+        SELECT u.id, u.name, r.role_name
+        FROM users u
+        JOIN userroles ur ON u.id = ur.user_id
+        JOIN roles r ON ur.role_id = r.id
+        WHERE u.id = retrieved_user_id;
     ELSE
-        RETURN QUERY SELECT NULL::INTEGER, NULL::VARCHAR;
+        RETURN QUERY SELECT NULL::INTEGER, NULL::VARCHAR, NULL::VARCHAR;
     END IF;
 END;
 $$ LANGUAGE plpgsql;
 
-
-SELECT update_deadline()

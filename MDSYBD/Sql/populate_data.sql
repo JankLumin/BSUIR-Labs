@@ -21,9 +21,9 @@ INSERT INTO projects (title, description, start_date, end_date) VALUES
 
 -- Заполнение таблицы roles
 INSERT INTO roles (role_name) VALUES
-('Менеджер проекта'),
-('Разработчик'),
-('Тестировщик'),
+('admin'),
+('manager'),
+('executor'),
 ('Дизайнер'),
 ('Аналитик');
 
