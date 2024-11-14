@@ -1,0 +1,60 @@
+{% extends 'base.html' %} {% block content %}
+<section class="cart-section">
+  <h2 class="section-title">Корзина</h2>
+
+  {% if cart_items %}
+  <table class="cart-table">
+    <thead>
+      <tr>
+        <th>Товар</th>
+        <th>Количество</th>
+        <th>Цена</th>
+        <th>Удалить</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart_items %}
+      <tr>
+        <td data-label="Товар">{{ item.title }}</td>
+        <td data-label="Количество">
+          <form method="post" action="{% url 'update_cart_item' item.id %}" class="quantity-form">
+            {% csrf_token %}
+            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="quantity-input" />
+            <button type="submit" class="btn btn-small">Обновить</button>
+          </form>
+        </td>
+        <td data-label="Цена">
+          {{ item.price }} x {{ item.quantity }} = {{ item.price|floatformat:2 }} x {{ item.quantity }}
+        </td>
+        <td data-label="Удалить">
+          <form method="post" action="{% url 'remove_from_cart' item.id %}" class="remove-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-small">Удалить</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3 class="total-price">Итоговая сумма: {{ total_price|floatformat:2 }}</h3>
+
+  <form method="post" action="{% url 'apply_promo_code' %}" class="promo-form">
+    {% csrf_token %}
+    <input type="text" name="promo_code" placeholder="Введите промокод" class="promo-input" />
+    <button type="submit" class="btn">Применить промокод</button>
+  </form>
+
+  {% if promo_code %}
+  <h4 class="promo-info">Промокод: {{ promo_code.code }} (Скидка: {{ promo_code.discount }}%)</h4>
+  {% endif %}
+
+  <form method="get" action="{% url 'checkout' %}" class="checkout-form">
+    <button type="submit" class="btn btn-primary">Перейти к оплате</button>
+  </form>
+
+  {% else %}
+  <p class="empty-cart">Ваша корзина пуста.</p>
+  {% endif %}
+</section>
+{% endblock %}

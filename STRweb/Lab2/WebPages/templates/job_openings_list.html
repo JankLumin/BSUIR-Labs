@@ -1,0 +1,34 @@
+{% extends 'base.html' %} {% block title %}Вакансии{% endblock %} {% block content %}
+<section class="vacancies-section">
+  <h2 class="vacancies-title">Вакансии</h2>
+  <div class="vacancies-container">
+    {% for job in job_openings %}
+    <div class="job-card">
+      <h3 class="job-title">{{ job.title }}</h3>
+      <p class="job-description">
+        <strong>Описание:</strong>
+        {{ job.description }}
+      </p>
+      <p class="job-location">
+        <strong>Местоположение:</strong>
+        {{ job.location }}
+      </p>
+      <p class="job-requirements">
+        <strong>Требования:</strong>
+        {{ job.requirements }}
+      </p>
+      <p class="job-responsibilities">
+        <strong>Обязанности:</strong>
+        {{ job.responsibilities }}
+      </p>
+      <p class="job-posted-date">
+        <strong>Дата публикации:</strong>
+        {{ job.posted_date }}
+      </p>
+    </div>
+    {% empty %}
+    <p>На данный момент вакансий нет.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

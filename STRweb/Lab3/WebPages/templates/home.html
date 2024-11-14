@@ -1,0 +1,109 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="main-content">
+  <section class="company-logo" data-aos="fade-up">
+    {% if company_logo %}
+    <img src="{{ company_logo }}" alt="Логотип компании" class="logo-image" />
+    <p class="company-name">{{ company_name }}</p>
+    {% else %}
+    <p>Логотип компании отсутствует</p>
+    {% endif %}
+  </section>
+
+  <section class="latest-news" data-aos="fade-up">
+    {% if latest_news %}
+    <h2>Последняя новость</h2>
+    <div class="news-card">
+      <h3>{{ latest_news.0.title }}</h3>
+      <p>{{ latest_news.0.summary }}</p>
+      <a href="{% url 'news_detail' latest_news.0.id %}" class="btn">Читать далее</a>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="partners" data-aos="fade-up">
+    <h2>Наши партнеры</h2>
+    <div class="partners-grid">
+      {% for partner in partners %}
+      <a href="{{ partner.website }}" class="partner-item">
+        <img src="{{ partner.logo }}" alt="{{ partner.name }}" class="partner-logo" />
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Обновленная секция "Наши предложения" -->
+  <section class="properties-catalog" data-aos="fade-up">
+    <h2>Наши предложения</h2>
+    <div id="catalog-container" class="catalog-container">
+      <!-- Карточки недвижимости будут динамически добавляться здесь -->
+    </div>
+    <div class="pagination-controls">
+      <button id="prev-page" class="pagination-button">Предыдущая</button>
+      <div id="page-numbers" class="page-numbers"></div>
+      <button id="next-page" class="pagination-button">Следующая</button>
+    </div>
+  </section>
+
+  <section class="photo-slider">
+    <div class="slider-container">
+      <div class="pagination" id="pagination"></div>
+
+      <div class="slider">
+        <div class="slide" data-url="https://www.facebook.com" style="display: block">
+          <img src="{% static 'images/1.png' %}" alt="Фото 1" />
+          <div class="caption">Баннер 1</div>
+        </div>
+        <div class="slide" data-url="https://www.twitter.com">
+          <img src="{% static 'images/2.png' %}" alt="Фото 2" />
+          <div class="caption">Баннер 2</div>
+        </div>
+        <div class="slide" data-url="https://www.instagram.com">
+          <img src="{% static 'images/3.png' %}" alt="Фото 3" />
+          <div class="caption">Баннер 3</div>
+        </div>
+
+        <div class="clickable-zone prev-zone">
+          <span class="arrow left-arrow">&lt;</span>
+        </div>
+        <div class="clickable-zone next-zone">
+          <span class="arrow right-arrow">&gt;</span>
+        </div>
+
+        <div class="slide-counter" id="slide-counter">1 / 3</div>
+      </div>
+
+      <form id="interval-form" class="interval-form">
+        <label for="rotation-interval">Интервал ротации (мс):</label>
+        <input
+          type="number"
+          id="rotation-interval"
+          name="rotation-interval"
+          value="3000"
+          min="1000"
+        />
+        <button type="button" onclick="slider.updateInterval()">Изменить</button>
+      </form>
+    </div>
+  </section>
+</div>
+{% endblock %} {% block extra_css %} {{ block.super }}
+<link rel="stylesheet" href="{% static 'css/catalog.css' %}" />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+  integrity="sha512-k+8QorhTG3j4PGWmsTFFV+65m/y5Z6Te6uM5kVbqnwm5G0pC54MQ3qpHec1XubE0GZni3oC3RF6tyDYhkK+Whg=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+{% endblock %} {% block extra_js %} {{ block.super }}
+<script src="{% static 'js/slider.js' %}"></script>
+<script src="{% static 'js/catalog.js' %}"></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script>
+  AOS.init();
+</script>
+{% endblock %}

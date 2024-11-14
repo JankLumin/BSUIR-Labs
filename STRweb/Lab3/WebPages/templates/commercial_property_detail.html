@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if property %}
+        <h2>{{ property.title }}</h2>
+        <p>{{ property.description }}</p>
+        <p>Цена: {{ property.price }}</p>
+        <p>Город: {{ property.city }}</p>
+        <p>Тип недвижимости: {{ property.property_type }}</p>
+        <p>Этаж: {{ property.floor }}/{{ property.total_floors }}</p>
+        <p>Общая площадь: {{ property.space_area_range }} кв. м</p>
+        <p>Класс здания: {{ property.building_class }}</p>
+        <p>Год постройки: {{ property.year_built }}</p>
+
+        <div class="property-photos">
+            <h3>Фотографии</h3>
+            {% if property.photos_read %}
+                {% for photo in property.photos_read %}
+                    <img src="{{ photo.image }}" alt="Фото" style="max-width: 300px; height: auto;">
+                {% endfor %}
+            {% else %}
+                <p>Фотографии отсутствуют</p>
+            {% endif %}
+        </div>
+
+        <form method="post" action="{% url 'add_to_cart' property.id 'commercial_property' %}">
+            {% csrf_token %}
+            <button type="submit">Добавить в корзину</button>
+        </form>
+    {% else %}
+        <p>Объект недвижимости не найден.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.title }} - Новости{% endblock %}
+
+{% block content %}
+<section>
+    <h2>{{ article.title }}</h2>
+    {% if article.image %}
+    <img src="{{ article.image }}" alt="{{ article.title }}" style="max-width: 100%; height: auto;">
+    {% endif %}
+    <p><em>Дата публикации: {{ article.published_date|date:"d.m.Y" }}</em></p>
+    <div>
+        {{ article.content | linebreaks }}
+    </div>
+    <a href="{% url 'news_list' %}" class="btn">Назад к новостям</a>
+</section>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %} {% block title %}Добавить отзыв - Риэлтерский Дом{% endblock %} {% block content %}
+<section class="add-review-section" data-aos="fade-up">
+  <h2>Добавить отзыв</h2>
+
+  <form method="post" class="add-review-form">
+    {% csrf_token %}
+    <div class="form-group">
+      <label>{{ form.rating.label }}</label>
+      <div class="rating-buttons">
+        {% for choice in form.rating %}
+        <label class="rating-button">
+          {{ choice.tag }}
+          <span class="number-label">{{ choice.choice_label }}</span>
+        </label>
+        {% endfor %}
+      </div>
+      {% if form.rating.errors %}
+      <div class="error">{{ form.rating.errors }}</div>
+      {% endif %}
+    </div>
+    <div class="form-group">
+      <label>{{ form.comment.label }}</label>
+      {{ form.comment }} {% if form.comment.errors %}
+      <div class="error">{{ form.comment.errors }}</div>
+      {% endif %}
+    </div>
+    <button type="submit" class="btn submit-btn">Отправить</button>
+  </form>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const textareas = document.querySelectorAll(".add-review-form textarea");
+
+      textareas.forEach((textarea) => {
+        textarea.style.overflow = "hidden";
+        textarea.style.height = "auto";
+        textarea.style.height = Math.min(textarea.scrollHeight, 400) + "px";
+
+        textarea.addEventListener("input", function () {
+          this.style.height = "auto";
+          const newHeight = Math.min(this.scrollHeight, 400);
+          this.style.height = newHeight + "px";
+        });
+      });
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const textarea = document.querySelector(".add-review-form textarea");
+      const errorMsg = document.createElement("div");
+      errorMsg.classList.add("textarea-error");
+      errorMsg.textContent = "Вы достигли максимального количества строк (15).";
+      textarea.parentNode.appendChild(errorMsg);
+
+      textarea.addEventListener("input", function (e) {
+        const lines = textarea.value.split("\n");
+        if (lines.length > 15) {
+          textarea.value = lines.slice(0, 15).join("\n");
+          errorMsg.classList.add("active");
+        } else {
+          errorMsg.classList.remove("active");
+        }
+      });
+    });
+  </script>
+</section>
+{% endblock %}

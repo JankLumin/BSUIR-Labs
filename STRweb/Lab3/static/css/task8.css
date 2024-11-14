@@ -1,0 +1,47 @@
+html,
+body {
+  height: auto; /* Убедитесь, что html и body не ограничивают высоту */
+  min-height: 100%; /* Минимальная высота на всякий случай */
+  margin: 0; /* Убираем стандартные отступы */
+  padding: 0; /* Убираем стандартные отступы */
+}
+
+.scene {
+  position: relative;
+  min-height: 100vh; /* Минимальная высота на весь экран */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Скрытие элементов, выходящих за границы */
+}
+
+.spacer {
+  height: 10000px; /* Устанавливаем фиксированную высоту для прокрутки */
+}
+
+.house {
+  position: fixed; /* фиксируем дома в пределах окна браузера */
+  width: 100px;
+  height: 100px;
+  top: 50%; /* начальное положение по вертикали */
+  left: 50%; /* начальное положение по горизонтали */
+  transform: translate(-50%, -50%); /* центрирование */
+}
+
+/* Стили для лупы */
+.magnifier {
+  position: fixed; /* Закрепляем лупу на экране */
+  top: 50%;
+  left: 50%;
+  width: 300px; /* Фиксированный размер */
+  height: 300px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.magnifier-glass {
+  width: 100%; /* Лупа заполняет контейнер */
+  height: auto;
+}

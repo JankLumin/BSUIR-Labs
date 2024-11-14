@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}О компании - Риэлтерский Дом{% endblock %}
+
+{% block content %}
+<section>
+    <h2>О компании</h2>
+    {% if company_info %}
+    <img src="{{ company_info.logo }}" alt="Логотип компании" style="max-width:100%; height:auto;">
+    <div>
+        <h3>Информация о компании</h3>
+        <p>{{ company_info.about }}</p>
+    </div>
+    <div>
+        <h3>История компании</h3>
+        <p>{{ company_info.history }}</p>
+    </div>
+    <div>
+        <h3>Реквизиты</h3>
+        <p>{{ company_info.requisites }}</p>
+    </div>
+    {% if company_info.certificate_image %}
+    <div>
+        <h3>Сертификат</h3>
+        <img src="{{ company_info.certificate_image }}" alt="Сертификат компании" width="359" height="512">
+    </div>
+    {% endif %}
+    {% if company_info.video_url %}
+    <div>
+        <h3>Видео о компании</h3>
+        <iframe width="560" height="315" src="{{ company_info.video_url }}" style="border: none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    {% endif %}
+    {% else %}
+    <p>Информация о компании отсутствует.</p>
+    {% endif %}
+</section>
+{% endblock %}

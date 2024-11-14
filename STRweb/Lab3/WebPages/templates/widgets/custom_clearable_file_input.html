@@ -1,0 +1,10 @@
+{% if widget.is_initial %}
+<p>{{ widget.initial_text }}:</p>
+<img
+  src="{{ widget.value.url }}"
+  alt="Текущая фотография"
+  style="max-width: 200px; max-height: 200px; border-radius: var(--border-radius)"
+/>
+<br />
+<br />
+{% endif %} <input type="{{ widget.type }}" name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %}>

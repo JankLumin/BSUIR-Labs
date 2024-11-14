@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Подтверждение заказа</h1>
+
+    {% if cart_items %}
+        <table>
+            <tr>
+                <th>Товар</th>
+                <th>Количество</th>
+                <th>Цена</th>
+            </tr>
+            {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.total_price|floatformat:2 }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <h3>Итоговая сумма: {{ total_price|floatformat:2 }}</h3>
+
+        {% if promo_code %}
+            <h4>Промокод: {{ promo_code.code }} (Скидка: {{ promo_code.discount }}%)</h4>
+        {% endif %}
+
+        <form action="{% url 'payment_success' %}" method="get">
+            <button type="submit">Оплатить</button>
+        </form>        
+
+    {% else %}
+        <p>Ваша корзина пуста.</p>
+    {% endif %}
+{% endblock %}

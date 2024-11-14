@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% block title %}Новости - Риэлтерский Дом{% endblock %} {% block content %}
+<section>
+  <h2>Новости</h2>
+  <div id="news-container">
+    {% for article in articles %}
+    <div class="news-item">
+      <h3>{{ article.title }}</h3>
+      {% if article.image %}
+      <img src="{{ article.image }}" alt="{{ article.title }}" style="width: 150px; height: auto" />
+      {% endif %}
+      <p>{{ article.summary }}</p>
+      <a href="/webpages/news/{{ article.id }}/" class="btn">Читать далее</a>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Агентство недвижимости{% endblock %}</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'images/logo.png' %}" type="image/jpeg" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/slider.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/preloader.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/timer.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/catalog.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/employee_list.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div id="preloader">
+      <div class="loader">
+        <div class="overlay"></div>
+        <div class="circle"></div>
+        <div class="stick"></div>
+      </div>
+    </div>
+    <header>
+      <div class="container header-container">
+        <div class="logo">
+          <a href="{% url 'home' %}" title="Риэлтерский Дом">
+            <img src="{% static 'images/logo.png' %}" alt="Риэлтерский Дом" />
+          </a>
+        </div>
+        <nav id="nav-menu">
+          <ul class="nav-list" id="nav-list">
+            <li>
+              <a
+                href="{% url 'news_list' %}"
+                class="nav-button {% if request.resolver_match.url_name == 'news_list' %}active{% endif %}"
+                title="Последние новости"
+              >
+                <i class="fas fa-newspaper"></i>
+                Новости
+              </a>
+            </li>
+            <li>
+              <a
+                href="{% url 'about' %}"
+                class="nav-button {% if request.resolver_match.url_name == 'about' %}active{% endif %}"
+                title="Информация о компании"
+              >
+                <i class="fas fa-building"></i>
+                О нас
+              </a>
+            </li>
+            <li>
+              <a
+                href="{% url 'review_list' %}"
+                class="nav-button {% if request.resolver_match.url_name == 'review_list' %}active{% endif %}"
+                title="Отзывы наших клиентов"
+              >
+                <i class="fas fa-comments"></i>
+                Отзывы
+              </a>
+            </li>
+            <li>
+              <a
+                href="{% url 'faq_list' %}"
+                class="nav-button {% if request.resolver_match.url_name == 'faq_list' %}active{% endif %}"
+                title="Часто задаваемые вопросы"
+              >
+                <i class="fas fa-question-circle"></i>
+                FAQ
+              </a>
+            </li>
+            <li>
+              <a
+                href="{% url 'employee_list' %}"
+                class="nav-button {% if request.resolver_match.url_name == 'employee_list' %}active{% endif %}"
+                title="Контактная информация"
+              >
+                <i class="fas fa-address-book"></i>
+                Контакты
+              </a>
+            </li>
+            <li>
+              <a
+                href="{% url 'job_openings_list' %}"
+                class="nav-button {% if request.resolver_match.url_name == 'job_openings_list' %}active{% endif %}"
+                title="Актуальные вакансии"
+              >
+                <i class="fas fa-briefcase"></i>
+                Вакансии
+              </a>
+            </li>
+            <li>
+              <a
+                href="{% url 'privacy_policy' %}"
+                class="nav-button {% if request.resolver_match.url_name == 'privacy_policy' %}active{% endif %}"
+                title="Политика конфиденциальности"
+              >
+                <i class="fas fa-shield-alt"></i>
+                Политика
+              </a>
+            </li>
+            <li>
+              <a
+                href="{% url 'promo_code_list' %}"
+                class="nav-button {% if request.resolver_match.url_name == 'promo_code_list' %}active{% endif %}"
+                title="Доступные промокоды"
+              >
+                <i class="fas fa-tags"></i>
+                Промокоды
+              </a>
+            </li>
+            {% if user.is_authenticated %}
+            <li>
+              <a
+                href="{% url 'profile' %}"
+                class="nav-button {% if request.resolver_match.url_name == 'profile' %}active{% endif %}"
+                title="Просмотр профиля"
+              >
+                <i class="fas fa-user"></i>
+                Профиль
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'logout' %}" class="nav-button" title="Выход из системы">
+                <i class="fas fa-sign-out-alt"></i>
+                Выйти
+              </a>
+            </li>
+            <li>
+              <a
+                href="{% url 'cart_detail' %}"
+                class="nav-button {% if request.resolver_match.url_name == 'cart_detail' %}active{% endif %}"
+                title="Просмотр корзины"
+              >
+                <i class="fas fa-shopping-cart"></i>
+                Корзина
+              </a>
+            </li>
+            {% else %}
+            <li>
+              <a
+                href="{% url 'login' %}"
+                class="nav-button {% if request.resolver_match.url_name == 'login' %}active{% endif %}"
+                title="Вход в систему"
+              >
+                <i class="fas fa-sign-in-alt"></i>
+                Вход
+              </a>
+            </li>
+            <li>
+              <a
+                href="{% url 'register' %}"
+                class="nav-button {% if request.resolver_match.url_name == 'register' %}active{% endif %}"
+                title="Регистрация нового пользователя"
+              >
+                <i class="fas fa-user-plus"></i>
+                Регистрация
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+        <div class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </header>
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <main class="container">{% block content %}{% endblock %}</main>
+    <footer>
+      <div class="container footer-container">
+        <p>© 2024 Риэлтерский Дом. Все права защищены.</p>
+        <a href="{% url 'privacy_policy' %}">Политика конфиденциальности</a>
+        <button id="reset-storage" class="reset-button">Сбросить хранилище</button>
+      </div>
+    </footer>
+    {% block extra_js %}
+    <script src="{% static 'js/timer.js' %}"></script>
+    <script src="{% static 'js/age_verification.js' %}"></script>
+    <script src="{% static 'js/reset_storage.js' %}"></script>
+    {% endblock %}
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const hamburger = document.getElementById("hamburger");
+        const navList = document.getElementById("nav-list");
+        const pageOverlay = document.querySelector(".page-overlay");
+
+        hamburger.addEventListener("click", function (event) {
+          navList.classList.toggle("active");
+          event.stopPropagation();
+        });
+
+        document.addEventListener("click", function (event) {
+          if (!navList.contains(event.target) && !hamburger.contains(event.target)) {
+            navList.classList.remove("active");
+          }
+        });
+
+        window.addEventListener("load", function () {
+          setTimeout(function () {
+            const preloader = document.getElementById("preloader");
+            preloader.classList.add("hidden");
+          }, 100);
+        });
+      });
+    </script>
+  </body>
+</html>

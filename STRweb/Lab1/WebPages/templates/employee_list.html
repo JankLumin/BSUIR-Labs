@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Контакты - Риэлтерский Дом{% endblock %}
+
+{% block content %}
+<section>
+    <h2>Наши сотрудники</h2>
+    <div>
+        {% for employee in employees %}
+        <div style="border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+            {% if employee.photo %}
+            <img src="{{ employee.photo }}" alt="{{ employee.first_name }} {{ employee.last_name }}" style="width: 100px; height: auto; float: left; margin-right: 15px;">
+            {% endif %}
+            <h3>{{ employee.first_name }} {{ employee.last_name }}</h3>
+            <p><strong>Описание:</strong> {{ employee.description }}</p>
+            <p><strong>Телефон:</strong> {{ employee.phone_number }}</p>
+            <p><strong>Email:</strong> <a href="mailto:{{ employee.email }}">{{ employee.email }}</a></p>
+        </div>
+        {% empty %}
+        <p>Информация о сотрудниках отсутствует.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

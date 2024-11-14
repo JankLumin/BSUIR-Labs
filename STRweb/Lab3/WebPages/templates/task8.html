@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Масштабная анимация при прокрутке</title>
+    <link rel="stylesheet" href="{% static 'css/task8.css' %}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  </head>
+  <body>
+    <div class="scene">
+      <div class="elements">
+        <!-- Дома -->
+        <img src="{% static 'images/house1.png' %}" alt="Дом 1" class="house house1" />
+        <img src="{% static 'images/house2.png' %}" alt="Дом 2" class="house house2" />
+        <img src="{% static 'images/house3.png' %}" alt="Дом 3" class="house house3" />
+        <img src="{% static 'images/house4.png' %}" alt="Дом 4" class="house house4" />
+        <!-- Увеличительное стекло -->
+        <div class="magnifier">
+          <img
+            src="{% static 'images/magnifier.png' %}"
+            alt="Увеличительное стекло"
+            class="magnifier-glass"
+          />
+    </div>
+    <!-- Spacer для прокрутки -->
+    <div class="spacer"></div>
+    <script src="{% static 'js/task8.js' %}"></script>
+  </body>
+</html>
