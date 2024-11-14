@@ -81,7 +81,7 @@ class Notifications:
                 {
                     "notification_id": row[0],
                     "message": row[1],
-                    "date": row[2],
+                    "date": row[2], 
                 }
                 for row in results
             ]
@@ -223,22 +223,6 @@ class TaskComments:
         Database.get_instance().call_procedure("delete_task_comment", comment_id)
 
     @staticmethod
-    def get(comment_id):
-        """
-        Получает комментарий по его идентификатору.
-        """
-        results = Database.get_instance().call_procedure("get_task_comment", comment_id)
-        if results and len(results) > 0:
-            row = results[0]
-            return {
-                "comment_id": row[0],
-                "comment_text": row[1],
-                "comment_creation_date": row[2],
-                "author_id": row[3],
-            }
-        return None
-
-    @staticmethod
     def get_by_task(task_id):
         """
         Получает все комментарии, связанные с указанной задачей.
@@ -292,26 +276,6 @@ class Tasks:
         Удаляет задачу по её идентификатору.
         """
         Database.get_instance().call_procedure("delete_task", task_id)
-
-    @staticmethod
-    def get(task_id):
-        """
-        Получает информацию о задаче по её идентификатору.
-        """
-        results = Database.get_instance().call_procedure("get_task", task_id)
-        if results and len(results) > 0:
-            row = results[0]
-            return {
-                "task_id": row[0],
-                "task_title": row[1],
-                "task_description": row[2],
-                "task_status": row[3],
-                "creation_date": row[4],
-                "completion_date": row[5],
-                "project_id": row[6],
-                "executor_id": row[7],
-            }
-        return None
 
     @staticmethod
     def update(task_id, title, description, status, completion_date):
@@ -405,7 +369,7 @@ class Users:
     @staticmethod
     def get(user_id):
         """
-        Получает информацию о пользователе вместе с его профилем, ролью и проектом.
+        Получает информацию о пользователе вместе с его профилем.
         """
         result = Database.get_instance().call_procedure(
             "get_user_with_profile", user_id
@@ -421,16 +385,27 @@ class Users:
                         "address",
                         "date_of_birth",
                         "profile_picture",
-                        "role_id",
-                        "role_name",
-                        "project_id",
-                        "project_title",
                     ],
                     result[0],
                 )
             )
             if result
             else None
+        )
+
+    @staticmethod
+    def get_roles(user_id):
+        """
+        Получает роли, связанные с пользователем.
+        """
+        results = Database.get_instance().call_procedure("get_user_roles", user_id)
+        return (
+            [
+                {"project_id": row[0], "role_id": row[1], "role_name": row[2]}
+                for row in results
+            ]
+            if results
+            else []
         )
 
     @staticmethod
@@ -468,11 +443,7 @@ class Users:
             "authenticate_user", email, password
         )
         return (
-            {
-                "user_id": result[0][0],
-                "user_name": result[0][1],
-                "role_name": result[0][2],
-            }
+            {"user_id": result[0][0], "user_name": result[0][1]}
             if result and result[0][0] is not None
             else None
         )

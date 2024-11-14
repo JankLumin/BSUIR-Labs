@@ -1,11 +1,6 @@
-# app.py
-
 from flask import Flask
 from flask_restx import Api
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager
-from config import Config
-
 from api import (
     api_deadlines,
     api_logs,
@@ -19,23 +14,14 @@ from api import (
 )
 
 app = Flask(__name__)
-app.config.from_object(Config)
 
 CORS(app, resources={r"/*": {"origins": "*"}})
-
-jwt = JWTManager(app)
-
-authorizations = {
-    "Bearer Auth": {"type": "apiKey", "in": "header", "name": "Authorization"}
-}
 
 api = Api(
     app,
     version="1.0",
     title="Управление задачами",
     description="API для управления задачами и проектами",
-    authorizations=authorizations,
-    security="Bearer Auth",
 )
 
 api.add_namespace(api_deadlines)
