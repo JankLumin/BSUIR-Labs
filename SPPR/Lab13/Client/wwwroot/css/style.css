@@ -1,0 +1,425 @@
+@import url("https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova&family=Kalnia:wght@100&display=swap");
+
+html,
+body,
+div,
+span,
+h1,
+h2,
+p,
+a,
+img,
+strong,
+ul,
+li,
+button,
+footer,
+header {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  position: relative;
+}
+*,
+:after,
+:before {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+a,
+button,
+div {
+  outline: none;
+}
+ul {
+  list-style: none;
+}
+img {
+  border: none;
+}
+
+html,
+body,
+.wrap {
+  height: 100%;
+}
+.wrap {
+  width: 1024px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.ship,
+.icon-field,
+.btn-play {
+  background: url("../img/sprite.png") no-repeat;
+}
+
+body {
+  font: normal 18px SegoePrint;
+  line-height: 24px;
+  color: #4530af;
+}
+p {
+  margin-bottom: 10px;
+}
+
+.btn-play {
+  width: 144px;
+  height: 45px;
+  font-family: SegoePrint;
+  font-size: 24px;
+  line-height: 40px;
+  color: #4530af;
+  text-align: center;
+  background-position: 0 -150px;
+  cursor: pointer;
+}
+.btn-newgame {
+  font-size: 19px;
+  margin-top: 10px;
+}
+
+.flex {
+  display: flex;
+}
+
+.battlefield {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  margin: 0 auto;
+  background: url("../img/grid.png") repeat;
+}
+.text-top {
+  height: 66px;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 7px;
+}
+.service-row {
+  text-align: center;
+}
+.service-text {
+  color: #c00;
+  padding-top: 10px;
+}
+
+.outer {
+  margin-bottom: 21px;
+  padding-left: 38px;
+}
+.field {
+  width: 366px;
+  height: 363px;
+  flex-shrink: 0;
+  position: relative;
+  background: url("../img/bg_play_field.png") no-repeat;
+}
+.field-computer {
+  margin-left: 31px;
+}
+
+.ships {
+  width: 330px;
+  height: 330px;
+  position: relative;
+  left: 29px;
+  top: 27px;
+}
+.ship {
+  height: 35px;
+  position: absolute;
+}
+
+.vertical {
+  transform: rotate(90deg);
+  transform-origin: 17.5px 17.5px;
+}
+
+.fourdeck {
+  width: 134px;
+  background-position: 0 0;
+}
+.fourdeck.success {
+  background-position: 0 -50px;
+}
+.fourdeck.unsuccess {
+  background-position: 0 -100px;
+}
+.tripledeck {
+  width: 101px;
+  background-position: -150px 0;
+}
+.tripledeck.success {
+  background-position: -150px -50px;
+}
+.tripledeck.unsuccess {
+  background-position: -150px -100px;
+}
+.doubledeck {
+  width: 68px;
+  background-position: -270px 0;
+}
+.doubledeck.success {
+  background-position: -270px -50px;
+}
+.doubledeck.unsuccess {
+  background-position: -270px -100px;
+}
+.singledeck {
+  width: 35px;
+  background-position: -360px 0;
+}
+.singledeck.success {
+  background-position: -360px -50px;
+}
+.singledeck.unsuccess {
+  background-position: -360px -100px;
+}
+
+.instruction {
+  margin-left: 26px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.type-placement-box {
+  line-height: 34px;
+  padding-bottom: 18px;
+}
+.type-placement-box .link {
+  font-size: 20px;
+  border-bottom: dashed 2px #4530af;
+  cursor: pointer;
+}
+
+.initial-ships li {
+  height: 35px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 31px;
+}
+.initial-ships .ship {
+  left: 0;
+  top: 0;
+  float: left;
+  cursor: move;
+}
+.initial-ships .tripledeck1 {
+  left: 164px;
+}
+.initial-ships .tripledeck2 {
+  left: 297px;
+}
+.initial-ships .doubledeck2 {
+  left: 99px;
+}
+.initial-ships .doubledeck3 {
+  left: 197px;
+}
+.initial-ships .singledeck2 {
+  left: 65px;
+}
+.initial-ships .singledeck3 {
+  left: 131px;
+}
+.initial-ships .singledeck4 {
+  left: 197px;
+}
+
+.icon-field {
+  width: 33px;
+  height: 33px;
+  display: block;
+  position: absolute;
+  z-index: 5;
+}
+.dot {
+  background-position: -410px 0;
+}
+.red-cross {
+  background-position: -410px -50px;
+}
+.shaded-cell {
+  background-position: -410px -100px;
+}
+.shaded-cell_red {
+  background-position: -410px -140px;
+}
+.explosion {
+  background-position: -150px -150px;
+  z-index: 6;
+  opacity: 0;
+  transform: scale(0.2);
+}
+
+@keyframes Explosion {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.explosion.active {
+  animation-name: Explosion;
+  animation-duration: 0.4s;
+  transform: scale(1);
+}
+
+.welcome-text {
+  font-family: serif;
+  font-size: 50px;
+  text-align: center;
+  height: 200px;
+  padding-top: 100px;
+}
+.start-page-buttons {
+  height: 400px;
+  width: 400px;
+  margin: auto;
+  position: absolute;
+  top: 25%;
+  left: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.start_button {
+  height: 90px;
+  width: 100%;
+  background-color: lightblue;
+  color: black;
+  transition: width 2s, 4s;
+  transition-property: background-color, font-size, color;
+  border-radius: 20px;
+  font-size: 20px;
+  font-family: Serif, cursive;
+}
+.start_button:hover {
+  background-color: royalblue;
+  font-size: 25px;
+  color: whitesmoke;
+}
+
+input[type="text"] {
+  height: 80px;
+  border-radius: 10px;
+  font-size: 30px;
+  padding-left: 15px;
+}
+
+.dot-pulse {
+  position: relative;
+  left: -9999px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+  box-shadow: 9999px 0 0 -5px;
+  animation: dot-pulse 1.5s infinite linear;
+  animation-delay: 0.25s;
+}
+.dot-pulse::before,
+.dot-pulse::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+}
+.dot-pulse::before {
+  box-shadow: 9984px 0 0 -5px;
+  animation: dot-pulse-before 1.5s infinite linear;
+  animation-delay: 0s;
+}
+.dot-pulse::after {
+  box-shadow: 10014px 0 0 -5px;
+  animation: dot-pulse-after 1.5s infinite linear;
+  animation-delay: 0.5s;
+}
+
+@keyframes dot-pulse-before {
+  0% {
+    box-shadow: 9984px 0 0 -5px;
+  }
+  30% {
+    box-shadow: 9984px 0 0 2px;
+  }
+  60%,
+  100% {
+    box-shadow: 9984px 0 0 -5px;
+  }
+}
+@keyframes dot-pulse {
+  0% {
+    box-shadow: 9999px 0 0 -5px;
+  }
+  30% {
+    box-shadow: 9999px 0 0 2px;
+  }
+  60%,
+  100% {
+    box-shadow: 9999px 0 0 -5px;
+  }
+}
+@keyframes dot-pulse-after {
+  0% {
+    box-shadow: 10014px 0 0 -5px;
+  }
+  30% {
+    box-shadow: 10014px 0 0 2px;
+  }
+  60%,
+  100% {
+    box-shadow: 10014px 0 0 -5px;
+  }
+}
+
+.users-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.users {
+  padding-left: 15px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+@keyframes Like {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+  75% {
+    transform: rotate(-2deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.boat {
+  animation-name: Like;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+}

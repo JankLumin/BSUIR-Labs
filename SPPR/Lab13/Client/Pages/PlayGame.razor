@@ -1,0 +1,49 @@
+﻿@page "/play"
+
+@inject NavigationManager NavigationManager
+@inject IGameService GameService
+@inject IJSRuntime JSRuntime
+
+@implements IDisposable
+
+
+<PageTitle>Play game</PageTitle>
+
+<link href="css/style.css" rel="stylesheet">
+
+<div class="wrap">
+	<div class="battlefield">
+		<div class="flex outer">
+			<div class="field my-field">
+				<div id="my_field" class="ships" style="pointer-events: none;">
+					@((MarkupString) content)
+					@foreach (var iconHtml in getIconHtmlList)
+					{
+						@iconHtml
+					}
+				</div>
+			</div>
+			<div class="field other-field">
+				@if (move)
+				{
+					<div id="other_field" class="ships" @onclick="(e => Click(e))">
+						@foreach (var iconHtml in iconHtmlList)
+						{
+							@iconHtml
+						}
+					</div>
+				}
+				else
+				{
+					<div id="other_field" class="ships" style="pointer-events: none;" >
+						@foreach (var iconHtml in iconHtmlList)
+						{
+							@iconHtml
+						}
+					</div>
+				}
+				<p id="results" hidden></p>
+			</div>		
+		</div>
+	</div>
+</div>

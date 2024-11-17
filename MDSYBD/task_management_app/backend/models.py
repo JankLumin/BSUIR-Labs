@@ -2,13 +2,7 @@ from db import Database
 
 
 class Deadlines:
-    @staticmethod
-    def create(due_date, deadline_type, task_id):
-        """Создает новый дедлайн."""
-        Database.get_instance().call_procedure(
-            "create_deadline", due_date, deadline_type, task_id
-        )
-
+ 
     @staticmethod
     def delete(deadline_id):
         """Удаляет дедлайн по его идентификатору."""
@@ -81,7 +75,7 @@ class Notifications:
                 {
                     "notification_id": row[0],
                     "message": row[1],
-                    "date": row[2], 
+                    "date": row[2],
                 }
                 for row in results
             ]
