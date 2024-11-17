@@ -5,9 +5,6 @@
 
 @implements IDisposable
 
-
-<PageTitle>Waiting</PageTitle>
-
 <div class="container">
 	<span class="loader" style="transform: scale(5) translateY(50px);"></span>
 </div>
@@ -27,6 +24,7 @@
 
 	protected async override Task OnInitializedAsync()
 	{
+
 		await GameService.ConnectToHub();
 
 		await Console.Out.WriteLineAsync($"/arrangement?GameId={GameId}&Username={Username} in waiting");

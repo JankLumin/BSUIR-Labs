@@ -6,9 +6,6 @@
 
 @implements IDisposable
 
-
-<PageTitle>Play game</PageTitle>
-
 <link href="css/style.css" rel="stylesheet">
 
 <div class="wrap">
@@ -16,7 +13,7 @@
 		<div class="flex outer">
 			<div class="field my-field">
 				<div id="my_field" class="ships" style="pointer-events: none;">
-					@((MarkupString) content)
+					@((MarkupString)content)
 					@foreach (var iconHtml in getIconHtmlList)
 					{
 						@iconHtml
@@ -35,7 +32,7 @@
 				}
 				else
 				{
-					<div id="other_field" class="ships" style="pointer-events: none;" >
+					<div id="other_field" class="ships" style="pointer-events: none;">
 						@foreach (var iconHtml in iconHtmlList)
 						{
 							@iconHtml
@@ -43,7 +40,7 @@
 					</div>
 				}
 				<p id="results" hidden></p>
-			</div>		
+			</div>
 		</div>
 	</div>
 </div>
