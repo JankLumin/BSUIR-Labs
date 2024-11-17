@@ -4,18 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Share.Models
 {
+
     public class BattleShipGame
     {
         public string Player1Name { get; init; }
         public string Player2Name { get; init; }
-
         private readonly Grid _player1Grid;
         private readonly Grid _player2Grid;
-
         public bool IsPlayer1Turn { get; private set; }
-
         private Dictionary<Action<string>, (Action onPlayer1Lost, Action onPlayer2Lost)>? _eventsDictionary;
 
         public event Action<string>? OnGameEnd
@@ -90,9 +89,7 @@ namespace Share.Models
 
 
         public IEnumerable<IEnumerable<BattleSquare>> Player1Rows => _player1Grid.Rows;
-
         public IEnumerable<IEnumerable<BattleSquare>> Player2Rows => _player2Grid.Rows;
-
 
         public override string ToString()
         {

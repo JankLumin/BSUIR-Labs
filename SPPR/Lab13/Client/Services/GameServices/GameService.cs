@@ -9,7 +9,6 @@ namespace Client.Services
 	public class GameService : IGameService
 	{
 		private readonly HubConnection _connection;
-
 		private readonly IJSRuntime _jsRuntime;
 
 		public GameService(IJSRuntime jsRuntime)
@@ -37,10 +36,12 @@ namespace Client.Services
 		{
 			return _connection.On(method, handler);
 		}
+
 		public IDisposable CreateConnection(string method, Action<string> handler)
 		{
 			return _connection.On(method, handler);
 		}
+
 		public IDisposable CreateConnection(string method, Action<int, int, bool> handler)
 		{
 			return _connection.On(method, handler);
@@ -139,6 +140,7 @@ namespace Client.Services
 				return "";
 			}
 		}
+
 		public async Task AddContent(string username, string content)
 		{
 			try
@@ -151,6 +153,7 @@ namespace Client.Services
 				return;
 			}
 		}
+
 		public async Task<string> GetMove(string game)
 		{
 			try
@@ -164,6 +167,7 @@ namespace Client.Services
 				return "";
 			}
 		}
+		
 		public async Task AddMove(string game, string username)
 		{
 			try

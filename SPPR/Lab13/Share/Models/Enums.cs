@@ -6,7 +6,7 @@ namespace Share.Models
         LeftRight = 0,
         TopDown = 1,
     }
-    
+
     public static class OrientationExtension
     {
         public static Orientation Opposite(this Orientation orientation)
@@ -57,5 +57,4 @@ namespace Share.Models
         Hit = Shotted,
         ShipSunk = Destroyed,
     }
-
 }

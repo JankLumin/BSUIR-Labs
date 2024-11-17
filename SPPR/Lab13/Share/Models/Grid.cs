@@ -6,12 +6,9 @@ namespace Share.Models
     {
         private readonly BattleSquare[,] _field;
         public int ShipCount { get; init; }
-
         private int _shipsAliveCount;
-
         public event Action? OnAllShipDestroyed;
         public event Action<Ship>? OnShipDestroyed;
-
 
         internal Grid(BattleSquare[,] field, int shipCount, Action? onAllShipDestroyed = null, Action<Ship>? onShipDestroyed = null)
         {
@@ -126,6 +123,7 @@ namespace Share.Models
                 return ShotStatus.ShipSunk;
             }
         }
+
         public IEnumerable<IEnumerable<BattleSquare>> Rows
         {
             get
@@ -140,7 +138,6 @@ namespace Share.Models
         }
 
         public BattleSquare[,] Field => (BattleSquare[,])_field.Clone();
-
 
         public BattleSquare this[int x, int y]
         {
@@ -163,7 +160,6 @@ namespace Share.Models
 
             return res;
         }
-
 
         private static void MoveToStart(ref int x, ref int y, Orientation orientation) => _ = orientation == Orientation.LeftRight ? x++ : y++;
         private static void MoveToEnd(ref int x, ref int y, Orientation orientation) => _ = orientation == Orientation.LeftRight ? x-- : y--;
@@ -212,6 +208,5 @@ namespace Share.Models
                 _field[row, col] = modify(_field[row, col]);
             }
         }
-
     }
 }

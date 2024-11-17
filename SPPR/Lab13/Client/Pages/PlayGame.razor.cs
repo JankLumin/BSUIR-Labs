@@ -28,19 +28,14 @@ namespace Client.Pages
         [SupplyParameterFromQuery]
         [Parameter]
         public string GameId { get; set; } = "";
-
         [SupplyParameterFromQuery]
         [Parameter]
         public string Username { get; set; } = "";
-
         private string matrix = "";
         private string content = "";
-
         private bool move = false;
-
         private readonly List<MarkupString> iconHtmlList = new();
         private readonly List<MarkupString> getIconHtmlList = new();
-
         private IDisposable? _change;
         private IDisposable? _finish;
         private IDisposable? _getMove;
@@ -103,6 +98,7 @@ namespace Client.Pages
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Ошибка: {ex.Message}");
             }
         }
 

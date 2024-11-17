@@ -6,12 +6,9 @@ namespace Share.Models
     {
         private Ship? _selectedShip;
         private Dictionary<Point, Ship> _ships;
-
         private event Action? _onAllShipDestroyed;
         private event Action<Ship>? _onShipDestroyed;
-
         private const int DEFAULT_SIZE = 10;
-
         public GridBuilder(int sizeX, int sizeY)
         {
             if (sizeX <= 0)
@@ -32,7 +29,6 @@ namespace Share.Models
 
         public int SizeX { get; init; }
         public int SizeY { get; init; }
-
 
         public GridBuilder AddShip(Ship ship)
         {
@@ -72,10 +68,8 @@ namespace Share.Models
         public GridBuilder RemoveSelectedShip()
         {
             _selectedShip = null;
-
             return this;
         }
-
 
         public GridBuilder Clear()
         {
@@ -234,7 +228,6 @@ namespace Share.Models
                     return s with { OrientedShipPart = (s.OrientedShipPart ?? new()) with { Orientation = ship.Orientation } };
                 }
 
-
                 var squares = new BuilderSquare[SizeY, SizeX];
 
                 foreach (var ship in _ships.Values)
@@ -262,12 +255,10 @@ namespace Share.Models
             }
         }
 
-
         public BuilderSquare this[int x, int y]
         {
             get => Field[x, y];
         }
-
 
         public Grid Build()
         {
@@ -279,7 +270,6 @@ namespace Share.Models
             BuilderSquare[,] builderSquares = Field;
 
             BattleSquare[,] battleSquares = new BattleSquare[SizeY, SizeX];
-
 
             for (int i = 0; i < SizeY; i++)
             {
@@ -312,8 +302,6 @@ namespace Share.Models
 
             return res;
         }
-
-
 
         private static bool IsIntersectedWith(int x, int y, Ship ship)
         {
@@ -351,7 +339,6 @@ namespace Share.Models
             return true;
         }
 
-
         private static void MarkShip(Ship ship, Func<BuilderSquare, BuilderSquare> modify, BuilderSquare[,] grid)
         {
             MarkShip(ship, (s, i) => modify(s), grid);
@@ -377,7 +364,6 @@ namespace Share.Models
                 grid[row, col] = modifyByShipIndex(ship, grid[row, col], i);
             }
         }
-
 
         private void MarkBorder(Ship ship, Func<BuilderSquare, BuilderSquare> modify, BuilderSquare[,] grid)
         {

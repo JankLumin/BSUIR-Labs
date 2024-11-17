@@ -7,7 +7,6 @@ namespace Client.Services
 	public class PageJsInvokeService : IPageJsInvokeService, IDisposable
 	{
 		private readonly IJSRuntime _jsRuntime;
-
 		private bool _inited = false;
 		private bool _disposed = false;
 
@@ -15,7 +14,6 @@ namespace Client.Services
 		{
 			_jsRuntime = jsRuntime;
 		}
-
 
 		public async Task RegisterAsync<T>(T page) where T : class
 		{
@@ -40,7 +38,6 @@ namespace Client.Services
 			var pageRef = await _jsRuntime.InvokeAsync<DotNetObjectReference<T>?>("_unregisterPage", typeof(T).Name);
 			pageRef?.Dispose();
 		}
-
 
 		public async void Dispose()
 		{

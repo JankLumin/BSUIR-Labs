@@ -18,31 +18,24 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Components;
 using System.Drawing;
 
-
 namespace Client.Pages
 {
-
     public partial class Arrangement : IDisposable
     {
         [Inject] private IJSRuntime _jsRuntime { get; init; } = null!;
         [Inject] private NavigationManager _navigationManager { get; init; } = null!;
         [Inject] private IPageJsInvokeService _pageJsInvokeService { get; init; } = null!;
         [Inject] private IGameService _gameService { get; init; } = null!;
-
         [SupplyParameterFromQuery]
         [Parameter]
         public string GameId { get; set; } = "";
-
         [SupplyParameterFromQuery]
         [Parameter]
         public string Username { get; set; } = "";
-
         private IDisposable? _wait;
         private IDisposable? _start;
-
         private int[,]? field = new int[10, 10];
         private GridBuilder _gridBuilder;
-
         private bool _disposed = false;
 
         public Arrangement()
@@ -51,23 +44,26 @@ namespace Client.Pages
         }
 
         [JSInvokable]
-        public async Task AddShip(int x, int y, int size, Orientation orientation)
+        public Task AddShip(int x, int y, int size, Orientation orientation)
         {
             _gridBuilder.AddShip(new Ship(x, y, size, orientation));
             _gridBuilder.SaveSelectedShip();
+            return Task.CompletedTask;
         }
 
         [JSInvokable]
-        public async Task RemoveShip(int x, int y)
+        public Task RemoveShip(int x, int y)
         {
             _gridBuilder.SelectShip(x, y);
             _gridBuilder.RemoveSelectedShip();
+            return Task.CompletedTask;
         }
 
         [JSInvokable]
-        public async Task ClearShips()
+        public Task ClearShips()
         {
             _gridBuilder.Clear();
+            return Task.CompletedTask;
         }
 
         protected async override Task OnInitializedAsync()
@@ -83,7 +79,6 @@ namespace Client.Pages
 
             await _gameService.ConnectToHub();
         }
-
 
         private async Task UpdateFieldAsync()
         {
@@ -128,7 +123,7 @@ namespace Client.Pages
 
             await _gameService.StartGame(GameId, Username, serializedField);
         }
-        
+
         public void Dispose()
         {
             if (_disposed)

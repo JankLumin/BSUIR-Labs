@@ -3,13 +3,9 @@ namespace Share.Models
     public class Ship
     {
         public int X { get; init; }
-
         public int Y { get; init; }
-
         public int Size { get; init; }
-
         public Orientation Orientation { get; init; }
-
 
         public Ship(int x, int y, int size, Orientation orientation)
         {

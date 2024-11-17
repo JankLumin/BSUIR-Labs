@@ -4,11 +4,9 @@ using System.Data.Common;
 
 namespace Server.Hubs
 {
-
     public class GameHub : Hub
     {
         private static readonly Dictionary<string, List<Tuple<string, string, string?>>> GameGroups = new();
-
         private static readonly Dictionary<string, string> FieldContent = new();
         private static readonly Dictionary<string, string> GameMove = new();
 
@@ -121,18 +119,22 @@ namespace Server.Hubs
                 await Clients.Group(game).SendAsync("Change");
             }
         }
+
         public string GetContent(string username)
         {
             return FieldContent[username];
         }
+
         public void AddContent(string username, string content)
         {
             FieldContent.Add(username, content);
         }
+
         public string GetMove(string game)
         {
             return GameMove[game];
         }
+        
         public void AddMove(string game, string username)
         {
             if (!GameMove.ContainsKey(game))

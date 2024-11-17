@@ -3,12 +3,10 @@ using System.Drawing;
 
 namespace Share.Models
 {
-
     public class BattleSquare
     {
         public ShotStatus ShotStatus { get; internal set; }
         public OrientedShipPart? OrientedShipPart { get; private set; }
-
 
         public BattleSquare(ShotStatus shotStatus, OrientedShipPart? orientedShipPart)
         {
