@@ -3,18 +3,20 @@
 @inject NavigationManager NavigationManager
 @inject IGameService GameService
 
+<PageTitle>Results</PageTitle>
+
 <link href="css/style.css" rel="stylesheet">
 
 <div class="battlefield">
 	<div class="welcome-text">
-		<p>Final!!!</p>
+		<p>Финал</p>
 	</div>
 	<div class="start-page-buttons">
 		<div class="users">
-			<p>Win: @Username</p>
+			<p>Победитель: @Username</p>
 		</div>
 		<div style="display: flex; justify-content:space-around;">
-			<input type="button" style="width:150px;" value="To menu" class="start_button" @onclick="toMenu">
+			<input type="button" style="width:150px;" value="Назад в меню" class="start_button" @onclick="toMenu">
 		</div>
 	</div>
 </div>

@@ -50,30 +50,16 @@ namespace Client.Pages
             _gridBuilder = new GridBuilder();
         }
 
-
-        [JSInvokable]
-        public async Task ReturnArrayAsync()
-        {
-            await Console.Out.WriteLineAsync(Username);
-        }
-
-
         [JSInvokable]
         public async Task AddShip(int x, int y, int size, Orientation orientation)
         {
-            await Console.Out.WriteLineAsync((x, y, size, orientation).ToString());
-
             _gridBuilder.AddShip(new Ship(x, y, size, orientation));
             _gridBuilder.SaveSelectedShip();
-
-            await Console.Out.WriteLineAsync(_gridBuilder.ToString());
         }
 
         [JSInvokable]
         public async Task RemoveShip(int x, int y)
         {
-            await Console.Out.WriteLineAsync((x, y).ToString());
-
             _gridBuilder.SelectShip(x, y);
             _gridBuilder.RemoveSelectedShip();
         }
@@ -81,13 +67,8 @@ namespace Client.Pages
         [JSInvokable]
         public async Task ClearShips()
         {
-            await Console.Out.WriteLineAsync("clear");
-
             _gridBuilder.Clear();
         }
-
-
-
 
         protected async override Task OnInitializedAsync()
         {
@@ -108,7 +89,6 @@ namespace Client.Pages
         {
             int[] preField = await _jsRuntime.InvokeAsync<int[]>("getMatrix");
 
-            Console.WriteLine($"{preField.Aggregate("", (c1, c2) => $"{c1}, {c2}")} preField from arragment update field async");
             for (int i = 0; i < 10; i++)
             {
                 for (int j = 0; j < 10; j++)
@@ -148,11 +128,7 @@ namespace Client.Pages
 
             await _gameService.StartGame(GameId, Username, serializedField);
         }
-
-
-
-
-
+        
         public void Dispose()
         {
             if (_disposed)

@@ -3,17 +3,19 @@
 @inject NavigationManager NavigationManager
 @inject IGameService GameService
 
+<PageTitle>Create game</PageTitle>
+
 <link href="css/style.css" rel="stylesheet">
 
 <div class="battlefield">
 	<div class="welcome-text">
-		<p>Create game</p>
+		<p>Создать игру</p>
 	</div>
 
 	<div class="start-page-buttons">
-		<input class="form-control" type="text" placeholder="Game ID" @bind="GameId">
+		<input class="form-control" type="text" placeholder="ID" @bind="GameId">
 		<input class="form-control" type="text" placeholder="Username" @bind="Username">
-		<input type="button" class="start_button" @onclick="(async () => await Create())" value="Create">
+		<input type="button" class="start_button" @onclick="(async () => await Create())" value="Создать">
 	</div>
 </div>
 
@@ -31,10 +33,7 @@
 
 	private async Task Create()
 	{
-		await Console.Out.WriteLineAsync(GameId + "<<<<<< +game_id+");
 		bool result = await GameService.CreateGame(GameId, Username);
-
-		Console.WriteLine("Result is " + result);
 
 		if (result)
 		{

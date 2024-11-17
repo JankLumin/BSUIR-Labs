@@ -68,7 +68,6 @@ namespace Client.Pages
 
             await GameService.ConnectToHub();
             matrix = await GameService.GetOpponentField(GameId, Username);
-            Console.WriteLine($"{matrix} in playGame");
             await JSRuntime.InvokeVoidAsync("GameInit", matrix);
             StateHasChanged();
         }
@@ -76,7 +75,6 @@ namespace Client.Pages
         private async Task Click(MouseEventArgs e)
         {
             string iconHtml = await JSRuntime.InvokeAsync<string>("onOtherField", e);
-            Console.WriteLine(iconHtml + " icon html");
 
             iconHtmlList.Add(new MarkupString(iconHtml));
             StateHasChanged();
@@ -105,7 +103,6 @@ namespace Client.Pages
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
             }
         }
 

@@ -5,8 +5,11 @@
 
 @implements IDisposable
 
-<div class="container">
-	<span class="loader" style="transform: scale(5) translateY(50px);"></span>
+
+<PageTitle>Waiting</PageTitle>
+
+<div class="container" style="text-align: center; margin-top: 50px;">
+	<h1>Ожидание...</h1>
 </div>
 
 @code
@@ -26,8 +29,6 @@
 	{
 
 		await GameService.ConnectToHub();
-
-		await Console.Out.WriteLineAsync($"/arrangement?GameId={GameId}&Username={Username} in waiting");
 
 		_notify = GameService.CreateConnection("Notify", () =>
 		{
