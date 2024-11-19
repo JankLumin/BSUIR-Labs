@@ -1,4 +1,3 @@
-// BACK/swagger.js
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
@@ -30,7 +29,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./routes/*.js"], // Путь к файлам маршрутов с аннотациями Swagger
+  apis: ["./routes/*.js"],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
