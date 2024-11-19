@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 
 class Counter extends Component {
+  // Классовый компонент
   constructor(props) {
     super(props);
-    this.state = { count: 0 };
+    this.state = { count: 0 }; // Работа со state
 
     // Привязка методов к текущему экземпляру
     this.increment = this.increment.bind(this);
@@ -26,9 +27,10 @@ class Counter extends Component {
   render() {
     return (
       <div style={styles.componentContainer}>
-        <h3>Счётчик: {this.state.count}</h3>
+        <h3>Счётчик: {this.state.count}</h3> // State
         <button onClick={this.increment} style={styles.button}>
-          Увеличить
+          {" "}
+          // Обработчик Увеличить
         </button>
         <button onClick={this.decrement} style={styles.button}>
           Уменьшить

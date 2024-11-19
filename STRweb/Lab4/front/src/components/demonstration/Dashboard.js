@@ -33,7 +33,7 @@ const Dashboard = () => {
           ○ Использование компонента внутри Dashboard
           ○ Добавление обработчика события
         */}
-        <ClickButton onClick={handleButtonClick} label="Нажми меня" />
+        <ClickButton onClick={handleButtonClick} label="Нажми меня" /> // Обработчик
       </section>
 
       {/* Классовый компонент Counter */}
@@ -88,7 +88,7 @@ const Dashboard = () => {
         <h2>Компонент UserForm</h2>
         {/*
           ○ Использование классового компонента
-          ○ Применение props (опционально)
+          ○ Применение props
           ○ Добавление обработчиков событий
           ○ Использование компонента внутри Dashboard
           ○ Демонстрация работы со state

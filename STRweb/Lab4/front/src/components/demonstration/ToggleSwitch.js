@@ -10,7 +10,8 @@ const ToggleSwitch = () => {
     <div style={styles.componentContainer}>
       <p>Состояние: {isOn ? "Включено" : "Выключено"}</p>
       <button onClick={toggle} style={styles.button}>
-        Переключить
+        {" "}
+        // Обработчик Переключить
       </button>
     </div>
   );

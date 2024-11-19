@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const ClickButton = ({ onClick, label }) => {
+  // Стрелочная функция
   return (
     <button onClick={onClick} style={styles.button}>
       {label}
@@ -16,7 +17,7 @@ ClickButton.defaultProps = {
 
 // Проверка типов props
 ClickButton.propTypes = {
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired, // Обработчик
   label: PropTypes.string,
 };
 

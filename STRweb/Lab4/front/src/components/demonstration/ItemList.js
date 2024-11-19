@@ -18,6 +18,8 @@ class ItemList extends Component {
           {items.map((item, index) => (
             <li key={index} style={styles.listItem}>
               <button onClick={() => this.handleItemClick(item)} style={styles.button}>
+                {" "}
+                // Обработчик
                 {item}
               </button>
             </li>

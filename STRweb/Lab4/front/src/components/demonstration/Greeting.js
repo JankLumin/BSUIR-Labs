@@ -1,8 +1,8 @@
-// front/src/components/Greeting.js
 import React from "react";
 import PropTypes from "prop-types";
 
 function Greeting({ name, age }) {
+  // Декларативная функция
   return (
     <div style={styles.componentContainer}>
       <h3>Привет, {name}!</h3>
