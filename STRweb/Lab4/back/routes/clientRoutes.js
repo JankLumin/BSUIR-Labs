@@ -1,4 +1,3 @@
-// BACK/routes/clientRoutes.js
 const express = require("express");
 const db = require("../models/Client");
 const router = express.Router();

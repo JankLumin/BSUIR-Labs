@@ -51,7 +51,7 @@ function PropertiesPage() {
 
   const formatTime = (dateString, options) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString("en-GB", options); // Форматирует как HH:MM
+    return date.toLocaleTimeString("en-GB", options);
   };
 
   const handleDelete = async (id) => {

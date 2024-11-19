@@ -1,7 +1,5 @@
-// BACK/models/User.js
 const db = require("../config/db");
 
-// Создаем таблицу пользователей, если она еще не создана
 db.run(
   `CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

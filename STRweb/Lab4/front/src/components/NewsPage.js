@@ -1,4 +1,3 @@
-// front/src/components/NewsPage.js
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../axiosInstance";
 
@@ -32,7 +31,6 @@ function NewsPage() {
               <p className="card-date">
                 <strong>Дата:</strong> {item.date}
               </p>
-              {/* Добавьте кнопки для редактирования/удаления, если необходимо */}
             </div>
           ))}
         </div>

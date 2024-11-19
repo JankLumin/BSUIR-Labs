@@ -1,4 +1,3 @@
-// front/src/components/ProfilePage.js
 import React, { useContext } from "react";
 import { AuthContext } from "../AuthContext";
 
@@ -24,9 +23,7 @@ function ProfilePage() {
         <p>
           <strong>Имя пользователя:</strong> {user.username}
         </p>
-        {/* Добавьте дополнительные поля при необходимости */}
       </div>
-      {/* Добавьте форму для обновления профиля, если необходимо */}
     </div>
   );
 }

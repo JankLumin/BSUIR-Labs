@@ -1,4 +1,3 @@
-// front/src/App.js
 import React, { useContext, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext, AuthProvider } from "./AuthContext";
@@ -71,7 +70,6 @@ function App() {
           }
         />
         <Route path="/auth/logout" element={<LogoutPage />} />
-        {/* Добавьте другие маршруты по необходимости */}
       </Routes>
     </div>
   );

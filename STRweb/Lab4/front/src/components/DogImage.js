@@ -3,11 +3,11 @@ import axios from "axios";
 import { AuthContext } from "../AuthContext";
 
 function DogImage() {
-  const { user } = useContext(AuthContext); // Проверяем авторизацию
+  const { user } = useContext(AuthContext);
   const [dogImageUrl, setDogImageUrl] = useState("");
 
   const fetchDogImage = async () => {
-    if (!user) return; // Блокируем запрос, если пользователь не авторизован
+    if (!user) return;
     try {
       const response = await axios.get("https://dog.ceo/api/breeds/image/random");
       setDogImageUrl(response.data.message);

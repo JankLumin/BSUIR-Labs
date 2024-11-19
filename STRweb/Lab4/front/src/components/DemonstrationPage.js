@@ -1,12 +1,6 @@
-// front/src/components/DemonstrationPage.js
 import React from "react";
 import Dashboard from "./demonstration/Dashboard";
 
-/**
- * Компонент DemonstrationPage
- *
- * Отображает заголовок и компонент Dashboard, содержащий все остальные компоненты с метками.
- */
 function DemonstrationPage() {
   return (
     <div style={styles.pageContainer}>
@@ -17,7 +11,6 @@ function DemonstrationPage() {
   );
 }
 
-// Стили для компонента (опционально)
 const styles = {
   pageContainer: {
     padding: "20px",

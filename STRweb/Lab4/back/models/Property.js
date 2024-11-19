@@ -1,6 +1,5 @@
 const db = require("../config/db");
 
-// Создаем таблицу объектов недвижимости, если она еще не создана
 db.run(
   `CREATE TABLE IF NOT EXISTS properties (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

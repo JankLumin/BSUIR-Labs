@@ -1,7 +1,5 @@
-// BACK/models/News.js
 const db = require("../config/db");
 
-// Создаем таблицу новостей, если она еще не создана
 db.run(
   `CREATE TABLE IF NOT EXISTS news (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

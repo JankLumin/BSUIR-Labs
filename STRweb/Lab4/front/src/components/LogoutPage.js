@@ -1,4 +1,3 @@
-// front/src/components/LogoutPage.js
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
@@ -14,7 +13,6 @@ function LogoutPage() {
         await axiosInstance.get("/auth/logout");
       } catch (error) {
         console.error("Ошибка при выходе:", error);
-        // Можете добавить уведомление для пользователя
       } finally {
         logout();
         navigate("/login");

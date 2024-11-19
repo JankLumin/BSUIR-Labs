@@ -1,6 +1,4 @@
-/* front/src/styles.css */
-
-/* Общие стили для всего приложения */
+/* Общие стили */
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
@@ -55,7 +53,7 @@ nav {
 }
 
 .container {
-  max-width: 1200px; /* Увеличенная ширина для больших экранов */
+  max-width: 1200px;
   margin: 2rem auto;
   padding: 1rem;
   background-color: #fff;
@@ -133,7 +131,7 @@ input[type="submit"]:hover {
   background-color: #c23321;
 }
 
-/* Дополнительные стили для страниц Клиенты, Новости, Недвижимость */
+/* Дополнительные стили */
 
 /* Карточки для элементов */
 .card {
@@ -179,7 +177,7 @@ input[type="submit"]:hover {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 1rem;
-  table-layout: fixed; /* Фиксированная ширина ячеек */
+  table-layout: fixed;
 }
 
 .table th,
@@ -190,8 +188,8 @@ input[type="submit"]:hover {
   font-size: 0.9em;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: normal; /* Разрешает перенос текста */
-  word-wrap: break-word; /* Переносит слова, если они длиннее ячейки */
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 /* Установка ширины для каждой из 10 колонок */
@@ -265,7 +263,7 @@ input[type="submit"]:hover {
   align-self: flex-start;
 }
 
-/* Стили для сообщений об ошибках */
+/* Ошибки */
 .error {
   color: red;
   font-weight: bold;

@@ -1,4 +1,3 @@
-// BACK/routes/newsRoutes.js
 const express = require("express");
 const db = require("../models/News");
 const router = express.Router();

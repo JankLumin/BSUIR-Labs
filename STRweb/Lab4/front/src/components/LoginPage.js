@@ -1,9 +1,8 @@
-// front/src/components/LoginPage.js
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode"; // Исправленный импорт
+import { jwtDecode } from "jwt-decode";
 
 function LoginPage() {
   const [username, setUsername] = useState("");
@@ -24,11 +23,9 @@ function LoginPage() {
       );
       const token = response.data.token;
 
-      // Сохраняем токен
       localStorage.setItem("token", token);
 
-      // Декодируем токен для получения данных пользователя
-      const decoded = jwtDecode(token); // Исправленное использование
+      const decoded = jwtDecode(token);
       login({ username: decoded.username, id: decoded.id });
 
       navigate("/clients");

@@ -1,8 +1,7 @@
-// front/src/components/Navbar.js
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
-import axiosInstance from "../axiosInstance"; // Добавлен импорт axiosInstance
+import axiosInstance from "../axiosInstance";
 import TimeZoneInfo from "./TimeZoneInfo";
 
 function Navbar() {
