@@ -1,4 +1,3 @@
-// front/src/components/Dashboard.js
 import React from "react";
 import Greeting from "./Greeting";
 import ClickButton from "./ClickButton";
@@ -9,16 +8,12 @@ import Timer from "./Timer";
 import UserForm from "./UserForm";
 
 const Dashboard = () => {
-  /**
-   * Обработчик клика для ClickButton
-   */
   const handleButtonClick = () => {
     alert("Кнопка нажата!");
   };
 
   return (
     <div style={styles.dashboardContainer}>
-      {/* Компонент Greeting с переданными props */}
       <section style={styles.section}>
         <h2>Компонент Greeting</h2>
         {/*
@@ -104,7 +99,6 @@ const Dashboard = () => {
   );
 };
 
-// Стили для компонента (опционально)
 const styles = {
   dashboardContainer: {
     display: "flex",

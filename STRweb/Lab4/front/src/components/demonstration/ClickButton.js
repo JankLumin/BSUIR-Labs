@@ -1,16 +1,6 @@
-// front/src/components/ClickButton.js
 import React from "react";
 import PropTypes from "prop-types";
 
-/**
- * Компонент ClickButton
- *
- * Принимает два свойства (props):
- * - onClick: функция-обработчик клика
- * - label: текст кнопки
- *
- * Если label не передан, используется значение по умолчанию.
- */
 const ClickButton = ({ onClick, label }) => {
   return (
     <button onClick={onClick} style={styles.button}>
@@ -30,7 +20,6 @@ ClickButton.propTypes = {
   label: PropTypes.string,
 };
 
-// Стили для компонента (опционально)
 const styles = {
   button: {
     padding: "10px 20px",

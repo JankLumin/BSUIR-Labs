@@ -1,12 +1,5 @@
-// front/src/components/ToggleSwitch.js
 import React, { useState } from "react";
 
-/**
- * Компонент ToggleSwitch
- *
- * Использует хук useState для отслеживания состояния переключателя (isOn).
- * Предоставляет кнопку для переключения состояния.
- */
 const ToggleSwitch = () => {
   const [isOn, setIsOn] = useState(false);
 
@@ -23,7 +16,6 @@ const ToggleSwitch = () => {
   );
 };
 
-// Стили для компонента (опционально)
 const styles = {
   componentContainer: {
     border: "1px solid #ccc",

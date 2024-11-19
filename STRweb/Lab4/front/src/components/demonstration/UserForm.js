@@ -1,12 +1,5 @@
-// front/src/components/UserForm.js
 import React, { Component } from "react";
 
-/**
- * Классовый компонент UserForm
- *
- * Представляет форму для ввода имени и email пользователя.
- * Отслеживает изменения полей ввода и обрабатывает отправку формы.
- */
 class UserForm extends Component {
   constructor(props) {
     super(props);
@@ -77,7 +70,6 @@ class UserForm extends Component {
   }
 }
 
-// Стили для компонента (опционально)
 const styles = {
   componentContainer: {
     border: "1px solid #ccc",

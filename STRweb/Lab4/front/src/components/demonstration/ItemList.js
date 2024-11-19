@@ -1,11 +1,5 @@
-// front/src/components/ItemList.js
 import React, { Component } from "react";
 
-/**
- * Классовый компонент ItemList
- *
- * Отображает список фруктов. При клике на фрукт выводит его название.
- */
 class ItemList extends Component {
   /**
    * Обработчик клика по элементу списка
@@ -34,7 +28,6 @@ class ItemList extends Component {
   }
 }
 
-// Стили для компонента (опционально)
 const styles = {
   componentContainer: {
     border: "1px solid #ccc",

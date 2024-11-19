@@ -1,14 +1,5 @@
-// front/src/components/Counter.js
 import React, { Component } from "react";
 
-/**
- * Классовый компонент Counter
- *
- * Отслеживает состояние счётчика (count) и предоставляет три метода:
- * - increment: увеличивает счётчик на 1
- * - decrement: уменьшает счётчик на 1
- * - reset: сбрасывает счётчик на 0
- */
 class Counter extends Component {
   constructor(props) {
     super(props);
@@ -20,17 +11,14 @@ class Counter extends Component {
     this.reset = this.reset.bind(this);
   }
 
-  // Метод для увеличения счётчика
   increment() {
     this.setState((prevState) => ({ count: prevState.count + 1 }));
   }
 
-  // Метод для уменьшения счётчика
   decrement() {
     this.setState((prevState) => ({ count: prevState.count - 1 }));
   }
 
-  // Метод для сброса счётчика
   reset() {
     this.setState({ count: 0 });
   }
@@ -53,7 +41,6 @@ class Counter extends Component {
   }
 }
 
-// Стили для компонента (опционально)
 const styles = {
   componentContainer: {
     border: "1px solid #ccc",

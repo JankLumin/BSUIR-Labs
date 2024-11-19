@@ -1,14 +1,7 @@
-// front/src/components/Timer.js
 import React, { useState, useEffect } from "react";
 
-/**
- * Компонент Timer
- *
- * Использует хук useState для отслеживания прошедшего времени в секундах.
- * Хук useEffect устанавливает интервал, который обновляет счётчик каждую секунду.
- */
 const Timer = () => {
-  const [seconds, setSeconds] = useState(0);
+  const [seconds, setSeconds] = useState(0); // Хук useState для отслеживания прошедшего времени в секундах.
 
   useEffect(() => {
     // Установка интервала для обновления счётчика каждую секунду
@@ -27,7 +20,6 @@ const Timer = () => {
   );
 };
 
-// Стили для компонента (опционально)
 const styles = {
   componentContainer: {
     border: "1px solid #ccc",
