@@ -1,58 +1,57 @@
-class Person {
-  constructor(lastName, city) {
-    this.lastName = lastName;
-    this.city = city;
-  }
-
-  getLastName() {
-    return this.lastName;
-  }
-
-  setLastName(lastName) {
-    this.lastName = lastName;
-  }
-
-  getCity() {
-    return this.city;
-  }
-
-  setCity(city) {
-    this.city = city;
-  }
+function Person(lastName, city) {
+  this.lastName = lastName;
+  this.city = city;
 }
 
-class Resident extends Person {
-  constructor(lastName, city, street, houseNumber, apartmentNumber) {
-    super(lastName, city);
-    this.street = street;
-    this.houseNumber = houseNumber;
-    this.apartmentNumber = apartmentNumber;
-  }
+Person.prototype.getLastName = function () {
+  return this.lastName;
+};
 
-  getStreet() {
-    return this.street;
-  }
+Person.prototype.setLastName = function (lastName) {
+  this.lastName = lastName;
+};
 
-  setStreet(street) {
-    this.street = street;
-  }
+Person.prototype.getCity = function () {
+  return this.city;
+};
 
-  getHouseNumber() {
-    return this.houseNumber;
-  }
+Person.prototype.setCity = function (city) {
+  this.city = city;
+};
 
-  setHouseNumber(houseNumber) {
-    this.houseNumber = houseNumber;
-  }
-
-  getApartmentNumber() {
-    return this.apartmentNumber;
-  }
-
-  setApartmentNumber(apartmentNumber) {
-    this.apartmentNumber = apartmentNumber;
-  }
+function Resident(lastName, city, street, houseNumber, apartmentNumber) {
+  Person.call(this, lastName, city);
+  this.street = street;
+  this.houseNumber = houseNumber;
+  this.apartmentNumber = apartmentNumber;
 }
+
+Resident.prototype = Object.create(Person.prototype);
+Resident.prototype.constructor = Resident;
+
+Resident.prototype.getStreet = function () {
+  return this.street;
+};
+
+Resident.prototype.setStreet = function (street) {
+  this.street = street;
+};
+
+Resident.prototype.getHouseNumber = function () {
+  return this.houseNumber;
+};
+
+Resident.prototype.setHouseNumber = function (houseNumber) {
+  this.houseNumber = houseNumber;
+};
+
+Resident.prototype.getApartmentNumber = function () {
+  return this.apartmentNumber;
+};
+
+Resident.prototype.setApartmentNumber = function (apartmentNumber) {
+  this.apartmentNumber = apartmentNumber;
+};
 
 let residents = [];
 
@@ -70,7 +69,7 @@ function addResident() {
 
 function displayResidents() {
   const list = document.getElementById("residentsList");
-  list.innerHTML = ""; // очищаем список перед обновлением
+  list.innerHTML = "";
   residents.forEach((resident, index) => {
     const listItem = document.createElement("li");
     listItem.textContent = `${resident.getLastName()} из ${resident.getCity()}, ${resident.getStreet()} дом ${resident.getHouseNumber()}, кв. ${resident.getApartmentNumber()}`;
@@ -79,7 +78,7 @@ function displayResidents() {
 }
 
 function findMatchingResidents() {
-  let matches = []; // Массив для хранения всех совпадений
+  let matches = [];
 
   for (let i = 0; i < residents.length; i++) {
     for (let j = i + 1; j < residents.length; j++) {
@@ -89,7 +88,6 @@ function findMatchingResidents() {
         residents[i].houseNumber === residents[j].houseNumber &&
         residents[i].apartmentNumber === residents[j].apartmentNumber
       ) {
-        // Добавляем совпадение в массив
         matches.push(
           `${residents[i].getLastName()} и ${residents[
             j
