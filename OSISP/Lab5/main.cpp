@@ -196,4 +196,9 @@ int main(int argc, char *argv[])
     WSACleanup();
     return 0;
 }
+
+
+
+
+
 // g++ -std=c++17 -finput-charset=UTF-8 main.cpp -o build/main -lws2_32 -liphlpapi -licmp
