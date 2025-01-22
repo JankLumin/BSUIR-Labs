@@ -2,6 +2,8 @@
 
 ### [Шестой семестр (2024)](https://github.com/JankLumin/BSUIR-Labs/tree/semester-6)
 
+- [МОиУ](https://github.com/JankLumin/BSUIR-Labs/tree/semester-6/MOiU) (Туровец Н.О.)
+
 ### [Пятый семестр (2024)](https://github.com/JankLumin/BSUIR-Labs/tree/semester-5)
 
 - [АВС](https://github.com/JankLumin/BSUIR-Labs/tree/semester-5/AVS) (Калиновская А.А.)
