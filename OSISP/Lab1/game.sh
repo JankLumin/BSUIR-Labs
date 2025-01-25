@@ -96,7 +96,7 @@ generate_new_number() {
             fi
         done
     done
-    
+
     if [ ${#empty[@]} -ne 0 ]; then
         local rand_index=$((RANDOM % ${#empty[@]}))
         local pos=(${empty[$rand_index]//,/ })
@@ -135,14 +135,14 @@ shift_and_merge() {
     shift
     local line=("$@")
     merged_line_ref=()
-    
+
     local new_line=()
     for num in "${line[@]}"; do
         if [ "$num" -ne 0 ]; then
             new_line+=("$num")
         fi
     done
-    
+
     local i=0
     while [ $i -lt ${#new_line[@]} ]; do
         if [ $((i + 1)) -lt ${#new_line[@]} ] && [ "${new_line[$i]}" -eq "${new_line[$i+1]}" ]; then
@@ -155,7 +155,7 @@ shift_and_merge() {
             i=$((i + 1))
         fi
     done
-    
+
     while [ ${#merged_line_ref[@]} -lt 4 ]; do
         merged_line_ref+=(0)
     done
@@ -254,10 +254,10 @@ generate_new_number
 while true; do
     display_grid
     echo "W/A/S/D для управления, Ctrl+C для выхода"
-    
+
     read -n 1 -s key
     key=${key,,}
-    
+
     case "$key" in
         w)
             move_up
@@ -276,11 +276,11 @@ while true; do
             continue
         ;;
     esac
-    
+
     if [ "$moved" -eq 1 ]; then
         generate_new_number
     fi
-    
+
     check_game_over
     if [ $? -eq 0 ]; then
         display_grid
@@ -291,7 +291,7 @@ while true; do
         echo "Таблица рекордов сохранена в '$leaderboard_file'."
         exit
     fi
-    
+
     moved=0
-    
+
 done
