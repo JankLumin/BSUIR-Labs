@@ -1,5 +1,6 @@
 package com.example.calculator.ui
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
@@ -19,45 +20,78 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.calculator.ui.theme.*
-import com.example.calculator.ui.theme.CalculatorTheme
+import androidx.compose.foundation.text.BasicTextField
 
 @Composable
-fun CalculatorScreen() {
-    val backgroundColor = CalcBackground
+fun CalculatorScreen(viewModel: CalculatorViewModel = CalculatorViewModel()) {
+    val uiState by viewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor)
+            .background(CalcBackground)
             .padding(20.dp)
     ) {
-        DisplayField("1234+1234+1234")
+        DisplayField(
+            displayValue = uiState.displayValue,
+            onValueChange = { newValue ->
+                viewModel.onDirectInputChange(newValue)
+            }
+        )
 
-        AdditionalDisplayField("2468")
+        AdditionalDisplayField(uiState.subDisplayValue)
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TopActionBar()
+        TopActionBar(
+            onDelete = { viewModel.onButtonClick("⌫️") }
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
         LightDivider()
 
         Spacer(modifier = Modifier.weight(1f))
 
-        BasicCalcPad()
+        BasicCalcPad(
+            onButtonClick = { text -> viewModel.onButtonClick(text) }
+        )
     }
 }
 
 @Composable
-fun DisplayField(displayValue: String) {
+fun DisplayField(
+    displayValue: String,
+    onValueChange: (String) -> Unit
+) {
+    var textFieldValue by remember {
+        mutableStateOf(
+            TextFieldValue(
+                text = displayValue,
+                selection = TextRange(displayValue.length)
+            )
+        )
+    }
+
+    LaunchedEffect(displayValue) {
+        if (textFieldValue.text != displayValue) {
+            textFieldValue = textFieldValue.copy(
+                text = displayValue,
+                selection = TextRange(displayValue.length)
+            )
+        }
+    }
+
     val textSize = when {
-        displayValue.length > 18 -> 32.sp
+        displayValue.length > 18 -> 30.sp
         displayValue.length > 12 -> 40.sp
         else -> 48.sp
     }
@@ -68,47 +102,71 @@ fun DisplayField(displayValue: String) {
             .height(150.dp)
             .padding(20.dp)
             .verticalScroll(rememberScrollState()),
-        contentAlignment = Alignment.TopEnd
+        contentAlignment = Alignment.BottomEnd
     ) {
-        Column(
-            horizontalAlignment = Alignment.End,
-            verticalArrangement = Arrangement.Top
-        ) {
-            Text(
-                text = displayValue,
+        BasicTextField(
+            value = textFieldValue,
+            onValueChange = { newValue ->
+                textFieldValue = newValue
+                onValueChange(newValue.text)
+            },
+            textStyle = TextStyle(
                 fontSize = textSize,
                 fontWeight = FontWeight.Normal,
                 color = DigitTextColor,
                 textAlign = TextAlign.End,
-                softWrap = true,
                 lineHeight = 56.sp
-            )
-        }
-    }
-}
-
-@Composable
-fun AdditionalDisplayField(displayValue: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .padding(horizontal = 20.dp),
-        contentAlignment = Alignment.CenterEnd
-    ) {
-        Text(
-            text = displayValue,
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Normal,
-            color = DigitTextColor.copy(alpha = 0.4f),
-            textAlign = TextAlign.End,
-            maxLines = 1
+            ),
+            cursorBrush = androidx.compose.ui.graphics.SolidColor(Color.White),
+            decorationBox = { innerTextField ->
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.BottomEnd
+                ) {
+                    if (textFieldValue.text.isEmpty()) {
+                        Text(
+                            text = "",
+                            fontSize = textSize,
+                            fontWeight = FontWeight.Normal,
+                            color = DigitTextColor.copy(alpha = 0.4f),
+                            textAlign = TextAlign.End,
+                            lineHeight = 56.sp
+                        )
+                    }
+                    innerTextField()
+                }
+            },
+            modifier = Modifier.fillMaxSize()
         )
     }
 }
 
+
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun TopActionBar() {
+fun AdditionalDisplayField(displayValue: String) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .padding(horizontal = 20.dp),
+            contentAlignment = Alignment.CenterEnd
+        ) {
+            Text(
+                text = displayValue,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Normal,
+                color = DigitTextColor.copy(alpha = 0.4f),
+                textAlign = TextAlign.End,
+                maxLines = 1
+            )
+        }
+}
+
+@Composable
+fun TopActionBar(
+    onDelete: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -119,21 +177,20 @@ fun TopActionBar() {
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             ActionPlaceholderButton("🕒")
-            ActionPlaceholderButton("🔢")
         }
-        ActionPlaceholderButton("⌫️")
+        ActionPlaceholderButton("⌫️", onClick = onDelete)
     }
 }
 
 @Composable
-fun ActionPlaceholderButton(label: String) {
+fun ActionPlaceholderButton(label: String, onClick: () -> Unit = {}) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .size(50.dp)
             .clip(CircleShape)
             .clickable(
-                onClick = { /* TODO */ },
+                onClick = onClick,
                 indication = LocalIndication.current,
                 interactionSource = remember { MutableInteractionSource() }
             )
@@ -148,7 +205,9 @@ fun ActionPlaceholderButton(label: String) {
 }
 
 @Composable
-fun BasicCalcPad() {
+fun BasicCalcPad(
+    onButtonClick: (String) -> Unit
+) {
     val buttons = listOf(
         "C", "( )", "%", "÷",
         "7", "8", "9", "×",
@@ -170,7 +229,7 @@ fun BasicCalcPad() {
             CalculatorButton(
                 text = btnText,
                 modifier = modifier,
-                onClick = { /* TODO: Обработка нажатия */ }
+                onClick = { onButtonClick(btnText) }
             )
         }
     }
@@ -180,45 +239,46 @@ fun BasicCalcPad() {
 fun CalculatorButton(
     text: String,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit
 ) {
     val backgroundColor: Color
     val contentColor: Color
 
-    when {
-        text == "C" -> {
+    when (text) {
+        "C" -> {
             backgroundColor = ClearButtonBackground
             contentColor = ClearButtonText
         }
-        text == "=" -> {
+        "=" -> {
             backgroundColor = EqualsButtonBackground
             contentColor = EqualsButtonText
         }
-        text in listOf("÷", "×", "−", "+", "%", "=") -> {
+        "÷", "×", "−", "+", "%", "=" -> {
             backgroundColor = ButtonGray
             contentColor = SymbolTextColor
         }
-        text == "( )" -> {
+        "( )" -> {
             backgroundColor = ButtonGray
             contentColor = SymbolTextColor
         }
-        text == "+/-" || text == "," -> {
-            backgroundColor = ButtonGray
-            contentColor = DigitTextColor
-        }
-        text.all { it.isDigit() } -> {
+        "+/-", "," -> {
             backgroundColor = ButtonGray
             contentColor = DigitTextColor
         }
         else -> {
-            backgroundColor = ButtonGray
-            contentColor = Color.White
+            if (text.all { it.isDigit() }) {
+                backgroundColor = ButtonGray
+                contentColor = DigitTextColor
+            } else {
+                backgroundColor = ButtonGray
+                contentColor = Color.White
+            }
         }
     }
 
     val fontSize = when (text) {
         "( )" -> 32.sp
-        in listOf("%", "÷", "×", "−", "+", "=") -> 50.sp
+        in listOf("%", "÷", "×", "−", "+", "=") -> 48.sp
         else -> 42.sp
     }
 
@@ -228,7 +288,7 @@ fun CalculatorButton(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .clip(CircleShape)
-            .background(color = animatedBgColor, shape = CircleShape)
+            .background(animatedBgColor)
             .clickable(
                 onClick = onClick,
                 indication = LocalIndication.current,
@@ -257,7 +317,6 @@ fun LightDivider() {
 @Preview(showBackground = true)
 @Composable
 fun CalculatorScreenPreview() {
-    CalculatorTheme {
-        CalculatorScreen()
-    }
+    val fakeVM = CalculatorViewModel()
+    CalculatorScreen(fakeVM)
 }

@@ -5,7 +5,6 @@ import androidx.compose.ui.graphics.Color
 val CalcBackground = Color(0xFF010101)
 
 val DigitTextColor = Color(0xFFE5BFCC)
-
 val SymbolTextColor = Color(0xFFB6A4BE)
 
 val ButtonGray = Color(0xFF191013)
