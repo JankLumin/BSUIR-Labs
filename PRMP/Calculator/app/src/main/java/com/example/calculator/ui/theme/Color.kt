@@ -2,15 +2,20 @@ package com.example.calculator.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val CalcBackground = Color(0xFF010101)
+val DarkCalcBackground = Color(0xFF010101)
+val DarkDigitTextColor = Color(0xFFE5BFCC)
+val DarkSymbolTextColor = Color(0xFFB6A4BE)
+val DarkButtonGray = Color(0xFF191013)
+val DarkEqualsButtonBackground = Color(0xFF6E537C)
+val DarkEqualsButtonText = Color(0xFFFAF9F7)
+val DarkClearButtonBackground = Color(0xFF191013)
+val DarkClearButtonText = Color(0xFFDC2A36)
 
-val DigitTextColor = Color(0xFFE5BFCC)
-val SymbolTextColor = Color(0xFFB6A4BE)
-
-val ButtonGray = Color(0xFF191013)
-
-val EqualsButtonBackground = Color(0xFF6E537C)
-val EqualsButtonText = Color(0xFFFAF9F7)
-
-val ClearButtonBackground = Color(0xFF191013)
-val ClearButtonText = Color(0xFFDC2A36)
+val LightCalcBackground = Color(0xFFF7F7F7)
+val LightDigitTextColor = Color(0xFF000000)
+val LightSymbolTextColor = Color(0xFFF78D29)
+val LightButtonGray = Color(0xFFFFFFFF)
+val LightEqualsButtonBackground = Color(0xFFFF8615)
+val LightEqualsButtonText = Color(0xFFFFFFFF)
+val LightClearButtonBackground = Color(0xFFFFFFFF)
+val LightClearButtonText = Color(0xFFF78D29)

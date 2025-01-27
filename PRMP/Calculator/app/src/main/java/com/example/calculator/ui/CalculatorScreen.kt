@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
@@ -40,11 +41,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun CalculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
-
+    val colors = LocalCalculatorColors.current
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
-            .background(CalcBackground)
+            .background(colors.calcBackground)
             .padding(20.dp)
     ) {
         val screenHeight = maxHeight
@@ -111,6 +112,7 @@ fun DisplayField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val colors = LocalCalculatorColors.current
     var textFieldValue by remember {
         mutableStateOf(
             TextFieldValue(
@@ -142,18 +144,16 @@ fun DisplayField(
     ) {
         BasicTextField(
             value = textFieldValue,
-            onValueChange = { newValue ->
-                textFieldValue = newValue
-                onValueChange(newValue.text)
-            },
+            onValueChange = { },
             textStyle = TextStyle(
                 fontSize = textSize,
                 fontWeight = FontWeight.Normal,
-                color = DigitTextColor,
+                color = colors.digitTextColor,
                 textAlign = TextAlign.End,
                 lineHeight = 56.sp
             ),
-            cursorBrush = androidx.compose.ui.graphics.SolidColor(Color.White),
+            cursorBrush = androidx.compose.ui.graphics.SolidColor(Color.Transparent),
+            readOnly = true,
             decorationBox = { innerTextField ->
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -164,7 +164,7 @@ fun DisplayField(
                             text = "",
                             fontSize = textSize,
                             fontWeight = FontWeight.Normal,
-                            color = DigitTextColor.copy(alpha = 0.4f),
+                            color = colors.digitTextColor.copy(alpha = 0.4f),
                             textAlign = TextAlign.End,
                             lineHeight = 56.sp
                         )
@@ -172,10 +172,13 @@ fun DisplayField(
                     innerTextField()
                 }
             },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .focusable(false)
         )
     }
 }
+
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -184,11 +187,12 @@ fun AdditionalDisplayField(displayValue: String, modifier: Modifier = Modifier) 
         modifier = modifier,
         contentAlignment = Alignment.CenterEnd
     ) {
+        val colors = LocalCalculatorColors.current
         Text(
             text = displayValue,
             fontSize = 30.sp,
             fontWeight = FontWeight.Normal,
-            color = DigitTextColor.copy(alpha = 0.4f),
+            color = colors.digitTextColor.copy(alpha = 0.4f),
             textAlign = TextAlign.End,
             maxLines = 1
         )
@@ -274,26 +278,27 @@ fun CalculatorButton(
     onClick: () -> Unit,
     modifier: Modifier
 ) {
+    val colors = LocalCalculatorColors.current
     val backgroundColor: Color
     val contentColor: Color
 
     backgroundColor = when (text) {
-        "C" -> ClearButtonBackground
-        "=" -> EqualsButtonBackground
-        "÷", "×", "−", "+", "%" -> ButtonGray
-        "( )" -> ButtonGray
-        "+/-", "," -> ButtonGray
-        else -> ButtonGray
+        "C" -> colors.clearButtonBackground
+        "=" -> colors.equalsButtonBackground
+        "÷", "×", "−", "+", "%" -> colors.buttonGray
+        "( )" -> colors.buttonGray
+        "+/-", "," -> colors.buttonGray
+        else -> colors.buttonGray
     }
 
     contentColor = when (text) {
-        "C" -> ClearButtonText
-        "=" -> EqualsButtonText
-        "÷", "×", "−", "+", "%" -> SymbolTextColor
-        "( )" -> SymbolTextColor
-        "+/-", "," -> DigitTextColor
+        "C" -> colors.clearButtonText
+        "=" -> colors.equalsButtonText
+        "÷", "×", "−", "+", "%" -> colors.symbolTextColor
+        "( )" -> colors.symbolTextColor
+        "+/-", "," -> colors.digitTextColor
         else -> {
-            if (text.all { it.isDigit() }) DigitTextColor else Color.White
+            if (text.all { it.isDigit() }) colors.digitTextColor else Color.White
         }
     }
 
@@ -318,7 +323,7 @@ fun CalculatorButton(
             .clickable(
                 onClick = { onClick() },
                 interactionSource = interactionSource,
-                indication = LocalIndication.current,
+                indication = null,
             )
             .semantics { contentDescription = "Button $text" }
     ) {
@@ -329,6 +334,11 @@ fun CalculatorButton(
                 .scale(scale)
                 .clip(CircleShape)
                 .background(animatedBgColor)
+                .clickable(
+                    onClick = { onClick() },
+                    interactionSource = interactionSource,
+                    indication = LocalIndication.current,
+                )
         ) {
             Text(
                 text = text,
