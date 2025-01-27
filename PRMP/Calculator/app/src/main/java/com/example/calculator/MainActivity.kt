@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import com.example.calculator.ui.CalculatorScreen
 import com.example.calculator.ui.CalculatorViewModel
 import com.example.calculator.ui.theme.CalculatorTheme
-import android.util.Log
 
 class MainActivity : ComponentActivity() {
 

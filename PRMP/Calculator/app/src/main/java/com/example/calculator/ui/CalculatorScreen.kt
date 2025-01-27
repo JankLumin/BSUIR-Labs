@@ -2,16 +2,19 @@ package com.example.calculator.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -19,7 +22,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -28,9 +34,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.calculator.ui.theme.*
-import androidx.compose.foundation.text.BasicTextField
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CalculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
@@ -42,11 +48,14 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
             .padding(20.dp)
     ) {
         val screenHeight = maxHeight
+        val screenWeight = maxWidth
 
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom
         ) {
-            PercentSpacer(0.01f)
+            Spacer(modifier = Modifier.weight(1f))
+
             DisplayField(
                 displayValue = uiState.displayValue,
                 onValueChange = { newValue ->
@@ -54,9 +63,10 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(screenHeight * 0.19f)
+                    .height(screenHeight * 0.16f)
             )
-            PercentSpacer(0.05f)
+
+            Spacer(modifier = Modifier.height(screenHeight * 0.01f))
 
             AdditionalDisplayField(
                 displayValue = uiState.subDisplayValue,
@@ -65,7 +75,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
                     .height(screenHeight * 0.05f)
             )
 
-            PercentSpacer(0.03f)
+            Spacer(modifier = Modifier.height(screenHeight * 0.01f))
 
             TopActionBar(
                 onDelete = { viewModel.onButtonClick("⌫️") },
@@ -74,7 +84,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
                     .height(screenHeight * 0.08f)
             )
 
-            PercentSpacer(0.01f)
+            Spacer(modifier = Modifier.height(screenHeight * 0.01f))
 
             LightDivider(
                 modifier = Modifier
@@ -82,27 +92,18 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
                     .height(1.dp)
             )
 
-            PercentSpacer(0.03f)
+            Spacer(modifier = Modifier.height(screenHeight * 0.01f))
 
             BasicCalcPad(
                 onButtonClick = { text -> viewModel.onButtonClick(text) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(screenHeight * 0.7f)
+                    .height((screenWeight * 101 / 80))
             )
         }
     }
 }
 
-@Composable
-fun PercentSpacer(percentage: Float) {
-    BoxWithConstraints {
-        val screenHeight = maxHeight
-        Spacer(
-            modifier = Modifier.height(screenHeight * percentage)
-        )
-    }
-}
 
 @Composable
 fun DisplayField(
@@ -248,60 +249,51 @@ fun BasicCalcPad(
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(4),
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(20.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        modifier = modifier
+            .fillMaxSize(),
+        horizontalArrangement = Arrangement.spacedBy(0.dp),
+        verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
-        items(buttons) { btnText ->
+        items(buttons.size) { index ->
+            val btnText = buttons[index]
             CalculatorButton(
                 text = btnText,
+                onClick = { onButtonClick(btnText) },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
-                onClick = { onButtonClick(btnText) }
+                    .aspectRatio(1f)
+                    .fillMaxSize()
             )
         }
     }
 }
 
+
 @Composable
 fun CalculatorButton(
     text: String,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier
 ) {
     val backgroundColor: Color
     val contentColor: Color
 
-    when (text) {
-        "C" -> {
-            backgroundColor = ClearButtonBackground
-            contentColor = ClearButtonText
-        }
-        "=" -> {
-            backgroundColor = EqualsButtonBackground
-            contentColor = EqualsButtonText
-        }
-        "÷", "×", "−", "+", "%" -> {
-            backgroundColor = ButtonGray
-            contentColor = SymbolTextColor
-        }
-        "( )" -> {
-            backgroundColor = ButtonGray
-            contentColor = SymbolTextColor
-        }
-        "+/-", "," -> {
-            backgroundColor = ButtonGray
-            contentColor = DigitTextColor
-        }
+    backgroundColor = when (text) {
+        "C" -> ClearButtonBackground
+        "=" -> EqualsButtonBackground
+        "÷", "×", "−", "+", "%" -> ButtonGray
+        "( )" -> ButtonGray
+        "+/-", "," -> ButtonGray
+        else -> ButtonGray
+    }
+
+    contentColor = when (text) {
+        "C" -> ClearButtonText
+        "=" -> EqualsButtonText
+        "÷", "×", "−", "+", "%" -> SymbolTextColor
+        "( )" -> SymbolTextColor
+        "+/-", "," -> DigitTextColor
         else -> {
-            if (text.all { it.isDigit() }) {
-                backgroundColor = ButtonGray
-                contentColor = DigitTextColor
-            } else {
-                backgroundColor = ButtonGray
-                contentColor = Color.White
-            }
+            if (text.all { it.isDigit() }) DigitTextColor else Color.White
         }
     }
 
@@ -313,24 +305,38 @@ fun CalculatorButton(
 
     val animatedBgColor by animateColorAsState(targetValue = backgroundColor)
 
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.9f else 1f,
+        animationSpec = tween(durationMillis = 100)
+    )
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .clip(CircleShape)
-            .background(animatedBgColor)
             .clickable(
-                onClick = onClick,
+                onClick = { onClick() },
+                interactionSource = interactionSource,
                 indication = LocalIndication.current,
-                interactionSource = remember { MutableInteractionSource() }
             )
-            .padding(8.dp)
+            .semantics { contentDescription = "Button $text" }
     ) {
-        Text(
-            text = text,
-            fontSize = fontSize,
-            fontWeight = FontWeight.Normal,
-            color = contentColor
-        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(60.dp)
+                .scale(scale)
+                .clip(CircleShape)
+                .background(animatedBgColor)
+        ) {
+            Text(
+                text = text,
+                fontSize = fontSize,
+                fontWeight = FontWeight.Normal,
+                color = contentColor
+            )
+        }
     }
 }
 

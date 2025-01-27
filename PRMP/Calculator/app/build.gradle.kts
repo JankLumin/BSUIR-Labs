@@ -57,6 +57,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("androidx.activity:activity-compose:1.10.0")
     implementation("com.google.android.material:material:1.12.0")
+    implementation("androidx.compose.animation:animation:1.7.6")
+    implementation("androidx.compose.material:material-icons-core:1.7.6")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
