@@ -14,7 +14,7 @@ data class CalculatorState(
 
 class CalculatorViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow(CalculatorState())
+    internal val _uiState = MutableStateFlow(CalculatorState())
     val uiState = _uiState.asStateFlow()
 
     private var lastBinaryOp: String? = null
@@ -133,7 +133,7 @@ class CalculatorViewModel : ViewModel() {
     private fun onPlusMinus() {
         val st = _uiState.value
         if (st.isResult) {
-            _uiState.value = CalculatorState(displayValue = "(-", isResult = false)
+            _uiState.value = st.copy(displayValue = "(-", isResult = false)
             return
         }
         val expr = st.displayValue
@@ -220,14 +220,12 @@ class CalculatorViewModel : ViewModel() {
         if (symbol.isEmpty()) return null
 
         if (expr.isEmpty()) {
-            if (symbol.first().isDigit()) {
-                return symbol
-            } else if (symbol == "-") {
-                return symbol
-            } else if (symbol == ".") {
-                return "0."
+            return when {
+                symbol.first().isDigit() -> symbol
+                symbol == "-" -> symbol
+                symbol == "." -> "0."
+                else -> null
             }
-            return null
         }
 
         val lastCh = expr.last()
@@ -302,7 +300,6 @@ class CalculatorViewModel : ViewModel() {
             if (level < 0) level = 0
 
             if (level == 0 && c in listOf('+', '-', '*', '/')) {
-                // проверка на унарный минус
                 if (c == '-' && (i == 0 || expr[i - 1].isOperatorChar() || expr[i - 1] == '(')) {
                     continue
                 }

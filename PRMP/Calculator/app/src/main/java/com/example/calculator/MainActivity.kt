@@ -10,10 +10,10 @@ import androidx.compose.ui.Modifier
 import com.example.calculator.ui.CalculatorScreen
 import com.example.calculator.ui.CalculatorViewModel
 import com.example.calculator.ui.theme.CalculatorTheme
+import android.util.Log
 
 class MainActivity : ComponentActivity() {
 
-    // Один экземпляр ViewModel на всё время жизни Activity
     private val viewModel by viewModels<CalculatorViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +21,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             CalculatorTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) {
-                    // Передаём ViewModel в экран (не создаём его внутри)
                     CalculatorScreen(viewModel)
                 }
             }
