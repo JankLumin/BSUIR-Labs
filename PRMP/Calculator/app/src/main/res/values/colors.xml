@@ -1,32 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Light Theme Colors -->
-    <color name="primary">#6200EE</color>
-    <color name="on_primary">#FFFFFF</color>
-    <color name="secondary">#03DAC6</color>
-    <color name="on_secondary">#000000</color>
-    <color name="background">#FFFFFF</color>
-    <color name="on_background">#000000</color>
-    <color name="surface">#FFFFFF</color>
-    <color name="on_surface">#000000</color>
-
-    <!-- Dark Theme Colors -->
-    <color name="dark_primary">#BB86FC</color>
-    <color name="dark_on_primary">#000000</color>
-    <color name="dark_secondary">#03DAC6</color>
-    <color name="dark_on_secondary">#000000</color>
-    <color name="dark_background">#121212</color>
-    <color name="dark_on_background">#FFFFFF</color>
-    <color name="dark_surface">#121212</color>
-    <color name="dark_on_surface">#FFFFFF</color>
-
-    <!-- Calculator Specific Colors -->
-    <color name="calc_background">#010101</color>
-    <color name="digit_text_color">#E5BFCC</color>
-    <color name="symbol_text_color">#B6A4BE</color>
-    <color name="button_gray">#191013</color>
-    <color name="equals_button_background">#6E537C</color>
-    <color name="equals_button_text">#FAF9F7</color>
-    <color name="clear_button_background">#191013</color>
-    <color name="clear_button_text">#DC2A36</color>
+    <color name="calc_background">#F7F7F7</color>
 </resources>
