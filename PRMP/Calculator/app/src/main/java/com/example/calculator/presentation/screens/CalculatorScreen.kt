@@ -1,4 +1,4 @@
-package com.example.calculator.ui
+package com.example.calculator.presentation.screens
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
@@ -34,14 +34,17 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.calculator.ui.theme.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.calculator.presentation.CalculatorViewModel
+import com.example.calculator.presentation.theme.LocalCalculatorColors
+import com.example.calculator.utils.rememberVibrationHelper
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun CalculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
+fun calculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     val colors = LocalCalculatorColors.current
+
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
@@ -57,11 +60,8 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
         ) {
             Spacer(modifier = Modifier.weight(1f))
 
-            DisplayField(
+            displayField(
                 displayValue = uiState.displayValue,
-                onValueChange = { newValue ->
-                    viewModel.onDirectInputChange(newValue)
-                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(screenHeight * 0.16f)
@@ -69,7 +69,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(screenHeight * 0.01f))
 
-            AdditionalDisplayField(
+            additionalDisplayField(
                 displayValue = uiState.subDisplayValue,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -78,7 +78,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(screenHeight * 0.01f))
 
-            TopActionBar(
+            topActionBar(
                 onDelete = { viewModel.onButtonClick("⌫️") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -87,7 +87,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(screenHeight * 0.01f))
 
-            LightDivider(
+            lightDivider(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(1.dp)
@@ -95,7 +95,7 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(screenHeight * 0.01f))
 
-            BasicCalcPad(
+            basicCalcPad(
                 onButtonClick = { text -> viewModel.onButtonClick(text) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -105,11 +105,9 @@ fun CalculatorScreen(viewModel: CalculatorViewModel = viewModel()) {
     }
 }
 
-
 @Composable
-fun DisplayField(
+fun displayField(
     displayValue: String,
-    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val colors = LocalCalculatorColors.current
@@ -179,15 +177,14 @@ fun DisplayField(
     }
 }
 
-
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AdditionalDisplayField(displayValue: String, modifier: Modifier = Modifier) {
+fun additionalDisplayField(displayValue: String, modifier: Modifier = Modifier) {
+    val colors = LocalCalculatorColors.current
     Box(
         modifier = modifier,
         contentAlignment = Alignment.CenterEnd
     ) {
-        val colors = LocalCalculatorColors.current
         Text(
             text = displayValue,
             fontSize = 30.sp,
@@ -200,7 +197,7 @@ fun AdditionalDisplayField(displayValue: String, modifier: Modifier = Modifier) 
 }
 
 @Composable
-fun TopActionBar(
+fun topActionBar(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -210,14 +207,14 @@ fun TopActionBar(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            ActionPlaceholderButton("🕒")
+            actionPlaceholderButton("🕒")
         }
-        ActionPlaceholderButton("⌫️", onClick = onDelete)
+        actionPlaceholderButton("⌫️", onClick = onDelete)
     }
 }
 
 @Composable
-fun ActionPlaceholderButton(label: String, onClick: () -> Unit = {}) {
+fun actionPlaceholderButton(label: String, onClick: () -> Unit = {}) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -239,7 +236,7 @@ fun ActionPlaceholderButton(label: String, onClick: () -> Unit = {}) {
 }
 
 @Composable
-fun BasicCalcPad(
+fun basicCalcPad(
     onButtonClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -260,7 +257,7 @@ fun BasicCalcPad(
     ) {
         items(buttons.size) { index ->
             val btnText = buttons[index]
-            CalculatorButton(
+            calculatorButton(
                 text = btnText,
                 onClick = { onButtonClick(btnText) },
                 modifier = Modifier
@@ -271,18 +268,16 @@ fun BasicCalcPad(
     }
 }
 
-
 @Composable
-fun CalculatorButton(
+fun calculatorButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier
 ) {
     val colors = LocalCalculatorColors.current
-    val backgroundColor: Color
-    val contentColor: Color
+    val vibrationHelper = rememberVibrationHelper()
 
-    backgroundColor = when (text) {
+    val backgroundColor: Color = when (text) {
         "C" -> colors.clearButtonBackground
         "=" -> colors.equalsButtonBackground
         "÷", "×", "−", "+", "%" -> colors.buttonGray
@@ -291,7 +286,7 @@ fun CalculatorButton(
         else -> colors.buttonGray
     }
 
-    contentColor = when (text) {
+    val contentColor: Color = when (text) {
         "C" -> colors.clearButtonText
         "=" -> colors.equalsButtonText
         "÷", "×", "−", "+", "%" -> colors.symbolTextColor
@@ -321,7 +316,10 @@ fun CalculatorButton(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .clickable(
-                onClick = { onClick() },
+                onClick = {
+                    vibrationHelper.vibrate()
+                    onClick()
+                },
                 interactionSource = interactionSource,
                 indication = null,
             )
@@ -335,7 +333,10 @@ fun CalculatorButton(
                 .clip(CircleShape)
                 .background(animatedBgColor)
                 .clickable(
-                    onClick = { onClick() },
+                    onClick = {
+                        vibrationHelper.vibrate()
+                        onClick()
+                    },
                     interactionSource = interactionSource,
                     indication = LocalIndication.current,
                 )
@@ -351,7 +352,7 @@ fun CalculatorButton(
 }
 
 @Composable
-fun LightDivider(modifier: Modifier = Modifier) {
+fun lightDivider(modifier: Modifier = Modifier) {
     HorizontalDivider(
         modifier = modifier,
         thickness = 1.dp,
