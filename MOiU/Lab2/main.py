@@ -57,11 +57,10 @@ def simplex_main_phase(c, A, x_initial, B_initial):
     c = np.array(c, dtype=float)
     A = np.array(A, dtype=float)
     x = np.array(x_initial, dtype=float)
-    B = [b_idx - 1 for b_idx in B_initial]  # Конвертация в 0-based индексы
+    B = [b_idx - 1 for b_idx in B_initial]
     m, n = A.shape
     iteration = 1
 
-    # Вычисление вектора b = A_B * x_B
     AB = A[:, B]
     x_B = x[B]
     b = AB @ x_B
@@ -78,9 +77,7 @@ def simplex_main_phase(c, A, x_initial, B_initial):
         u = cB @ AB_inv
         delta = u @ A - c
 
-        # Проверка условия оптимальности
         if np.all(delta >= -1e-10):
-            # Вывод информации о последней итерации
             print_iteration(
                 iteration,
                 AB,
@@ -99,7 +96,6 @@ def simplex_main_phase(c, A, x_initial, B_initial):
             )
             return x
 
-        # Выбор входящей переменной j0
         j0_candidates = np.where(delta < -1e-10)[0]
         if len(j0_candidates) == 0:
             print_iteration(
@@ -121,26 +117,21 @@ def simplex_main_phase(c, A, x_initial, B_initial):
             return x
         j0 = j0_candidates[0]
 
-        # Вычисление вектора z
         Aj0 = A[:, j0]
         z = AB_inv @ Aj0
 
-        # Вычисление вектора θ
         theta = np.array([x[B[i]] / z[i] if z[i] > 1e-10 else np.inf for i in range(m)])
         theta0 = np.min(theta)
 
-        # Проверка неограниченности функции
         if theta0 == np.inf:
             print("\nФункция не ограничена сверху.")
             return None
 
-        # Определение покидающей переменной
         k = np.where(theta == theta0)[0][0]
         j_star = B[k]
         B_new = B.copy()
         B_new[k] = j0
 
-        # Обновление плана x
         x_new = x.copy()
         x_new[j0] = theta0
         for i in range(m):
@@ -148,7 +139,6 @@ def simplex_main_phase(c, A, x_initial, B_initial):
                 x_new[B[i]] -= theta0 * z[i]
         x_new[j_star] = 0
 
-        # Вывод информации об итерации
         print_iteration(
             iteration,
             AB,
@@ -166,7 +156,6 @@ def simplex_main_phase(c, A, x_initial, B_initial):
             x_new,
         )
 
-        # Обновление базиса и плана
         B = B_new
         x = x_new
         iteration += 1
@@ -201,7 +190,6 @@ def get_vector(prompt, length, type_func=float):
 
 def main():
 
-    # Считывание размерностей
     n = get_input(
         "Введите количество переменных (n): ",
         int,
@@ -215,22 +203,18 @@ def main():
         "Введите положительное целое число.",
     )
 
-    # Считывание вектора c
     print(f"\nВведите вектор c (размер {n}):")
     c = get_vector("c: ", n)
 
-    # Считывание матрицы A
     print(f"\nВведите матрицу A (размер {m}x{n}):")
     A = []
     for i in range(1, m + 1):
         row = get_vector(f"A[{i}]: ", n)
         A.append(row)
 
-    # Считывание начального плана x_initial
     print(f"\nВведите начальный допустимый план x (размер {n}):")
     x_initial = get_vector("x: ", n)
 
-    # Считывание начального базиса B_initial
     print(f"\nВведите начальный базис B (размер {m}, индексы от 1 до {n}):")
     while True:
         B_initial = get_vector("B: ", m, int)
@@ -239,7 +223,6 @@ def main():
         else:
             print("Индексы должны быть уникальными и в диапазоне от 1 до n.")
 
-    # Вывод исходных данных
     print("\nИсходные данные:")
     print(f"Целевая функция: {c}")
     print("\nМатрица A:")
@@ -248,10 +231,8 @@ def main():
     print(f"\nНачальный план x: {x_initial}")
     print(f"Начальный базис B: {B_initial}")
 
-    # Запуск симплекс-метода
     optimal_x = simplex_main_phase(c, A, x_initial, B_initial)
 
-    # Вывод результата
     if optimal_x is not None:
         if np.all(np.mod(optimal_x, 1) == 0):
             optimal_x = optimal_x.astype(int)
