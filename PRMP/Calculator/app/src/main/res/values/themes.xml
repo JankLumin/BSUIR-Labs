@@ -1,10 +1,11 @@
 <resources>
     <style name="Theme.Calculator" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <item name="android:windowBackground">@color/calc_background</item>
     </style>
 
     <style name="Theme.Calculator.MySplash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenAnimatedIcon">@mipmap/logo</item>
-        <item name="windowSplashScreenBackground">@color/calc_background</item>
         <item name="postSplashScreenTheme">@style/Theme.Calculator</item>
     </style>
 </resources>
