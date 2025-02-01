@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.calculator.presentation.CalculatorViewModel
-import com.example.calculator.presentation.screens.calculatorScreen
+import com.example.calculator.presentation.calculatorScreen
 import com.example.calculator.presentation.theme.calculatorTheme
 
 class MainActivity : ComponentActivity() {

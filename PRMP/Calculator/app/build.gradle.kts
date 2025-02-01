@@ -1,4 +1,3 @@
-//Calculator/app/build.gradle.kts
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -64,8 +63,8 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.compose.animation:animation:1.7.7")
     implementation("androidx.compose.material:material-icons-core:1.7.7")
-    implementation ("androidx.appcompat:appcompat:1.7.0")
-    implementation ("androidx.core:core-splashscreen:1.0.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")

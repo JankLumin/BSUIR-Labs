@@ -2,12 +2,12 @@ package com.example.calculator.domain.usecase
 
 import com.example.calculator.domain.model.CalculatorState
 import java.util.Stack
-import kotlin.math.pow
+import kotlin.math.*
 
 class CalculatorUseCase {
 
     fun onButtonClick(state: CalculatorState, button: String): CalculatorState {
-        val r = when (button) {
+        val newState = when (button) {
             "C" -> CalculatorState()
             "⌫️" -> deleteLast(state)
             "=" -> equals(state)
@@ -15,157 +15,222 @@ class CalculatorUseCase {
             "( )" -> parentheses(state)
             else -> generalInput(state, button)
         }
-        return updateSubDisplay(r)
+        return updateSubDisplay(newState)
     }
 
     private fun deleteLast(state: CalculatorState): CalculatorState {
         if (state.isResult) return CalculatorState()
-        if (state.displayValue.isEmpty()) return state
-        return state.copy(displayValue = state.displayValue.dropLast(1))
+        val expr = state.displayValue
+        if (expr.isEmpty()) return state
+        val tokens = tokenize(expr)
+        if (tokens.isEmpty()) return state
+        val mutableTokens = tokens.toMutableList()
+        val lastToken = mutableTokens.last()
+        if (isFunction(lastToken)) {
+            mutableTokens.removeAt(mutableTokens.size - 1)
+        } else if (lastToken.all { it.isDigit() || it == '.' || it == '-' } && lastToken.length > 1) {
+            mutableTokens[mutableTokens.size - 1] = lastToken.dropLast(1)
+        } else {
+            mutableTokens.removeAt(mutableTokens.size - 1)
+        }
+        val newDisplay = mutableTokens.joinToString("")
+        return state.copy(displayValue = newDisplay)
     }
 
     private fun equals(state: CalculatorState): CalculatorState {
-        if (state.isResult) return repeatLast(state)
-        val v = tryEvalExpression(state.displayValue) ?: return state.copy(
-            displayValue = "Error",
-            subDisplayValue = "",
-            isResult = true,
-            lastBinaryOp = null,
-            lastOperand = null
-        )
-        val (op, operand) = extractLastOp(state.displayValue)
-        return state.copy(
-            displayValue = formatResult(v),
-            subDisplayValue = "",
-            isResult = true,
-            lastBinaryOp = op,
-            lastOperand = operand
-        )
+        return if (!state.isResult) {
+            val originalExpr = state.displayValue
+            val value = tryEvalExpression(originalExpr) ?: state.copy(
+                displayValue = "Error",
+                subDisplayValue = "",
+                isResult = true,
+                lastBinaryOp = null,
+                lastOperand = null
+            )
+            val (op, operand) = extractLastOp(originalExpr)
+            state.copy(
+                displayValue = formatResult(value as Double),
+                subDisplayValue = "",
+                isResult = true,
+                lastBinaryOp = op,
+                lastOperand = operand
+            )
+        } else {
+            repeatLast(state)
+        }
     }
 
     private fun repeatLast(state: CalculatorState): CalculatorState {
         val op = state.lastBinaryOp ?: return state
         val operand = state.lastOperand ?: return state
-        val cur = state.displayValue.toDoubleOrNull() ?: return state
+        val cur = state.displayValue.replace(',', '.').toDoubleOrNull() ?: return state
         val val2 = operand.toDoubleOrNull() ?: return state
-        val r = when (op) {
+        val newVal = when (op) {
             "+" -> cur + val2
             "-" -> cur - val2
-            "*" -> cur * val2
-            "/" -> if (val2 == 0.0) null else cur / val2
+            "×", "*" -> cur * val2
+            "÷", "/" -> if (val2 == 0.0) null else cur / val2
             else -> null
         } ?: return state
-        return state.copy(displayValue = formatResult(r), subDisplayValue = "", isResult = true)
+        return state.copy(
+            displayValue = formatResult(newVal),
+            subDisplayValue = "",
+            isResult = true
+        )
     }
 
     private fun plusMinus(state: CalculatorState): CalculatorState {
-        if (state.isResult) return CalculatorState(displayValue = "(-")
-        if (state.displayValue.isEmpty()) return state.copy(displayValue = "(-")
-        return state.copy(displayValue = state.displayValue + "(-")
+        val expr = state.displayValue
+        if (expr.isEmpty()) return state.copy(displayValue = "(-")
+        val tokens = tokenize(expr)
+        if (tokens.isEmpty()) return state
+        if (tokens.size == 1) {
+            val onlyToken = tokens[0]
+            if (onlyToken.isOperator() || isFunction(onlyToken)) return state
+            val toggled = if (onlyToken.startsWith("(-")) onlyToken.removePrefix("(-") else "(-$onlyToken"
+            return state.copy(displayValue = toggled)
+        }
+        val lastIndex = tokens.size - 1
+        val penaltyIndex = tokens.size - 2
+        val lastToken = tokens[lastIndex]
+        val penaltyToken = tokens[penaltyIndex]
+        if (lastToken.isOperator() || isFunction(lastToken)) {
+            return state
+        }
+        if (penaltyToken == "(" && lastToken.startsWith("-") && !isFunction(lastToken)) {
+            val combined = "(-" + lastToken.removePrefix("-")
+            val toggled = if (combined.startsWith("(-")) combined.removePrefix("(-") else "(-$combined"
+            val newTokens = tokens.dropLast(2).toMutableList()
+            if (toggled.isNotEmpty()) {
+                newTokens.add(toggled)
+            }
+            return state.copy(displayValue = newTokens.joinToString(""))
+        }
+        val toggled2 = if (lastToken.startsWith("(-")) {
+            lastToken.removePrefix("(-")
+        } else {
+            "(-$lastToken"
+        }
+        val newTokens = tokens.dropLast(1) + toggled2
+        return state.copy(displayValue = newTokens.joinToString(""))
     }
 
     private fun parentheses(state: CalculatorState): CalculatorState {
-        if (state.isResult) return CalculatorState(displayValue = "(")
+        if (state.isResult) {
+            return CalculatorState(displayValue = "(")
+        }
         val expr = state.displayValue
-        val openC = expr.count { it == '(' }
-        val closeC = expr.count { it == ')' }
+        val openCount = expr.count { it == '(' }
+        val closeCount = expr.count { it == ')' }
         val last = expr.lastOrNull()
-        val needOpen = (openC == closeC) || (last != null && last in listOf('+', '-', '*', '/', '%', '('))
-        val s = if (needOpen) {
-            if (last != null && (last.isDigit() || last == ')')) "*(" else "("
-        } else ")"
-        val appended = validate(expr, s) ?: return state
-        return state.copy(displayValue = appended)
+        val needOpen = (openCount == closeCount) || (last != null && last in listOf('+', '-', '×', '÷', '%', '('))
+        val symbol = if (needOpen) {
+            if (last != null && (last.isDigit() || last == ')')) "×(" else "("
+        } else {
+            ")"
+        }
+        val validated = validate(expr, symbol) ?: return state
+        return state.copy(displayValue = validated)
     }
 
     private fun generalInput(state: CalculatorState, button: String): CalculatorState {
+        val sym = mapBtnToOp(button)
         if (state.isResult) {
             val safe = if (state.displayValue == "Error") "" else state.displayValue
-            val sym = mapBtnToOp(button)
             return if (button.all { it.isDigit() } || button == ",") {
-                val newVal = if (button == ",") "0." else button
+                val newVal = if (button == ",") "0," else button
                 CalculatorState(displayValue = newVal)
             } else {
-                val a = validate(safe, sym) ?: return state
-                state.copy(displayValue = a, subDisplayValue = "", isResult = false)
+                val exprWithMul = if (safe.isNotEmpty()) autoInsertMultiplication(safe, sym) else safe
+                val validated = validate(exprWithMul, sym) ?: return state
+                state.copy(displayValue = validated, subDisplayValue = "", isResult = false)
             }
         }
-        val sym = mapBtnToOp(button)
-        val a = validate(state.displayValue, sym) ?: return state
-        return state.copy(displayValue = a)
+        val autoExpr = autoInsertMultiplication(state.displayValue, sym)
+        val validated = validate(autoExpr, sym) ?: return state
+        return state.copy(displayValue = validated)
+    }
+
+    private fun autoInsertMultiplication(currentExpr: String, newSymbol: String): String {
+        if (currentExpr.isEmpty()) return currentExpr
+        if (currentExpr.last().isDigit() && newSymbol.firstOrNull()?.isDigit() == true) {
+            return currentExpr
+        }
+        val lastChar = currentExpr.last()
+        val needsMul = (lastChar.isDigit() || lastChar == ')' || lastChar == 'e' || lastChar == 'π' || lastChar == '!')
+        val startsOperand = when {
+            newSymbol.startsWith("√(") || newSymbol.startsWith("∛(") -> true
+            newSymbol.firstOrNull()?.isDigit() == true -> true
+            newSymbol.firstOrNull()?.isLetter() == true -> true
+            newSymbol.startsWith("(") || newSymbol.startsWith("(-") -> true
+            else -> false
+        }
+        return if (needsMul && startsOperand) {
+            "$currentExpr×"
+        } else {
+            currentExpr
+        }
     }
 
     private fun mapBtnToOp(btn: String): String {
         return when (btn) {
-            "," -> "."
-            "×", "x", "X" -> "*"
-            "÷" -> "/"
+            "," -> ","
+            "×" -> "×"
+            "÷" -> "÷"
             "−" -> "-"
+            "+" -> "+"
+            "e^x" -> "e^("
+            "sin" -> "sin("
+            "cos" -> "cos("
+            "tan" -> "tan("
+            "ln" -> "ln("
+            "log" -> "log("
+            "√" -> "√("
+            "∛" -> "∛("
+            "x²" -> "^(2)"
+            "x^y" -> "^("
+            "1/x" -> "1÷("
+            "|x|" -> "abs("
+            "π" -> "π"
+            "e" -> "e"
+            "!" -> "!"
             else -> btn
         }
     }
 
     private fun validate(expr: String, symbol: String): String? {
-        if (symbol.isEmpty()) return null
+        val disallowedStart = listOf("×", "÷", "+", "-", "!", "^(", "^(2)")
+        if (expr.isEmpty() && symbol in disallowedStart) return null
         if (expr.isEmpty()) {
             return when {
-                symbol.first().isDigit() -> if (symbol == "0") "0" else symbol
-                symbol == "." -> "0."
+                symbol.firstOrNull()?.isDigit() == true -> if (symbol == "0") "0" else symbol
+                symbol == "," -> "0,"
                 symbol == "(" -> "("
-                symbol in listOf("+", "-", "*", "/", "%") -> null
-                symbol == "*(" -> "("
-                else -> null
+                symbol.firstOrNull()?.isLetter() == true -> symbol
+                else -> symbol
             }
         }
-        if (expr.endsWith("(-") && symbol in listOf("*", "/")) return null
-        if (expr.endsWith("(-")) {
-            if (symbol == "-") return expr
-            if (symbol.isOperatorSymbol()) return expr.dropLast(2) + symbol
-        }
-        val last = expr.last()
-        if (last == ')' && symbol.first().isDigit()) return "$expr*$symbol"
-        if (symbol == "(") {
-            if (last.isDigit() || last == ')') return "$expr*("
-        }
-        if (symbol == "*(") return "$expr*("
-        if (symbol in listOf("*", "/") && (last.isOperatorChar() || last == '(')) return null
-        if (symbol.isOperatorSymbol() && last.isOperatorChar()) {
-            return expr.dropLast(1) + symbol
-        }
-        if (last == '0') {
-            val ln = lastNumber(expr)
-            if (ln == "0") {
-                if (symbol.first().isDigit()) {
-                    if (symbol == "0") return expr
-                    return expr.dropLast(1) + symbol
-                }
-                if (symbol == ".") return "$expr."
-            }
+        if (symbol in listOf("+", "-", "×", "÷") && expr.last() in listOf('+', '-', '×', '÷')) {
+            return replaceLastOperator(expr, symbol)
         }
         return expr + symbol
     }
 
-    private fun lastNumber(expr: String): String {
-        var i = expr.length - 1
-        while (i >= 0 && !expr[i].isOperatorChar() && expr[i] !in listOf('(', ')')) i--
-        return expr.substring(i + 1)
-    }
-
     private fun updateSubDisplay(state: CalculatorState): CalculatorState {
-        if (state.isResult) return state.copy(subDisplayValue = "")
         val e = state.displayValue
-        if (!e.any { it in listOf('+', '-', '*', '/', '%', '(', ')') }) return state.copy(subDisplayValue = "")
+        if (!e.any { it in listOf('+', '-', '×', '÷', '%', '(', ')', '!', 'π', 'e') }) {
+            return state.copy(subDisplayValue = "")
+        }
         val v = tryEvalExpression(e) ?: return state.copy(subDisplayValue = "")
         return state.copy(subDisplayValue = formatResult(v))
     }
 
-    private fun extractLastOp(e: String): Pair<String?, String?> {
+    private fun extractLastOp(expr: String): Pair<String?, String?> {
         return try {
-            val t = tokenize(e)
+            val t = tokenize(expr.replace(',', '.'))
             for (i in t.size - 1 downTo 1) {
-                if (t[i - 1].isOperator() && t[i].isNumber()) {
-                    val o = t[i - 1]
-                    if (o in listOf("+", "-", "*", "/")) return o to t[i]
+                if (t[i - 1] in listOf("+", "-", "×", "÷") && t[i].toDoubleOrNull() != null) {
+                    return t[i - 1] to t[i]
                 }
             }
             null to null
@@ -175,61 +240,39 @@ class CalculatorUseCase {
     }
 
     private fun tryEvalExpression(expr: String): Double? {
+        var transformed = expr
+            .replace(',', '.')
+            .replace("×", "*")
+            .replace("÷", "/")
+            .replace("-", "-")
+            .replace("e^(", "exp(")
+            .replace(Regex("\\be\\b"), "${Math.E}")
+            .replace("π", "${Math.PI}")
+        transformed = transformPercent(transformed)
+        val openCount = transformed.count { it == '(' }
+        val closeCount = transformed.count { it == ')' }
+        if (openCount > closeCount) {
+            transformed += ")".repeat(openCount - closeCount)
+        }
         return try {
-            val x = transformPercent(expr)
-            val tok = tokenize(x)
-            val pf = infixToPostfix(tok)
-            evaluatePostfix(pf)
+            val tokens = tokenize(transformed)
+            val postfix = infixToPostfix(tokens)
+            evaluatePostfix(postfix)
         } catch (_: Exception) {
             null
         }
     }
 
-    private fun transformPercent(e: String): String {
-        if (!e.contains('%')) return e
-        val idx = e.lastIndexOf('%')
-        if (idx == -1) return e
-        val left = e.substring(0, idx)
-        val r = e.substring(idx + 1)
-        val (lop, op, rng) = findLast(left)
-        if (op == null || lop == null) {
-            val x = left.toDoubleOrNull() ?: return e
-            val xx = formatDouble(x / 100.0)
-            return xx + r
+    private fun transformPercent(s: String): String {
+        return s.replace(Regex("(\\d+(?:\\.\\d+)?)%")) { mr ->
+            "(${mr.groupValues[1]}/100)"
         }
-        val rp = left.substring(rng)
-        val rv = rp.toDoubleOrNull() ?: return e
-        val lv = lop.toDoubleOrNull() ?: return e
-        val nr = when (op) {
-            "+", "-" -> lv * (rv / 100.0)
-            "*", "/" -> lv * (rv / 100.0)
-            else -> rv / 100.0
-        }
-        val pref = left.substring(0, rng.first)
-        return pref + formatDouble(nr) + r
     }
 
-    private fun findLast(expr: String): Triple<String?, String?, IntRange> {
-        var lvl = 0
-        for (i in expr.indices.reversed()) {
-            val c = expr[i]
-            if (c == ')') lvl++
-            if (c == '(') lvl--
-            if (lvl < 0) lvl = 0
-            if (lvl == 0 && c in listOf('+', '-', '*', '/')) {
-                if (c == '-' && (i == 0 || expr[i - 1].isOperatorChar() || expr[i - 1] == '(')) continue
-                val l = expr.substring(0, i)
-                val o = c.toString()
-                val rng = (i + 1) until expr.length
-                return Triple(l, o, rng)
-            }
-        }
-        return Triple(null, null, 0..0)
-    }
-
-    private fun formatDouble(d: Double): String {
+    private fun formatResult(d: Double): String {
         val l = d.toLong()
-        return if (d == l.toDouble()) l.toString() else d.toString()
+        val result = if (d == l.toDouble()) l.toString() else d.toString()
+        return result.replace('.', ',')
     }
 
     private fun tokenize(e: String): List<String> {
@@ -238,8 +281,17 @@ class CalculatorUseCase {
         while (i < e.length) {
             val c = e[i]
             when {
-                c.isWhitespace() -> i++
-                c in listOf('(', ')') -> {
+                c.isWhitespace() -> { i++ }
+                c == '√' || c == '∛' -> {
+                    if (i + 1 < e.length && e[i + 1] == '(') {
+                        r.add("$c(")
+                        i += 2
+                    } else {
+                        r.add("$c(")
+                        i++
+                    }
+                }
+                c == '(' || c == ')' -> {
                     r.add(c.toString())
                     i++
                 }
@@ -253,12 +305,33 @@ class CalculatorUseCase {
                         i++
                     }
                 }
+                c == '!' -> {
+                    r.add("!")
+                    i++
+                }
                 c.isDigit() || c == '.' -> {
                     val (num, len) = readNumber(e, i)
                     r.add(num)
                     i += len
                 }
-                else -> i++
+                c.isLetter() -> {
+                    val start = i
+                    while (i < e.length && e[i].isLetter()) {
+                        i++
+                    }
+                    if (i < e.length && e[i] == '(') {
+                        val token = e.substring(start, i + 1)
+                        r.add(token)
+                        i++
+                    } else {
+                        val token = e.substring(start, i)
+                        r.add(token)
+                    }
+                }
+                else -> {
+                    r.add(c.toString())
+                    i++
+                }
             }
         }
         return r
@@ -266,55 +339,91 @@ class CalculatorUseCase {
 
     private fun readNumber(e: String, s: Int): Pair<String, Int> {
         var i = s
-        val b = StringBuilder()
+        val sb = StringBuilder()
         if (i < e.length && (e[i] == '+' || e[i] == '-')) {
-            b.append(e[i])
+            sb.append(e[i])
             i++
         }
-        var dot = false
+        var dotUsed = false
         while (i < e.length) {
             val c = e[i]
             if (c.isDigit()) {
-                b.append(c)
+                sb.append(c)
                 i++
-            } else if (c == '.' && !dot) {
-                b.append(c)
-                dot = true
+            } else if (c == '.' && !dotUsed) {
+                sb.append('.')
+                dotUsed = true
                 i++
-            } else break
+            } else {
+                break
+            }
         }
-        return b.toString() to (i - s)
+        return sb.toString() to (i - s)
     }
 
-    private fun infixToPostfix(t: List<String>): List<String> {
-        val o = mutableListOf<String>()
+    private fun infixToPostfix(tokens: List<String>): List<String> {
+        val out = mutableListOf<String>()
         val st = Stack<String>()
-        for (x in t) {
+        for (x in tokens) {
             when {
-                x.isNumber() -> o.add(x)
+                x.toDoubleOrNull() != null -> out.add(x)
+                isFunction(x) -> st.push(x)
                 x.isOperator() -> {
-                    while (st.isNotEmpty() && st.peek().isOperator() && priority(st.peek()) >= priority(x)) {
-                        o.add(st.pop())
+                    while (st.isNotEmpty() && (st.peek().isOperator() || isFunction(st.peek())) && priority(st.peek()) >= priority(x)) {
+                        out.add(st.pop())
                     }
                     st.push(x)
                 }
                 x == "(" -> st.push(x)
                 x == ")" -> {
-                    while (st.isNotEmpty() && st.peek() != "(") o.add(st.pop())
+                    while (st.isNotEmpty() && st.peek() != "(") {
+                        out.add(st.pop())
+                    }
                     if (st.isNotEmpty() && st.peek() == "(") st.pop()
+                    if (st.isNotEmpty() && isFunction(st.peek())) {
+                        out.add(st.pop())
+                    }
                 }
             }
         }
-        while (st.isNotEmpty()) o.add(st.pop())
-        return o
+        while (st.isNotEmpty()) {
+            out.add(st.pop())
+        }
+        return out
     }
 
-    private fun evaluatePostfix(p: List<String>): Double? {
+    private fun evaluatePostfix(tokens: List<String>): Double? {
         val st = Stack<Double>()
-        for (x in p) {
-            if (x.isNumber()) {
-                val d = x.toDoubleOrNull() ?: return null
+        for (x in tokens) {
+            val d = x.toDoubleOrNull()
+            if (d != null) {
                 st.push(d)
+            } else if (x == "!") {
+                if (st.isEmpty()) return null
+                val top = st.pop()
+                val ff = factorial(top) ?: return null
+                st.push(ff)
+            } else if (x == "π") {
+                st.push(Math.PI)
+            } else if (x == "e") {
+                st.push(Math.E)
+            } else if (isFunction(x)) {
+                if (st.isEmpty()) return null
+                val top = st.pop()
+                val res = when {
+                    x.startsWith("sin(") -> sin(top)
+                    x.startsWith("cos(") -> cos(top)
+                    x.startsWith("tan(") -> tan(top)
+                    x.startsWith("ln(")  -> if (top > 0) ln(top) else return null
+                    x.startsWith("log(") -> if (top > 0) log10(top) else return null
+                    x.startsWith("exp(") -> exp(top)
+                    x.startsWith("√(")   -> if (top >= 0) sqrt(top) else return null
+                    x.startsWith("∛(")   -> cbrt(top)
+                    x.startsWith("abs(") -> abs(top)
+                    else -> return null
+                }
+                if (res.isNaN() || res.isInfinite()) return null
+                st.push(res)
             } else if (x.isOperator()) {
                 if (st.size < 2) return null
                 val b = st.pop()
@@ -328,28 +437,45 @@ class CalculatorUseCase {
                     "^" -> a.pow(b)
                     else -> null
                 } ?: return null
+                if (r.isNaN() || r.isInfinite()) return null
                 st.push(r)
+            } else {
+                return null
             }
         }
-        return if (st.size == 1) st.pop() else null
+        if (st.size != 1) return null
+        return st.pop()
     }
 
     private fun priority(op: String): Int {
-        return when (op) {
-            "+", "-" -> 1
-            "*", "/", "%" -> 2
-            "^" -> 3
+        return when {
+            isFunction(op) -> 4
+            op == "!" -> 4
+            op == "+" || op == "-" -> 1
+            op == "*" || op == "/" || op == "%" -> 2
+            op == "^" -> 3
             else -> 0
         }
     }
 
-    private fun formatResult(d: Double): String {
-        val l = d.toLong()
-        return if (d == l.toDouble()) l.toString() else d.toString()
+    private fun factorial(a: Double): Double? {
+        if (a < 0 || a != floor(a)) return null
+        var res = 1.0
+        val n = a.toLong()
+        for (i in 1..n) {
+            res *= i
+            if (res.isInfinite()) return null
+        }
+        return res
     }
 
-    private fun String.isNumber(): Boolean = toDoubleOrNull() != null
-    private fun String.isOperator(): Boolean = this in listOf("+", "-", "*", "/", "%", "^")
-    private fun Char.isOperatorChar(): Boolean = this in listOf('+', '-', '*', '/', '%', '^')
-    private fun String.isOperatorSymbol(): Boolean = length == 1 && get(0).isOperatorChar()
+    private fun String.isOperator(): Boolean = this in listOf("+", "-", "*", "/", "%", "^", "!")
+    private fun isFunction(token: String): Boolean {
+        val regex = Regex("^(sin|cos|tan|ln|log|exp|√|∛|abs)\\($")
+        return regex.matches(token)
+    }
+}
+private fun replaceLastOperator(expr: String, newOp: String): String {
+    if (expr.isEmpty()) return newOp
+    return expr.dropLast(1) + newOp
 }
