@@ -8,7 +8,7 @@
 
 *.dll
 
-
+**/google-services.json
 
 
 !Logs/*.txt

@@ -1,3 +1,4 @@
+//Calculator/app/src/main/java/com/example/calculator/domain/model/CalculatorState.kt
 package com.example.calculator.domain.model
 
 data class CalculatorState(
