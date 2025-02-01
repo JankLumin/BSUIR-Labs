@@ -43,6 +43,7 @@ import com.example.calculator.utils.rememberVibrationHelper
 fun verticalCalculatorScreen(viewModel: CalculatorViewModel) {
     val uiState by viewModel.uiState.collectAsState()
     val colors = LocalCalculatorColors.current
+    val flashlightHelper = com.example.calculator.utils.rememberFlashlightHelper()
 
     BoxWithConstraints(
         modifier = Modifier
@@ -95,7 +96,7 @@ fun verticalCalculatorScreen(viewModel: CalculatorViewModel) {
             Spacer(modifier = Modifier.height(screenHeight * 0.01f))
 
             basicCalcPad(
-                onButtonClick = { text -> viewModel.onButtonClick(text) },
+                onButtonClick = { text -> viewModel.onButtonClick(text, flashlightHelper) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(screenWidth * 101 / 80)

@@ -1,16 +1,21 @@
 package com.example.calculator.domain.usecase
 
 import com.example.calculator.domain.model.CalculatorState
+import com.example.calculator.utils.FlashlightHelper
 import java.util.Stack
 import kotlin.math.*
 
 class CalculatorUseCase {
 
-    fun onButtonClick(state: CalculatorState, button: String): CalculatorState {
+    fun onButtonClick(
+        state: CalculatorState,
+        button: String,
+        flashlightHelper: FlashlightHelper? = null
+    ): CalculatorState {
         val newState = when (button) {
             "C" -> CalculatorState()
             "⌫️" -> deleteLast(state)
-            "=" -> equals(state)
+            "=" -> equals(state, flashlightHelper)
             "+/-" -> plusMinus(state)
             "( )" -> parentheses(state)
             else -> generalInput(state, button)
@@ -37,26 +42,34 @@ class CalculatorUseCase {
         return state.copy(displayValue = newDisplay)
     }
 
-    private fun equals(state: CalculatorState): CalculatorState {
-        return if (!state.isResult) {
+    private fun equals(
+        state: CalculatorState,
+        flashlightHelper: FlashlightHelper?
+    ): CalculatorState {
+        if (!state.isResult) {
             val originalExpr = state.displayValue
-            val value = tryEvalExpression(originalExpr) ?: state.copy(
-                displayValue = "Error",
-                subDisplayValue = "",
-                isResult = true,
-                lastBinaryOp = null,
-                lastOperand = null
-            )
-            val (op, operand) = extractLastOp(originalExpr)
-            state.copy(
-                displayValue = formatResult(value as Double),
-                subDisplayValue = "",
-                isResult = true,
-                lastBinaryOp = op,
-                lastOperand = operand
-            )
+            val evalResult = tryEvalExpression(originalExpr)
+            if (evalResult == null) {
+                flashlightHelper?.blinkFlashlight(300L)
+                return state.copy(
+                    displayValue = "Error",
+                    subDisplayValue = "",
+                    isResult = true,
+                    lastBinaryOp = null,
+                    lastOperand = null
+                )
+            } else {
+                val (op, operand) = extractLastOp(originalExpr)
+                return state.copy(
+                    displayValue = formatResult(evalResult),
+                    subDisplayValue = "",
+                    isResult = true,
+                    lastBinaryOp = op,
+                    lastOperand = operand
+                )
+            }
         } else {
-            repeatLast(state)
+            return repeatLast(state)
         }
     }
 
@@ -157,7 +170,14 @@ class CalculatorUseCase {
             return currentExpr
         }
         val lastChar = currentExpr.last()
-        val needsMul = (lastChar.isDigit() || lastChar == ')' || lastChar == 'e' || lastChar == 'π' || lastChar == '!')
+        val needsMul = (
+                lastChar.isDigit() ||
+                        lastChar == ')' ||
+                        lastChar == 'e' ||
+                        lastChar == 'π' ||
+                        lastChar == '!' ||
+                        lastChar == '%'
+                )
         val startsOperand = when {
             newSymbol.startsWith("√(") || newSymbol.startsWith("∛(") -> true
             newSymbol.firstOrNull()?.isDigit() == true -> true
@@ -281,7 +301,9 @@ class CalculatorUseCase {
         while (i < e.length) {
             val c = e[i]
             when {
-                c.isWhitespace() -> { i++ }
+                c.isWhitespace() -> {
+                    i++
+                }
                 c == '√' || c == '∛' -> {
                     if (i + 1 < e.length && e[i + 1] == '(') {
                         r.add("$c(")
@@ -414,11 +436,11 @@ class CalculatorUseCase {
                     x.startsWith("sin(") -> sin(top)
                     x.startsWith("cos(") -> cos(top)
                     x.startsWith("tan(") -> tan(top)
-                    x.startsWith("ln(")  -> if (top > 0) ln(top) else return null
+                    x.startsWith("ln(") -> if (top > 0) ln(top) else return null
                     x.startsWith("log(") -> if (top > 0) log10(top) else return null
                     x.startsWith("exp(") -> exp(top)
-                    x.startsWith("√(")   -> if (top >= 0) sqrt(top) else return null
-                    x.startsWith("∛(")   -> cbrt(top)
+                    x.startsWith("√(") -> if (top >= 0) sqrt(top) else return null
+                    x.startsWith("∛(") -> cbrt(top)
                     x.startsWith("abs(") -> abs(top)
                     else -> return null
                 }
@@ -475,6 +497,7 @@ class CalculatorUseCase {
         return regex.matches(token)
     }
 }
+
 private fun replaceLastOperator(expr: String, newOp: String): String {
     if (expr.isEmpty()) return newOp
     return expr.dropLast(1) + newOp
