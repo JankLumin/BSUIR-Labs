@@ -7,6 +7,8 @@ import com.example.calculator.domain.model.UserTheme
 import com.example.calculator.domain.usecase.CalculatorUseCase
 import com.example.calculator.utils.ThemePreferences
 import com.example.calculator.utils.getDeviceId
+import com.example.calculator.utils.FlashlightHelper
+import com.example.calculator.utils.NotificationHelper
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,9 +35,13 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         loadThemeFromFirebase()
     }
 
-    fun onButtonClick(button: String, flashlightHelper: com.example.calculator.utils.FlashlightHelper? = null) {
+    fun onButtonClick(
+        button: String,
+        flashlightHelper: FlashlightHelper? = null,
+        notificationHelper: NotificationHelper? = null
+    ) {
         val oldState = _uiState.value
-        val newState = calculatorUseCase.onButtonClick(oldState, button, flashlightHelper)
+        val newState = calculatorUseCase.onButtonClick(oldState, button, flashlightHelper, notificationHelper)
         _uiState.value = newState
 
         if (button == "=" && newState.displayValue != "Error") {

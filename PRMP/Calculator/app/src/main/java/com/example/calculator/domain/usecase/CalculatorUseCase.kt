@@ -2,6 +2,7 @@ package com.example.calculator.domain.usecase
 
 import com.example.calculator.domain.model.CalculatorState
 import com.example.calculator.utils.FlashlightHelper
+import com.example.calculator.utils.NotificationHelper
 import java.util.Stack
 import kotlin.math.*
 
@@ -10,12 +11,13 @@ class CalculatorUseCase {
     fun onButtonClick(
         state: CalculatorState,
         button: String,
-        flashlightHelper: FlashlightHelper? = null
+        flashlightHelper: FlashlightHelper? = null,
+        notificationHelper: NotificationHelper? = null
     ): CalculatorState {
         val newState = when (button) {
             "C" -> CalculatorState()
             "⌫️" -> deleteLast(state)
-            "=" -> equals(state, flashlightHelper)
+            "=" -> equals(state, flashlightHelper, notificationHelper)
             "+/-" -> plusMinus(state)
             "( )" -> parentheses(state)
             else -> generalInput(state, button)
@@ -44,13 +46,16 @@ class CalculatorUseCase {
 
     private fun equals(
         state: CalculatorState,
-        flashlightHelper: FlashlightHelper?
+        flashlightHelper: FlashlightHelper?,
+        notificationHelper: NotificationHelper?
     ): CalculatorState {
         if (!state.isResult) {
             val originalExpr = state.displayValue
             val evalResult = tryEvalExpression(originalExpr)
             if (evalResult == null) {
                 flashlightHelper?.blinkFlashlight(300L)
+                val errorMessage = getRandomErrorMessage()
+                notificationHelper?.showErrorNotification(errorMessage)
                 return state.copy(
                     displayValue = "Error",
                     subDisplayValue = "",
@@ -72,6 +77,23 @@ class CalculatorUseCase {
             return repeatLast(state)
         }
     }
+
+    private fun getRandomErrorMessage(): String {
+        val messages = listOf(
+            "Ты дурак, зачем так делаешь?",
+            "Неверное выражение, попробуй ещё раз!",
+            "Ошибка! Проверь ввод.",
+            "Ой, что-то пошло не так...",
+            "Ты ввёл что-то неправильное!",
+            "Неудачный ход, переформатируй выражение.",
+            "Эх, ошибка вычисления.",
+            "Похоже, что-то не так с твоим выражением.",
+            "Внимание: ошибка в выражении!",
+            "Пожалуйста, проверь свой ввод!"
+        )
+        return messages.random()
+    }
+
 
     private fun repeatLast(state: CalculatorState): CalculatorState {
         val op = state.lastBinaryOp ?: return state

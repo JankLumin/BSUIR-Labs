@@ -59,6 +59,7 @@ dependencies {
     implementation("androidx.compose.material:material:1.7.7")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation ("androidx.biometric:biometric:1.2.0-alpha05")
 
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")

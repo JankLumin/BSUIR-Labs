@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.calculator.presentation.CalculatorViewModel
 import com.example.calculator.presentation.theme.LocalCalculatorColors
+import com.example.calculator.utils.rememberNotificationHelper
 import com.example.calculator.utils.rememberVibrationHelper
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -43,6 +44,7 @@ import com.example.calculator.utils.rememberVibrationHelper
 fun horizontalCalculatorScreen(viewModel: CalculatorViewModel) {
     val uiState by viewModel.uiState.collectAsState()
     val colors = LocalCalculatorColors.current
+    val notificationHelper = rememberNotificationHelper()
 
     BoxWithConstraints(
         modifier = Modifier
@@ -113,7 +115,9 @@ fun horizontalCalculatorScreen(viewModel: CalculatorViewModel) {
                 )
             } else {
                 engineeringCalcPad(
-                    onButtonClick = { text -> viewModel.onButtonClick(text) },
+                    onButtonClick = { text ->
+                        viewModel.onButtonClick(text, notificationHelper = notificationHelper)
+                    },
                     buttonSize = buttonSize
                 )
             }

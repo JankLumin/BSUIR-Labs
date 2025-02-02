@@ -36,8 +36,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.calculator.presentation.CalculatorViewModel
 import com.example.calculator.presentation.theme.LocalCalculatorColors
-import com.example.calculator.utils.rememberVibrationHelper
 import com.example.calculator.utils.rememberFlashlightHelper
+import com.example.calculator.utils.rememberNotificationHelper
+import com.example.calculator.utils.rememberVibrationHelper
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -45,6 +46,7 @@ fun verticalCalculatorScreen(viewModel: CalculatorViewModel) {
     val uiState by viewModel.uiState.collectAsState()
     val colors = LocalCalculatorColors.current
     val flashlightHelper = rememberFlashlightHelper()
+    val notificationHelper = rememberNotificationHelper()
 
     BoxWithConstraints(
         modifier = Modifier
@@ -108,7 +110,9 @@ fun verticalCalculatorScreen(viewModel: CalculatorViewModel) {
                 )
             } else {
                 basicCalcPad(
-                    onButtonClick = { text -> viewModel.onButtonClick(text, flashlightHelper) },
+                    onButtonClick = { text ->
+                        viewModel.onButtonClick(text, flashlightHelper, notificationHelper)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(screenWidth * 101 / 80)
