@@ -1,4 +1,3 @@
-//Calculator/app/src/main/java/com/example/calculator/presentation/screens/VerticalCalculatorScreen.kt
 package com.example.calculator.presentation.screens
 
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -38,13 +37,14 @@ import androidx.compose.ui.unit.sp
 import com.example.calculator.presentation.CalculatorViewModel
 import com.example.calculator.presentation.theme.LocalCalculatorColors
 import com.example.calculator.utils.rememberVibrationHelper
+import com.example.calculator.utils.rememberFlashlightHelper
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun verticalCalculatorScreen(viewModel: CalculatorViewModel) {
     val uiState by viewModel.uiState.collectAsState()
     val colors = LocalCalculatorColors.current
-    val flashlightHelper = com.example.calculator.utils.rememberFlashlightHelper()
+    val flashlightHelper = rememberFlashlightHelper()
 
     BoxWithConstraints(
         modifier = Modifier
@@ -81,6 +81,8 @@ fun verticalCalculatorScreen(viewModel: CalculatorViewModel) {
 
             topActionBar(
                 onDelete = { viewModel.onButtonClick("⌫️") },
+                onHistoryClick = { viewModel.toggleHistory() },
+                onThemeToggle = { viewModel.toggleTheme() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(screenHeight * 0.08f)
@@ -96,12 +98,22 @@ fun verticalCalculatorScreen(viewModel: CalculatorViewModel) {
 
             Spacer(modifier = Modifier.height(screenHeight * 0.01f))
 
-            basicCalcPad(
-                onButtonClick = { text -> viewModel.onButtonClick(text, flashlightHelper) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(screenWidth * 101 / 80)
-            )
+            if (uiState.isHistoryOpen) {
+                historyScreen(
+                    historyList = uiState.historyList,
+                    onClearHistory = { viewModel.clearHistory() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(screenWidth * 101 / 80)
+                )
+            } else {
+                basicCalcPad(
+                    onButtonClick = { text -> viewModel.onButtonClick(text, flashlightHelper) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(screenWidth * 101 / 80)
+                )
+            }
         }
     }
 }
@@ -170,6 +182,7 @@ fun verticalDisplayField(
         )
     }
 }
+
 @Composable
 fun basicCalcPad(
     onButtonClick: (String) -> Unit,

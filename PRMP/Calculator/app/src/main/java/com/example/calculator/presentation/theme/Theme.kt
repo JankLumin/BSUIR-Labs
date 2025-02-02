@@ -1,7 +1,7 @@
-//Calculator/app/src/main/java/com/example/calculator/presentation/theme/Theme.kt
 package com.example.calculator.presentation.theme
 
 import android.app.Activity
+import android.graphics.drawable.ColorDrawable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -58,9 +58,11 @@ fun calculatorTheme(
     val colors = if (useDarkTheme) DarkColorScheme else LightColorScheme
 
     val view = LocalView.current
-    val activity = (LocalContext.current as? Activity)
+    val activity = LocalContext.current as? Activity
 
     activity?.window?.let { window ->
+        window.setBackgroundDrawable(ColorDrawable(colors.calcBackground.toArgb()))
+
         window.statusBarColor = colors.calcBackground.toArgb()
         window.navigationBarColor = colors.calcBackground.toArgb()
 

@@ -1,4 +1,3 @@
-//Calculator/app/src/main/java/com/example/calculator/utils/FlashlightHelper.kt
 package com.example.calculator.utils
 
 import android.content.Context

@@ -1,8 +1,8 @@
-//Calculator/app/build.gradle.kts
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -48,6 +48,8 @@ android {
 
 dependencies {
     implementation(platform("androidx.compose:compose-bom:2025.01.01"))
+    implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
+
 
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -56,6 +58,7 @@ dependencies {
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.material:material:1.7.7")
     implementation("androidx.compose.material:material-icons-extended")
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
@@ -67,6 +70,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
 
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -74,4 +78,6 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
 }
+apply(plugin = "com.google.gms.google-services")

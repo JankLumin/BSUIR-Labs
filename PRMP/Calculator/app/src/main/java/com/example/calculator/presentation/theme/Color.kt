@@ -1,4 +1,3 @@
-//Calculator/app/src/main/java/com/example/calculator/presentation/theme/Color.kt
 package com.example.calculator.presentation.theme
 
 import androidx.compose.ui.graphics.Color

@@ -1,4 +1,3 @@
-//Calculator/app/src/main/java/com/example/calculator/presentation/screens/HorizontalCalculatorScreen.kt
 package com.example.calculator.presentation.screens
 
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -88,6 +87,8 @@ fun horizontalCalculatorScreen(viewModel: CalculatorViewModel) {
 
                 topActionBar(
                     onDelete = { viewModel.onButtonClick("⌫️") },
+                    onHistoryClick = { viewModel.toggleHistory() },
+                    onThemeToggle = { viewModel.toggleTheme() },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(this@BoxWithConstraints.maxHeight * 0.1f)
@@ -102,10 +103,20 @@ fun horizontalCalculatorScreen(viewModel: CalculatorViewModel) {
             )
             Spacer(modifier = Modifier.height(2.dp))
 
-            engineeringCalcPad(
-                onButtonClick = { text -> viewModel.onButtonClick(text) },
-                buttonSize = buttonSize
-            )
+            if (uiState.isHistoryOpen) {
+                historyScreen(
+                    historyList = uiState.historyList,
+                    onClearHistory = { viewModel.clearHistory() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(gridHeight)
+                )
+            } else {
+                engineeringCalcPad(
+                    onButtonClick = { text -> viewModel.onButtonClick(text) },
+                    buttonSize = buttonSize
+                )
+            }
         }
     }
 }

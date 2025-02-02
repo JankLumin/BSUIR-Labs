@@ -1,4 +1,3 @@
-//Calculator/app/src/main/java/com/example/calculator/MainActivity.kt
 package com.example.calculator
 
 import android.os.Bundle
@@ -8,6 +7,8 @@ import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import com.example.calculator.presentation.CalculatorViewModel
 import com.example.calculator.presentation.calculatorScreen
@@ -23,7 +24,8 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
 
         setContent {
-            calculatorTheme {
+            val useDarkTheme by viewModel.useDarkTheme.collectAsState()
+            calculatorTheme(useDarkTheme = useDarkTheme) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize()
                 ) {
