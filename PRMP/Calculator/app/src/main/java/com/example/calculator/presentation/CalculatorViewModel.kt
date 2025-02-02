@@ -25,7 +25,7 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
     private val _uiState = MutableStateFlow(CalculatorState())
     val uiState = _uiState.asStateFlow()
 
-    private val _useDarkTheme = MutableStateFlow(false)
+    private val _useDarkTheme = MutableStateFlow(true)
     val useDarkTheme = _useDarkTheme.asStateFlow()
 
     init {
@@ -103,6 +103,9 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
             }
     }
 
+    private val _isThemeLoaded = MutableStateFlow(false)
+    val isThemeLoaded = _isThemeLoaded.asStateFlow()
+
     private fun loadThemeFromFirebase() {
         db.collection(themeCollection)
             .document(deviceId)
@@ -119,10 +122,12 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
                         .set(UserTheme(deviceId, "light"))
                     ThemePreferences.saveTheme(getApplication(), "light")
                 }
+                _isThemeLoaded.value = true
             }
             .addOnFailureListener { exception ->
                 _useDarkTheme.value = false
                 ThemePreferences.saveTheme(getApplication(), "light")
+                _isThemeLoaded.value = true
             }
     }
 

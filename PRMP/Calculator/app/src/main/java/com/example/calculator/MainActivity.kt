@@ -19,10 +19,12 @@ class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<CalculatorViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
+
+        splashScreen.setKeepOnScreenCondition {
+            !viewModel.isThemeLoaded.value
+        }
         super.onCreate(savedInstanceState)
-
-        installSplashScreen()
-
         setContent {
             val useDarkTheme by viewModel.useDarkTheme.collectAsState()
             calculatorTheme(useDarkTheme = useDarkTheme) {
