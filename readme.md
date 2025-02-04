@@ -6,3 +6,4 @@
 - [ОЭД](https://github.com/JankLumin/BSUIR-Labs/tree/semester-6/OED) (Ганусевич М.В.)
 - [ОСиСП](https://github.com/JankLumin/BSUIR-Labs/tree/semester-6/OSISP) (Гриценко Н. Ю.)
 - [ПрМП](https://github.com/JankLumin/BSUIR-Labs/tree/semester-6/PRMP) (Тушинская Е.В.)
+- [ИСОБ](https://github.com/JankLumin/BSUIR-Labs/tree/semester-6/ISOB) (Герчик А.В.)
