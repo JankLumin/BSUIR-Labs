@@ -8,6 +8,7 @@
 - [ОЭД](https://github.com/JankLumin/BSUIR-Labs/tree/semester-6/MOiU) (Ганусевич М.В.)
 - [ОСиСП](https://github.com/JankLumin/BSUIR-Labs/tree/semester-6/MOiU) (Гриценко Н. Ю.)
 - [ПрМП](https://github.com/JankLumin/BSUIR-Labs/tree/semester-6/MOiU) (Тушинская Е.В.)
+- [ИСОБ](https://github.com/JankLumin/BSUIR-Labs/tree/semester-6/ISOB) (Герчик А.В.)
 
 ### [Пятый семестр (2024)](https://github.com/JankLumin/BSUIR-Labs/tree/semester-5)
 
