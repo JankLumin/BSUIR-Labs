@@ -2,10 +2,54 @@ import numpy as np
 
 
 def clean_matrix(matrix):
-    """Заменяет значения, близкие к нулю, на 0.0 для лучшей читаемости."""
+    """
+    Заменяет значения, близкие к нулю, на 0.0 для лучшей читаемости.
+    """
     cleaned = matrix.copy()
     cleaned[np.isclose(cleaned, 0.0)] = 0.0
     return cleaned
+
+
+def update_basis_inverse(old_inv, old_basis, new_col, i):
+    """
+    Обновляет обратную матрицу базисной матрицы при замене i-го столбца.
+    """
+    print("\n--- Обновление обратной матрицы базиса ---")
+    n = old_basis.shape[0]
+    A_prime = old_basis.copy()
+    A_prime[:, i - 1] = new_col
+    print(f"Шаг 1: Новая базисная матрица A' (заменён столбец {i}):")
+    print(clean_matrix(A_prime))
+
+    l = old_inv @ new_col
+    print("\nШаг 2: Вычисляем вектор ℓ = A⁻¹ * новый столбец:")
+    print(clean_matrix(l.reshape(-1, 1)))
+
+    if np.isclose(l[i - 1], 0):
+        print(f"\nПоскольку ℓ[{i}] ≈ 0, матрица A' необратима.")
+        return None, None, None
+
+    print(f"\nПоскольку ℓ[{i}] ≠ 0, матрица A' обратима.")
+
+    l_e = l.copy()
+    l_e[i - 1] = -1
+    print(f"\nШаг 3: Формируем вектор ℓₑ (заменяем элемент {i} на -1):")
+    print(clean_matrix(l_e.reshape(-1, 1)))
+
+    l_b = (-1 / l[i - 1]) * l_e
+    print(f"\nШаг 4: Вычисляем вектор ℓ_b = -1 / ℓ[{i}] * ℓₑ:")
+    print(clean_matrix(l_b.reshape(-1, 1)))
+
+    Q = np.eye(n)
+    Q[:, i - 1] = l_b
+    print(f"\nШаг 5: Формируем матрицу Q (заменяем столбец {i} на ℓ_b):")
+    print(clean_matrix(Q))
+
+    A_inv_new = Q @ old_inv
+    print("\nШаг 6: Вычисляем (A')⁻¹ = Q * A⁻¹:")
+    print(clean_matrix(A_inv_new))
+
+    return A_inv_new, Q, A_prime
 
 
 def print_iteration(
@@ -24,8 +68,8 @@ def print_iteration(
     B_new=None,
     x_new=None,
 ):
-    """Выводит информацию об итерации."""
-    print(f"\n{'-'*40}\nИтерация {iteration}\n{'-'*40}")
+    """Выводит информацию об итерации симплекс-метода."""
+    print(f"\n{'-' * 40}\nИтерация {iteration}\n{'-' * 40}")
     print("Базисная матрица AB:")
     print(clean_matrix(AB))
     print("\nОбратная матрица AB⁻¹:")
@@ -53,7 +97,9 @@ def print_iteration(
 
 
 def simplex_main_phase(c, A, x_initial, B_initial):
-    """Основная фаза симплекс-метода."""
+    """
+    Основная фаза симплекс-метода.
+    """
     c = np.array(c, dtype=float)
     A = np.array(A, dtype=float)
     x = np.array(x_initial, dtype=float)
@@ -62,17 +108,13 @@ def simplex_main_phase(c, A, x_initial, B_initial):
     iteration = 1
 
     AB = A[:, B]
-    x_B = x[B]
-    b = AB @ x_B
+    try:
+        AB_inv = np.linalg.inv(AB)
+    except np.linalg.LinAlgError:
+        print("Базисная матрица необратима. Завершение метода.")
+        return None
 
     while True:
-        AB = A[:, B]
-        try:
-            AB_inv = np.linalg.inv(AB)
-        except np.linalg.LinAlgError:
-            print("AB необратима. Завершение метода.")
-            return None
-
         cB = c[B]
         u = cB @ AB_inv
         delta = u @ A - c
@@ -122,11 +164,9 @@ def simplex_main_phase(c, A, x_initial, B_initial):
 
         theta = np.array([x[B[i]] / z[i] if z[i] > 1e-10 else np.inf for i in range(m)])
         theta0 = np.min(theta)
-
         if theta0 == np.inf:
             print("\nФункция не ограничена сверху.")
             return None
-
         k = np.where(theta == theta0)[0][0]
         j_star = B[k]
         B_new = B.copy()
@@ -156,13 +196,26 @@ def simplex_main_phase(c, A, x_initial, B_initial):
             x_new,
         )
 
+        print(
+            "\nВыполняется обновление обратной матрицы базиса с использованием алгоритма обновления:"
+        )
+        updated = update_basis_inverse(AB_inv, AB, Aj0, k + 1)
+        if updated[0] is None:
+            print("Ошибка при обновлении обратной матрицы. Завершение метода.")
+            return None
+        AB_inv, Q, A_prime = updated
+
+        AB = A_prime
+
         B = B_new
         x = x_new
         iteration += 1
 
 
 def get_input(prompt, type_func, condition=lambda x: True, error_msg="Неверный ввод."):
-    """Универсальная функция для считывания и проверки ввода."""
+    """
+    Универсальная функция для считывания и проверки ввода.
+    """
     while True:
         try:
             value = type_func(input(prompt))
@@ -175,7 +228,9 @@ def get_input(prompt, type_func, condition=lambda x: True, error_msg="Невер
 
 
 def get_vector(prompt, length, type_func=float):
-    """Считывает вектор из консоли."""
+    """
+    Считывает вектор из консоли.
+    """
     while True:
         try:
             values = input(prompt).strip().split()
@@ -189,7 +244,6 @@ def get_vector(prompt, length, type_func=float):
 
 
 def main():
-
     n = get_input(
         "Введите количество переменных (n): ",
         int,
@@ -226,12 +280,12 @@ def main():
     print("\nИсходные данные:")
     print(f"Целевая функция: {c}")
     print("\nМатрица A:")
-    A = np.array(A)
-    print(A)
+    A_np = np.array(A)
+    print(A_np)
     print(f"\nНачальный план x: {x_initial}")
     print(f"Начальный базис B: {B_initial}")
 
-    optimal_x = simplex_main_phase(c, A, x_initial, B_initial)
+    optimal_x = simplex_main_phase(c, A_np, x_initial, B_initial)
 
     if optimal_x is not None:
         if np.all(np.mod(optimal_x, 1) == 0):

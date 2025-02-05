@@ -25,7 +25,7 @@ def print_iteration(
     B_new=None,
     x_new=None,
 ):
-    """Выводит информацию об итерации."""
+    """Выводит информацию об итерации симплекс-метода."""
     print(f"\n{phase}. Итерация {iteration}")
     print("-" * 40)
     print("Базисная матрица:")
@@ -38,7 +38,7 @@ def print_iteration(
     if j0 is not None:
         print(f"\nВходящая переменная: {j0 + 1}")
     if z is not None:
-        print(f"z: {z}")
+        print(f"z: {clean_matrix(z.reshape(-1, 1))}")
     if theta is not None:
         print(f"θ: {theta}")
     if theta0 is not None:
@@ -53,9 +53,11 @@ def print_iteration(
     print("-" * 40)
 
 
-def simplex_main_phase_with_basis(c, A, x_initial, B_initial, phase_label="Основная фаза"):
+def simplex_main_phase_with_basis(
+    c, A, x_initial, B_initial, phase_label="Основная фаза"
+):
     """
-    Основная фаза симплекс-метода.
+    Основная фаза симплекс-метода с подробным выводом.
     """
     c = np.array(c, dtype=float)
     A = np.array(A, dtype=float)
@@ -69,7 +71,7 @@ def simplex_main_phase_with_basis(c, A, x_initial, B_initial, phase_label="Ос�
         try:
             AB_inv = np.linalg.inv(AB)
         except np.linalg.LinAlgError:
-            print("Ошибка: AB необратима.")
+            print("Ошибка: Базисная матрица AB необратима.")
             return None, None, None
 
         cB = c[B]
@@ -106,6 +108,24 @@ def simplex_main_phase_with_basis(c, A, x_initial, B_initial, phase_label="Ос�
             if i != k:
                 x_new[B[i]] -= theta0 * z[i]
         x_new[j_star] = 0
+
+        print_iteration(
+            phase_label,
+            iteration,
+            AB,
+            AB_inv,
+            cB,
+            u,
+            delta,
+            j0=j0,
+            z=z,
+            theta=theta,
+            theta0=theta0,
+            k=k,
+            j_star=j_star,
+            B_new=B_new,
+            x_new=x_new,
+        )
 
         B = B_new
         x = x_new
@@ -151,19 +171,20 @@ def simplex_initial_phase(c, A, b):
         c_aux, A_e, x_e_initial, B_aux_initial, phase_label="Вспомогательная фаза"
     )
     if x_e_opt is None:
-        print("Вспомогательная задача не решается.")
+        print("Вспомогательная задача не имеет решения.")
         return None, None, None, None, None
 
     print("\nОптимальное решение вспомогательной задачи:")
     print("xₑ:")
     print(x_e_opt)
-
     print("Bₑ:")
     print([int(b) + 1 for b in B_aux])
 
     artificial_values = x_e_opt[n:]
     if not np.all(np.abs(artificial_values) < 1e-8):
-        print("\nОшибка: Искусственные переменные ≠ 0. Допустимых планов нет.")
+        print(
+            "\nОшибка: Искусственные переменные не обнулились. Допустимых планов нет."
+        )
         return None, None, None, None, None
 
     x = x_e_opt[:n]
@@ -176,7 +197,9 @@ def simplex_initial_phase(c, A, b):
         j_k = max(artificial_in_B)
         k = B_aux.index(j_k)
         i_row = j_k - n
-        print(f"\nКорректировка: обнаружен искусственный индекс {j_k + 1} (ограничение {i_row + 1}).")
+        print(
+            f"\nКорректировка: обнаружен искусственный базисный индекс {j_k + 1} (ограничение {i_row + 1})."
+        )
         replaced = False
         for j in range(n):
             if j in B_aux:
@@ -189,12 +212,14 @@ def simplex_initial_phase(c, A, b):
                 try:
                     AB_inv = np.linalg.inv(AB)
                 except np.linalg.LinAlgError:
-                    print("Ошибка: Базис после замены необратим.")
+                    print("Ошибка: Базис после замены оказался необратим.")
                     return None, None, None, None, None
                 replaced = True
                 break
         if not replaced:
-            print(f"  Все j ∉ B удовлетворяют (ℓ(j))[{k + 1}] = 0. Удаляем ограничение {i_row + 1}.")
+            print(
+                f"  Все j ∉ B удовлетворяют условию (ℓ(j))[{k + 1}] = 0. Удаляем ограничение {i_row + 1}."
+            )
             A = np.delete(A, i_row, axis=0)
             b = np.delete(b, i_row, axis=0)
             A_e = np.delete(A_e, i_row, axis=0)
@@ -205,13 +230,13 @@ def simplex_initial_phase(c, A, b):
                 try:
                     AB_inv = np.linalg.inv(AB)
                 except np.linalg.LinAlgError:
-                    print("Ошибка: Базис после удаления необратим.")
+                    print("Ошибка: Базис после удаления ограничений необратим.")
                     return None, None, None, None, None
-            print("  Обновленные A:")
+            print("  Обновлённая матрица A:")
             print(clean_matrix(A))
-            print("  Обновленный b:")
+            print("  Обновлённый вектор b:")
             print(b)
-            print("  Новый Bₑ:")
+            print("  Новый базис Bₑ:")
             print([int(b) + 1 for b in B_aux])
 
     if m == 1 and np.isclose(b[0], 0.0):
@@ -229,6 +254,7 @@ def simplex_initial_phase(c, A, b):
 
 
 def get_input(prompt, type_func, condition=lambda x: True, error_msg="Неверный ввод."):
+    """Универсальная функция ввода с проверкой корректности."""
     while True:
         try:
             value = type_func(input(prompt))
@@ -241,6 +267,7 @@ def get_input(prompt, type_func, condition=lambda x: True, error_msg="Невер
 
 
 def get_vector(prompt, length, type_func=float):
+    """Считывает вектор из консоли."""
     while True:
         try:
             values = input(prompt).strip().split()
@@ -253,6 +280,7 @@ def get_vector(prompt, length, type_func=float):
 
 
 def get_matrix(prompt, m, n):
+    """Считывает матрицу из консоли построчно."""
     print(prompt)
     matrix = []
     for i in range(1, m + 1):
