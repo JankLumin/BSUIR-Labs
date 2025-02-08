@@ -6,7 +6,7 @@ create table MyTable (
 --------------------------------------------------
 
 begin
-    for i in 1..10000 loop
+    for i in 1..10 loop
         insert into MyTable(id, val)
         values (i, trunc(DBMS_RANDOM.VALUE(1,10000)));
         end loop;
@@ -54,7 +54,7 @@ exception
         RETURN 'Ошибка выполнения: ' || SQLERRM;
 end;
 
-SELECT Generate_Insert_Statement(1) FROM dual;
+SELECT Generate_Insert_Statement(-8) FROM dual;
 
 --------------------------------------------------
 
