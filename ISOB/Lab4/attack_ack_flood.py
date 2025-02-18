@@ -16,7 +16,7 @@ async def attack_ack_flood(i: int):
         else:
             print(f"[ACK Flood {i}] Received: {text}")
 
-        for j in range(10000):
+        for j in range(10):
             writer.write("ACK\n".encode())
             await writer.drain()
             await asyncio.sleep(0.01)
