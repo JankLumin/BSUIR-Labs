@@ -1,19 +1,17 @@
 import psycopg2
 import sys
 
+
 def main():
     enable_protection = True
-    if '--disable-protection' in sys.argv:
+    if "--disable-protection" in sys.argv:
         enable_protection = False
 
     username = input("Введите имя пользователя: ")
 
     try:
         conn = psycopg2.connect(
-            dbname="lab6",
-            user="postgres",
-            password="8025",
-            host="localhost"
+            dbname="lab6", user="postgres", password="8025", host="localhost"
         )
         cur = conn.cursor()
 
@@ -32,10 +30,11 @@ def main():
     except Exception as e:
         print("Ошибка:", e)
     finally:
-        if 'cur' in locals():
+        if "cur" in locals():
             cur.close()
-        if 'conn' in locals():
+        if "conn" in locals():
             conn.close()
+
 
 if __name__ == "__main__":
     main()
