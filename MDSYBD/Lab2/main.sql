@@ -302,7 +302,7 @@ select * from students;
 SELECT * FROM students_audit;
 
 INSERT INTO groups (id, name, c_val) VALUES (1, 'Группа А', 0);
-INSERT INTO groups (id, name, c_val) VALUES (2,'Группа Б', 0);
+INSERT INTO groups (id, name, c_val) VALUES (2,'Группа А', 0);
 INSERT INTO groups (id, name, c_val) VALUES (3,'Группа В', 0);
 
 delete from groups where id = 1;
@@ -313,11 +313,11 @@ UPDATE students SET group_id = 12 WHERE id = 40;
 
 
 BEGIN
-    restore_students_to_offset(INTERVAL '-10'  minute );
+    restore_students_to_offset(INTERVAL '-1'  minute );
 END;
 
 delete from students where id = 21;
 
 BEGIN
-  restore_students_to_time(TO_TIMESTAMP('2025-02-21 10:20:29', 'YYYY-MM-DD HH24:MI:SS'));
+  restore_students_to_time(TO_TIMESTAMP('2025-02-24 16:28:27', 'YYYY-MM-DD HH24:MI:SS'));
 END;
