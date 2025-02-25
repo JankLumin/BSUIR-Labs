@@ -1,20 +1,18 @@
--- Создаём таблицы без внешних ключей
 CREATE TABLE A (
   A_ID NUMBER PRIMARY KEY,
-  B_ID NUMBER  -- Будет ссылка на таблицу B
+  B_ID NUMBER
 );
 
 CREATE TABLE B (
   B_ID NUMBER PRIMARY KEY,
-  C_ID NUMBER  -- Будет ссылка на таблицу C
+  C_ID NUMBER
 );
 
 CREATE TABLE C (
   C_ID NUMBER PRIMARY KEY,
-  A_ID NUMBER  -- Будет ссылка на таблицу A
+  A_ID NUMBER
 );
 
--- Добавляем ограничения внешних ключей с возможностью отложенной проверки
 ALTER TABLE A
   ADD CONSTRAINT FK_A_B
   FOREIGN KEY (B_ID) REFERENCES B(B_ID)
