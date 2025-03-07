@@ -45,4 +45,8 @@ COMMIT;
 BEGIN
   report_pkg.create_report(TIMESTAMP '2025-03-07 10:00:00');
 END;
-/
+
+
+BEGIN
+  report_pkg.create_report();
+END;

@@ -266,3 +266,46 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE('Затронуто строк: ' || v_rows);
 END;
 /
+
+
+--------------------------------------------------
+
+DECLARE
+  v_json_input CLOB := '{
+    "query_type": "SELECT",
+    "select_columns": "d.dept_id, d.dept_name, SUM(e.salary) AS total_salary, AVG(e.salary) AS avg_salary",
+    "tables": "employees e, departments d",
+    "join_conditions": "e.dept_id = d.dept_id",
+    "where_conditions": "e.salary > 1000",
+    "group_by": "d.dept_id, d.dept_name"
+  }';
+  v_cursor  SYS_REFCURSOR;
+  v_rows    NUMBER;
+  v_message VARCHAR2(4000);
+
+  v_dept_id      NUMBER;
+  v_dept_name    VARCHAR2(100);
+  v_total_salary NUMBER;
+  v_avg_salary   NUMBER;
+BEGIN
+  dynamic_sql_executor(
+    p_json    => v_json_input,
+    p_cursor  => v_cursor,
+    p_rows    => v_rows,
+    p_message => v_message
+  );
+
+  DBMS_OUTPUT.PUT_LINE('Сообщение: ' || v_message);
+
+  LOOP
+    FETCH v_cursor INTO v_dept_id, v_dept_name, v_total_salary, v_avg_salary;
+    EXIT WHEN v_cursor%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE('Dept ID: ' || v_dept_id ||
+                         ', Dept: ' || v_dept_name ||
+                         ', Total Salary: ' || v_total_salary ||
+                         ', Avg Salary: ' || v_avg_salary);
+  END LOOP;
+
+  CLOSE v_cursor;
+END;
+/
