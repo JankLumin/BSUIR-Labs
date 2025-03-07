@@ -5,14 +5,15 @@ CREATE OR REPLACE PROCEDURE dynamic_sql_executor (
   p_message OUT VARCHAR2
 )
 AS
-  v_json_obj JSON_OBJECT_T;
-  v_query_type VARCHAR2(50);
+  v_json_obj          JSON_OBJECT_T;
+  v_query_type        VARCHAR2(50);
 
   v_select_columns      VARCHAR2(32767);
   v_tables              VARCHAR2(32767);
   v_join_conditions     VARCHAR2(32767);
   v_where_conditions    VARCHAR2(32767);
   v_subquery_conditions VARCHAR2(32767);
+  v_group_by            VARCHAR2(32767);
   v_filter_clause       VARCHAR2(32767);
 
   v_query VARCHAR2(32767);
@@ -22,8 +23,8 @@ AS
   v_values     VARCHAR2(32767);
   v_set_clause VARCHAR2(32767);
 
-  v_ddl_command VARCHAR2(50);
-  v_fields      VARCHAR2(32767);
+  v_ddl_command      VARCHAR2(50);
+  v_fields           VARCHAR2(32767);
   v_generate_trigger VARCHAR2(5);
   v_trigger_name     VARCHAR2(100);
   v_pk_field         VARCHAR2(100);
@@ -52,6 +53,11 @@ BEGIN
     EXCEPTION WHEN NO_DATA_FOUND THEN
       v_subquery_conditions := NULL;
     END;
+    BEGIN
+      v_group_by := v_json_obj.get_String('group_by');
+    EXCEPTION WHEN NO_DATA_FOUND THEN
+      v_group_by := NULL;
+    END;
 
     v_filter_clause := NULL;
     IF v_join_conditions IS NOT NULL AND TRIM(v_join_conditions) IS NOT NULL THEN
@@ -75,6 +81,9 @@ BEGIN
     v_query := 'SELECT ' || v_select_columns || ' FROM ' || v_tables;
     IF v_filter_clause IS NOT NULL AND TRIM(v_filter_clause) IS NOT NULL THEN
       v_query := v_query || ' WHERE ' || v_filter_clause;
+    END IF;
+    IF v_group_by IS NOT NULL AND TRIM(v_group_by) IS NOT NULL THEN
+      v_query := v_query || ' GROUP BY ' || v_group_by;
     END IF;
 
     p_message := 'Выполняется SELECT запрос.';
@@ -146,7 +155,6 @@ BEGIN
       IF v_filter_clause IS NOT NULL AND TRIM(v_filter_clause) IS NOT NULL THEN
         v_query := v_query || ' WHERE ' || v_filter_clause;
       END IF;
-
     END IF;
 
     p_message := 'DML операция ' || v_query_type || ' выполнена.';
@@ -216,4 +224,3 @@ EXCEPTION
     p_cursor  := NULL;
 END dynamic_sql_executor;
 /
-
