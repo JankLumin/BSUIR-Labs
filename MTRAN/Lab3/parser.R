@@ -138,7 +138,7 @@ parseProcedure <- function() {
 ast_tree <- parseProcedure()
 
 ast_text <- toJSON(ast_tree, pretty = TRUE, auto_unbox = TRUE)
-write(ast_text, file = "ast_tree.txt")
+write(ast_text, file = "st_tree.txt")
 
 dotNodes <- c()
 dotEdges <- c()
@@ -210,7 +210,7 @@ dotNodes <<- c()
 dotEdges <<- c()
 nodeIdCounter <<- 0
 rootId <- traverseAst(ast_tree)
-dotGraphString <- paste("digraph AST {",
+dotGraphString <- paste("digraph ST {",
     paste(dotNodes, collapse = "\n"),
     paste(dotEdges, collapse = "\n"),
     "}",
@@ -218,7 +218,7 @@ dotGraphString <- paste("digraph AST {",
 )
 
 svg_code <- export_svg(grViz(dotGraphString))
-write(svg_code, file = "ast_tree.svg")
+write(svg_code, file = "st_tree.svg")
 
-cat("AST дерево сохранено в 'ast_tree.txt'\n")
-cat("Визуальное представление AST сохранено в 'ast_tree.svg'\n")
+cat("ST дерево сохранено в 'st_tree.txt'\n")
+cat("Визуальное представление ST сохранено в 'st_tree.svg'\n")
