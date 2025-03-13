@@ -1,0 +1,1253 @@
+{
+  "type": "Procedure",
+  "header": {
+    "type": "ProcedureHeader",
+    "identifier": {
+      "type": "identifier",
+      "value": "test"
+    },
+    "separator": {
+      "type": "operator",
+      "value": ":"
+    },
+    "procedureKeyword": {
+      "type": "keyword",
+      "value": "PROCEDURE"
+    },
+    "optionsKeyword": {
+      "type": "keyword",
+      "value": "OPTIONS"
+    },
+    "openParen": {
+      "type": "operator",
+      "value": "("
+    },
+    "options": {
+      "type": "identifier",
+      "value": "main"
+    },
+    "closeParen": {
+      "type": "operator",
+      "value": ")"
+    },
+    "endHeader": {
+      "type": "operator",
+      "value": ";"
+    }
+  },
+  "declarations": [
+    {
+      "type": "Declaration",
+      "declareKeyword": {
+        "type": "keyword",
+        "value": "DECLARE"
+      },
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "identifier",
+          "value": "FIXED"
+        },
+        {
+          "type": "identifier",
+          "value": "BINARY"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "10"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "keyword",
+          "value": "STATIC"
+        },
+        {
+          "type": "keyword",
+          "value": "INITIAL"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        }
+      ],
+      "endDeclaration": {
+        "type": "operator",
+        "value": ";"
+      }
+    }
+  ],
+  "statements": [
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "DO"
+        },
+        {
+          "type": "keyword",
+          "value": "WHILE"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "<"
+        },
+        {
+          "type": "numeric_constant",
+          "value": "10"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "+"
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "IF"
+        },
+        {
+          "type": "keyword",
+          "value": "MOD"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "0"
+        },
+        {
+          "type": "keyword",
+          "value": "THEN"
+        },
+        {
+          "type": "keyword",
+          "value": "CONTINUE"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "PUT"
+        },
+        {
+          "type": "keyword",
+          "value": "LIST"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "string_constant",
+          "value": "Значение I (нечетное): "
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "END"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "DO"
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "keyword",
+          "value": "REPEAT"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "+"
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "IF"
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "keyword",
+          "value": "THEN"
+        },
+        {
+          "type": "keyword",
+          "value": "PUT"
+        },
+        {
+          "type": "keyword",
+          "value": "LIST"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "string_constant",
+          "value": "Значение I (I = 2,  DO REPEAT): "
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "ELSE"
+        },
+        {
+          "type": "keyword",
+          "value": "PUT"
+        },
+        {
+          "type": "keyword",
+          "value": "LIST"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "string_constant",
+          "value": "Значение I (DO REPEAT): "
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "IF"
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ">"
+        },
+        {
+          "type": "numeric_constant",
+          "value": "5"
+        },
+        {
+          "type": "keyword",
+          "value": "THEN"
+        },
+        {
+          "type": "keyword",
+          "value": "LEAVE"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "END"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "DO"
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "keyword",
+          "value": "REPEAT"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "+"
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "keyword",
+          "value": "WHILE"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "<="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "5"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "PUT"
+        },
+        {
+          "type": "keyword",
+          "value": "LIST"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "string_constant",
+          "value": "Значение I (DO REPEAT WHILE): "
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "END"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "DO"
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "keyword",
+          "value": "TO"
+        },
+        {
+          "type": "numeric_constant",
+          "value": "5"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "PUT"
+        },
+        {
+          "type": "keyword",
+          "value": "LIST"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "string_constant",
+          "value": "Значение I (DO TO): "
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "END"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "DO"
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "keyword",
+          "value": "TO"
+        },
+        {
+          "type": "numeric_constant",
+          "value": "10"
+        },
+        {
+          "type": "keyword",
+          "value": "BY"
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "PUT"
+        },
+        {
+          "type": "keyword",
+          "value": "LIST"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "string_constant",
+          "value": "Значение I (DO TO BY 2): "
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "END"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "DO"
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "keyword",
+          "value": "TO"
+        },
+        {
+          "type": "numeric_constant",
+          "value": "10"
+        },
+        {
+          "type": "keyword",
+          "value": "BY"
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "keyword",
+          "value": "WHILE"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "<="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "7"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "PUT"
+        },
+        {
+          "type": "keyword",
+          "value": "LIST"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "string_constant",
+          "value": "Значение I (DO TO BY WHILE): "
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "END"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "DO"
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "keyword",
+          "value": "BY"
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "keyword",
+          "value": "TO"
+        },
+        {
+          "type": "numeric_constant",
+          "value": "10"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "PUT"
+        },
+        {
+          "type": "keyword",
+          "value": "LIST"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "string_constant",
+          "value": "Значение I (DO BY с пределом): "
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "END"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "DO"
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "3"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "5"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "15"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "25"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "100"
+        },
+        {
+          "type": "keyword",
+          "value": "TO"
+        },
+        {
+          "type": "numeric_constant",
+          "value": "0"
+        },
+        {
+          "type": "keyword",
+          "value": "BY"
+        },
+        {
+          "type": "operator",
+          "value": "-"
+        },
+        {
+          "type": "numeric_constant",
+          "value": "4"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "PUT"
+        },
+        {
+          "type": "keyword",
+          "value": "LIST"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "string_constant",
+          "value": "Значение I: "
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "END"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "I"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    }
+  ],
+  "procedureEnd": {
+    "type": "ProcedureEnd",
+    "endKeyword": {
+      "type": "keyword",
+      "value": "END"
+    },
+    "identifier": {
+      "type": "identifier",
+      "value": "test"
+    },
+    "endSymbol": {
+      "type": "operator",
+      "value": ";"
+    }
+  }
+}
