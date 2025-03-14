@@ -49,10 +49,6 @@ determineCodeType <- function(ast) {
                 }
             }
 
-
-
-
-
             createAggregate <- function(declTokens) {
                 debugPrint("createAggregate: declTokens =", sapply(declTokens, function(t) t$value))
                 if (length(declTokens) >= 2 && declTokens[[2]]$value == "(") {
