@@ -1,0 +1,1165 @@
+{
+  "type": "Procedure",
+  "header": {
+    "type": "ProcedureHeader",
+    "identifier": {
+      "type": "identifier",
+      "value": "test"
+    },
+    "separator": {
+      "type": "operator",
+      "value": ":"
+    },
+    "procedureKeyword": {
+      "type": "keyword",
+      "value": "PROCEDURE"
+    },
+    "optionsKeyword": {
+      "type": "keyword",
+      "value": "OPTIONS"
+    },
+    "openParen": {
+      "type": "operator",
+      "value": "("
+    },
+    "options": {
+      "type": "identifier",
+      "value": "main"
+    },
+    "closeParen": {
+      "type": "operator",
+      "value": ")"
+    },
+    "endHeader": {
+      "type": "operator",
+      "value": ";"
+    }
+  },
+  "declarations": [
+    {
+      "type": "Declaration",
+      "declareKeyword": {
+        "type": "keyword",
+        "value": "DECLARE"
+      },
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "A"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "3"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "4"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "identifier",
+          "value": "CHARACTER"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        }
+      ],
+      "endDeclaration": {
+        "type": "operator",
+        "value": ";"
+      }
+    },
+    {
+      "type": "Declaration",
+      "declareKeyword": {
+        "type": "keyword",
+        "value": "DECLARE"
+      },
+      "tokens": [
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "identifier",
+          "value": "Person"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "identifier",
+          "value": "Name"
+        },
+        {
+          "type": "identifier",
+          "value": "CHARACTER"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "20"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "identifier",
+          "value": "Age"
+        },
+        {
+          "type": "identifier",
+          "value": "FIXED"
+        },
+        {
+          "type": "identifier",
+          "value": "BINARY"
+        }
+      ],
+      "endDeclaration": {
+        "type": "operator",
+        "value": ";"
+      }
+    },
+    {
+      "type": "Declaration",
+      "declareKeyword": {
+        "type": "keyword",
+        "value": "DECLARE"
+      },
+      "tokens": [
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "identifier",
+          "value": "student_list"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "100"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "identifier",
+          "value": "student_info"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "3"
+        },
+        {
+          "type": "identifier",
+          "value": "last_name"
+        },
+        {
+          "type": "identifier",
+          "value": "CHARACTER"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "20"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "3"
+        },
+        {
+          "type": "identifier",
+          "value": "first_name"
+        },
+        {
+          "type": "identifier",
+          "value": "CHARACTER"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "20"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        }
+      ],
+      "endDeclaration": {
+        "type": "operator",
+        "value": ";"
+      }
+    },
+    {
+      "type": "Declaration",
+      "declareKeyword": {
+        "type": "keyword",
+        "value": "DECLARE"
+      },
+      "tokens": [
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "identifier",
+          "value": "Y"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "identifier",
+          "value": "field1"
+        },
+        {
+          "type": "identifier",
+          "value": "FIXED"
+        },
+        {
+          "type": "identifier",
+          "value": "BINARY"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "identifier",
+          "value": "field2"
+        },
+        {
+          "type": "identifier",
+          "value": "CHARACTER"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "10"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        }
+      ],
+      "endDeclaration": {
+        "type": "operator",
+        "value": ";"
+      }
+    },
+    {
+      "type": "Declaration",
+      "declareKeyword": {
+        "type": "keyword",
+        "value": "DECLARE"
+      },
+      "tokens": [
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "identifier",
+          "value": "X"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ":"
+        },
+        {
+          "type": "numeric_constant",
+          "value": "100"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "keyword",
+          "value": "STATIC"
+        },
+        {
+          "type": "keyword",
+          "value": "LIKE"
+        },
+        {
+          "type": "identifier",
+          "value": "Y"
+        }
+      ],
+      "endDeclaration": {
+        "type": "operator",
+        "value": ";"
+      }
+    }
+  ],
+  "statements": [
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "A"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "string_constant",
+          "value": "A1"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "A"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "string_constant",
+          "value": "B1"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "A"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "string_constant",
+          "value": "A2"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "A"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "string_constant",
+          "value": "B2"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "Person"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "Name"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "string_constant",
+          "value": "Иван Иванов"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "Person"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "Age"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "25"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "student_list"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "student_info"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "last_name"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "string_constant",
+          "value": "Петров"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "student_list"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "student_info"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "first_name"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "string_constant",
+          "value": "Алексей"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "X"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "field1"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "numeric_constant",
+          "value": "42"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "identifier",
+          "value": "X"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "field2"
+        },
+        {
+          "type": "operator",
+          "value": "="
+        },
+        {
+          "type": "string_constant",
+          "value": "Пример"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "PUT"
+        },
+        {
+          "type": "keyword",
+          "value": "LIST"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "string_constant",
+          "value": "Массив A(1,1): "
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "A"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "PUT"
+        },
+        {
+          "type": "keyword",
+          "value": "LIST"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "string_constant",
+          "value": "Массив A(2,1): "
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "A"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "2"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "PUT"
+        },
+        {
+          "type": "keyword",
+          "value": "LIST"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "string_constant",
+          "value": "Структура Person: "
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "Person"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "Name"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "Person"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "Age"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "PUT"
+        },
+        {
+          "type": "keyword",
+          "value": "LIST"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "string_constant",
+          "value": "Смешанный агрегат student_list(1): "
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "student_list"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "student_info"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "last_name"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "student_list"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "student_info"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "first_name"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    },
+    {
+      "type": "StatementBlock",
+      "tokens": [
+        {
+          "type": "keyword",
+          "value": "PUT"
+        },
+        {
+          "type": "keyword",
+          "value": "LIST"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "string_constant",
+          "value": "Переменная X(1) (LIKE Y): "
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "X"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "field1"
+        },
+        {
+          "type": "operator",
+          "value": ","
+        },
+        {
+          "type": "identifier",
+          "value": "X"
+        },
+        {
+          "type": "operator",
+          "value": "("
+        },
+        {
+          "type": "numeric_constant",
+          "value": "1"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": "."
+        },
+        {
+          "type": "identifier",
+          "value": "field2"
+        },
+        {
+          "type": "operator",
+          "value": ")"
+        },
+        {
+          "type": "operator",
+          "value": ";"
+        }
+      ]
+    }
+  ],
+  "procedureEnd": {
+    "type": "ProcedureEnd",
+    "endKeyword": {
+      "type": "keyword",
+      "value": "END"
+    },
+    "identifier": {
+      "type": "identifier",
+      "value": "test"
+    },
+    "endSymbol": {
+      "type": "operator",
+      "value": ";"
+    }
+  }
+}
