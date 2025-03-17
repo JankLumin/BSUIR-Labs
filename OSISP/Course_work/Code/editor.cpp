@@ -10,50 +10,41 @@
 #include <unistd.h>
 #include <vector>
 
-// Количество байт в строке
+
 #define BYTES_PER_ROW 16
 
-// Структура для undo/redo
 struct Change {
-  char op; // 'E' - edit byte, 'P' - paste
-  int sector; // какому сектору принадлежит изменение
-  int offset; // для 'E': смещение байта
+  char op;
+  int sector;
+  int offset;
   unsigned char oldValue;
   unsigned char newValue;
-  std::vector<unsigned char> oldSector; // для 'P'
-  std::vector<unsigned char> newSector; // для 'P'
+  std::vector<unsigned char> oldSector;
+  std::vector<unsigned char> newSector;
 };
 
-// Глобальные переменные
 static int fd = -1;
 static unsigned long long deviceSize;
 static int sectorSizeGlobal = 512;
 static int numSectors = 0;
 static bool autosave = false;
 
-// Текущее состояние
 static int currentSector = 0;
 static int cursorX = 0, cursorY = 0;
 
-// Undo/Redo стеки
 static std::vector<Change> undoStack;
 static std::vector<Change> redoStack;
 
-// Буфер для текущего сектора
 static std::vector<unsigned char> sectorBuffer;
 static bool sectorBufferLoaded = false;
 
-// Буфер для копирования сектора
 static std::vector<unsigned char> copyBuffer;
 static bool hasCopy = false;
-
-// Вспомогательные функции
 
 static inline int getIndexInBuffer(int row, int col) {
   return row * BYTES_PER_ROW + col;
 }
 
-// Загрузить текущий сектор (currentSector) в sectorBuffer
 static bool loadCurrentSector() {
   if (currentSector < 0 || currentSector >= numSectors)
     return false;
@@ -69,7 +60,6 @@ static bool loadCurrentSector() {
   return true;
 }
 
-// Сохранить sectorBuffer в текущий сектор
 static bool saveCurrentSector() {
   if (!sectorBufferLoaded)
     return false;
@@ -78,7 +68,6 @@ static bool saveCurrentSector() {
   return (w == (ssize_t)sectorSizeGlobal);
 }
 
-// Отрисовка UI
 static void drawUI(const char *filename) {
   clear();
   mvprintw(0, 0, "File: %s | Sector: %d/%d | Sector size: %d bytes", filename,
@@ -117,7 +106,6 @@ static void drawUI(const char *filename) {
     }
   }
   int bottom = (sectorSizeGlobal / BYTES_PER_ROW) + 2;
-  // Краткая справка внизу
   mvprintw(bottom, 0,
            "Arrows: move cursor | n/p: next/prev sector | j: jump sector");
   mvprintw(bottom + 1, 0,
@@ -126,7 +114,6 @@ static void drawUI(const char *filename) {
   refresh();
 }
 
-// Переместить курсор
 static void moveCursor(int dy, int dx) {
   int rows = sectorSizeGlobal / BYTES_PER_ROW;
   cursorY += dy;
@@ -141,7 +128,6 @@ static void moveCursor(int dy, int dx) {
     cursorX = BYTES_PER_ROW - 1;
 }
 
-// Подробная помощь (при нажатии h)
 static void showDetailedHelp() {
   clear();
   int row = 0;
@@ -184,7 +170,6 @@ static void showDetailedHelp() {
   getch();
 }
 
-// Редактирование байта под курсором
 static void editByte() {
   if (!sectorBufferLoaded)
     return;
@@ -202,7 +187,6 @@ static void editByte() {
   if (sscanf(input, "%x", &newVal) == 1 && newVal >= 0 && newVal <= 255) {
     unsigned char oldVal = sectorBuffer[offset];
     if (oldVal != (unsigned char)newVal) {
-      // Undo entry
       Change ch;
       ch.op = 'E';
       ch.sector = currentSector;
@@ -230,7 +214,6 @@ static void editByte() {
   curs_set(0);
 }
 
-// Сохранение сектора
 static void saveSector(bool showMessage) {
   if (!sectorBufferLoaded)
     return;
@@ -247,14 +230,12 @@ static void saveSector(bool showMessage) {
   }
 }
 
-// Undo
 static void undoChange() {
   if (undoStack.empty())
     return;
   Change ch = undoStack.back();
   undoStack.pop_back();
 
-  // Возможно, надо перейти в другой сектор
   if (ch.sector != currentSector) {
     if (autosave)
       saveCurrentSector();
@@ -265,10 +246,8 @@ static void undoChange() {
   }
 
   if (ch.op == 'E') {
-    // один байт
     sectorBuffer[ch.offset] = ch.oldValue;
   } else if (ch.op == 'P') {
-    // вернуть старый сектор
     memcpy(sectorBuffer.data(), ch.oldSector.data(), sectorSizeGlobal);
   }
 
@@ -280,7 +259,6 @@ static void undoChange() {
   getch();
 }
 
-// Redo
 static void redoChange() {
   if (redoStack.empty())
     return;
@@ -309,7 +287,6 @@ static void redoChange() {
   getch();
 }
 
-// Копирование сектора
 static void copySector() {
   if (!sectorBufferLoaded)
     return;
@@ -321,7 +298,6 @@ static void copySector() {
   getch();
 }
 
-// Вставка сектора
 static void pasteSector() {
   if (!sectorBufferLoaded)
     return;
@@ -359,7 +335,6 @@ static void pasteSector() {
   getch();
 }
 
-// Переход к следующему сектору
 static void nextSector() {
   if (currentSector < numSectors - 1) {
     if (autosave)
@@ -371,7 +346,6 @@ static void nextSector() {
   }
 }
 
-// Переход к предыдущему сектору
 static void prevSector() {
   if (currentSector > 0) {
     if (autosave)
@@ -383,7 +357,6 @@ static void prevSector() {
   }
 }
 
-// Переход к указанному сектору
 static void jumpSector() {
   echo();
   curs_set(1);
@@ -413,7 +386,6 @@ static void jumpSector() {
   }
 }
 
-// Основная функция
 void runEditor(const char *filename, int secSize, bool autosaveFlag) {
   sectorSizeGlobal = secSize;
   autosave = autosaveFlag;
@@ -424,7 +396,6 @@ void runEditor(const char *filename, int secSize, bool autosaveFlag) {
     exit(EXIT_FAILURE);
   }
 
-  // Определяем размер
   unsigned long long size64 = 0;
   if (ioctl(fd, BLKGETSIZE64, &size64) == 0 && size64 > 0) {
     deviceSize = size64;
@@ -438,13 +409,11 @@ void runEditor(const char *filename, int secSize, bool autosaveFlag) {
     deviceSize = (unsigned long long)sz;
   }
 
-  // Число секторов
   numSectors = deviceSize / sectorSizeGlobal;
   if (deviceSize % sectorSizeGlobal != 0) {
     numSectors++;
   }
 
-  // Готовим буфер для одного сектора
   sectorBuffer.resize(sectorSizeGlobal, 0);
   sectorBufferLoaded = false;
 
@@ -458,7 +427,6 @@ void runEditor(const char *filename, int secSize, bool autosaveFlag) {
     return;
   }
 
-  // Инициализация ncurses
   initscr();
   if (has_colors()) {
     start_color();
