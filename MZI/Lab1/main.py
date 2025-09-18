@@ -4,22 +4,25 @@ import struct
 BLOCK_SIZE = 8
 KEY_SIZE = 32
 
-SBOX = [
-    [4, 10, 9, 2, 13, 8, 0, 14, 6, 11, 1, 12, 7, 15, 5, 3],
-    [14, 11, 4, 12, 6, 13, 15, 10, 2, 3, 8, 1, 0, 7, 5, 9],
-    [5, 8, 1, 13, 10, 3, 4, 2, 14, 15, 12, 7, 6, 0, 9, 11],
-    [7, 13, 10, 1, 0, 8, 9, 15, 14, 4, 6, 12, 11, 2, 5, 3],
-    [6, 12, 7, 1, 5, 15, 13, 8, 4, 10, 9, 14, 0, 3, 11, 2],
-    [4, 11, 10, 0, 7, 2, 1, 13, 3, 6, 8, 5, 9, 12, 15, 14],
-    [13, 11, 4, 1, 3, 15, 5, 9, 0, 10, 14, 7, 6, 8, 2, 12],
-    [1, 15, 13, 0, 5, 7, 10, 4, 9, 2, 3, 14, 6, 11, 8, 12],
-]
+KEY_HEX = "00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10 11 12 13 14 15 16 17 18 19 1A 1B 1C 1D 1E 1F"
+KEY = bytes.fromhex(KEY_HEX)
 
-KEY = bytes(range(32))
+SBOX_HEX = """
+04 0A 09 02 0D 08 00 0E 06 0B 01 0C 07 0F 05 03
+0E 0B 04 0C 06 0D 0F 0A 02 03 08 01 00 07 05 09
+05 08 01 0D 0A 03 04 02 0E 0F 0C 07 06 00 09 0B
+07 0D 0A 01 00 08 09 0F 0E 04 06 0C 0B 02 05 03
+06 0C 07 01 05 0F 0D 08 04 0A 09 0E 00 03 0B 02
+04 0B 0A 00 07 02 01 0D 03 06 08 05 09 0C 0F 0E
+0D 0B 04 01 03 0F 05 09 00 0A 0E 07 06 08 02 0C
+01 0F 0D 00 05 07 0A 04 09 02 03 0E 06 0B 08 0C
+""".strip()
+SBOX_BYTES = bytes.fromhex(" ".join(SBOX_HEX.split()))
 
 
 def rotl32(x, n):
     x &= 0xFFFFFFFF
+    n &= 31
     return ((x << n) & 0xFFFFFFFF) | (x >> (32 - n))
 
 
@@ -27,7 +30,8 @@ def substitute(x):
     out = 0
     for i in range(8):
         nib = (x >> (4 * i)) & 0xF
-        out |= (SBOX[i][nib] & 0xF) << (4 * i)
+        sb = SBOX_BYTES[i * 16 + nib] & 0xF
+        out |= sb << (4 * i)
     return out
 
 
@@ -61,7 +65,7 @@ def encrypt_block(block, key, trace=False):
         f = rotl32(f, 11)
         n1, n2 = n2, (n1 ^ f) & 0xFFFFFFFF
         if trace:
-            print(f"main.py | Раунд {r+1:2d}: N1=0x{n1:08X}, N2=0x{n2:08X}")
+            print(f"Раунд {r+1:2d}: N1=0x{n1:08X}, N2=0x{n2:08X}")
     return join_block(n2, n1)
 
 
@@ -74,7 +78,7 @@ def decrypt_block(block, key, trace=False):
         f = rotl32(f, 11)
         n1, n2 = n2, (n1 ^ f) & 0xFFFFFFFF
         if trace:
-            print(f"main.py | Раунд {r+1:2d}: N1=0x{n1:08X}, N2=0x{n2:08X}")
+            print(f"Раунд {r+1:2d}: N1=0x{n1:08X}, N2=0x{n2:08X}")
     return join_block(n2, n1)
 
 
@@ -82,6 +86,7 @@ def pad(data):
     padlen = BLOCK_SIZE - (len(data) % BLOCK_SIZE)
     if padlen == 0:
         padlen = BLOCK_SIZE
+    print(f"[PKCS7] +{padlen} байт")
     return data + bytes([padlen]) * padlen
 
 
@@ -89,6 +94,7 @@ def unpad(data):
     if not data or len(data) % BLOCK_SIZE != 0:
         raise ValueError("Некорректная длина для PKCS#7.")
     p = data[-1]
+    print(f"[PKCS7] last=0x{p:02X}")
     if p < 1 or p > BLOCK_SIZE or data[-p:] != bytes([p]) * p:
         raise ValueError("Некорректная добивка PKCS#7.")
     return data[:-p]
@@ -105,7 +111,7 @@ def encrypt_text(text):
     for i in range(0, len(data), BLOCK_SIZE):
         blk = data[i : i + BLOCK_SIZE]
         print(
-            f"\nmain.py | Блок {i//BLOCK_SIZE:02d} (ENC) IN: {blk.hex().upper()}  '{safe_ascii(blk)}'"
+            f"\nБлок {i//BLOCK_SIZE:02d} (ENC) IN: {blk.hex().upper()}  '{safe_ascii(blk)}'"
         )
         out += encrypt_block(blk, KEY, trace=True)
     return out.hex().upper()
@@ -119,7 +125,7 @@ def decrypt_text(hextext):
     out = bytearray()
     for i in range(0, len(data), BLOCK_SIZE):
         blk = data[i : i + BLOCK_SIZE]
-        print(f"\nmain.py | Блок {i//BLOCK_SIZE:02d} (DEC) IN: {blk.hex().upper()}")
+        print(f"\nБлок {i//BLOCK_SIZE:02d} (DEC) IN: {blk.hex().upper()}")
         out += decrypt_block(blk, KEY, trace=True)
     return unpad(bytes(out)).decode("utf-8")
 
@@ -138,12 +144,12 @@ def main():
         text = open(in_path, "r", encoding="utf-8").read()
         cipher_hex = encrypt_text(text)
         open(out_path, "w", encoding="utf-8").write(cipher_hex)
-        print(f"\nmain.py | Шифртекст (HEX) записан в: {out_path}")
+        print(f"\nШифртекст (HEX) записан в: {out_path}")
     else:
         hextext = open(in_path, "r", encoding="utf-8").read()
         plain = decrypt_text(hextext)
         open(out_path, "w", encoding="utf-8").write(plain)
-        print(f"\nmain.py | Расшифрованный текст записан в: {out_path}")
+        print(f"\nРасшифрованный текст записан в: {out_path}")
 
 
 if __name__ == "__main__":
