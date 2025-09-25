@@ -1,6 +1,6 @@
 # Информатика и техногии программирования (ИиТП)
 
-### [Седьмой семестр (2025](https://github.com/JankLumin/BSUIR-Labs/tree/semester-7)
+### [Седьмой семестр (2025)](https://github.com/JankLumin/BSUIR-Labs/tree/semester-7)
 
 - [УпРПО](https://github.com/JankLumin/BSUIR-Labs/tree/semester-7/YpRPO) (Стержанов М.В.)
 - [МЗИ](https://github.com/JankLumin/BSUIR-Labs/tree/semester-7/MZI) (Герчик А.В.)
