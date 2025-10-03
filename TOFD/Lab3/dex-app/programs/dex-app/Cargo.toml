@@ -1,0 +1,24 @@
+[package]
+name = "dex-app"
+version = "0.1.0"
+edition = "2021"
+description = "Created with Anchor"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "dex_app"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
+anchor-debug = []
+custom-heap = []
+custom-panic = []
+
+[dependencies]
+anchor-lang = "0.31.1"
+anchor-spl  = { version = "0.31.1", features = ["token", "associated_token"] }
