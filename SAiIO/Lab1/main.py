@@ -1,288 +1,302 @@
-import math
-from typing import List, Tuple
-
-TOL = 1e-9
-INT_TOL = 1e-7
-MAX_ITERS = 5000
+from fractions import Fraction
 
 
-def gauss_jordan_inverse(A: List[List[float]]):
-    n = len(A)
-    M = [row[:] + [1.0 if i == j else 0.0 for j in range(n)] for i, row in enumerate(A)]
-    r = 0
-    for c in range(n):
-        piv = None
-        for i in range(r, n):
-            if abs(M[i][c]) > TOL:
-                piv = i
-                break
-        if piv is None:
-            return None
-        if piv != r:
-            M[r], M[piv] = M[piv], M[r]
-        div = M[r][c]
-        for j in range(2 * n):
-            M[r][j] /= div
-        for i in range(n):
-            if i == r:
-                continue
-            f = M[i][c]
-            if abs(f) > TOL:
-                for j in range(2 * n):
-                    M[i][j] -= f * M[r][j]
-        r += 1
-    return [row[n:] for row in M]
+def example_data():
+    c = [1, 1]
+    A = [
+        [5, 9],
+        [9, 5],
+    ]
+    b = [63, 63]
+    d_minus = [1, 1]
+    d_plus = [6, 6]
+    return A, b, c, d_minus, d_plus
 
 
-def mat_mul(A: List[List[float]], x: List[float]) -> List[float]:
-    return [sum(A[i][j] * x[j] for j in range(len(x))) for i in range(len(A))]
+def fmt_vec(v):
+    def f(x):
+        if isinstance(x, Fraction):
+            return str(x) if x.denominator != 1 else str(x.numerator)
+        return str(x)
+
+    return "[" + "; ".join(f(x) for x in v) + "]"
 
 
-def vec_dot(a: List[float], b: List[float]) -> float:
-    return sum(ai * bi for ai, bi in zip(a, b))
+def to_frac_vec(v):
+    return [Fraction(int(x)) for x in v]
 
 
-def vec_sub(a: List[float], b: List[float]) -> List[float]:
-    return [ai - bi for ai, bi in zip(a, b)]
+def to_frac_mat(M):
+    return [[Fraction(int(x)) for x in row] for row in M]
 
 
-class LPSolution:
-    def __init__(self, x, obj, status):
-        self.x = x
-        self.obj = obj
-        self.status = status
+def matmul_vec(M, v):
+    return [sum(M[i][j] * v[j] for j in range(len(v))) for i in range(len(M))]
 
 
-def dual_simplex(A, b, c, basis) -> LPSolution:
-    m, n = len(A), len(A[0])
-    B = basis[:]
-    N = [j for j in range(n) if j not in B]
-
-    for _ in range(MAX_ITERS):
-        AB = [[A[i][j] for j in B] for i in range(m)]
-        AB_inv = gauss_jordan_inverse(AB)
-        if AB_inv is None:
-            return LPSolution(None, -1e18, "dual_infeasible")
-
-        xB = mat_mul(AB_inv, b)
-        if min(xB) >= -TOL:
-            x = [0.0] * n
-            for k, j in enumerate(B):
-                x[j] = max(0.0, xB[k])
-            return LPSolution(x, vec_dot(c, x), "optimal")
-
-        min_val = min(xB)
-        cand_leave = [k for k, val in enumerate(xB) if abs(val - min_val) <= 1e-12]
-        p = min(cand_leave)
-        v = AB_inv[p][:]
-
-        cB = [c[j] for j in B]
-        y = [sum(cB[i] * AB_inv[i][r] for i in range(m)) for r in range(m)]
-
-        AN = [[A[i][j] for j in N] for i in range(m)]
-        rN = []
-        for col in range(len(N)):
-            rj = c[N[col]] - sum(y[i] * AN[i][col] for i in range(m))
-            if 0 < rj < 1e-12:
-                rj = 0.0
-            rN.append(rj)
-        wN = [sum(v[i] * AN[i][col] for i in range(m)) for col in range(len(N))]
-
-        ratios = []
-        for t in range(len(N)):
-            if wN[t] < -TOL:
-                theta = rN[t] / wN[t]
-                ratios.append((theta, N[t], t))
-        if not ratios:
-            return LPSolution(None, -1e18, "infeasible")
-
-        ratios.sort(key=lambda z: (z[0], z[1]))
-        _, _, t = ratios[0]
-
-        B[p], N[t] = N[t], B[p]
-    return LPSolution(None, -1e18, "iters_exceeded")
+def vec_add(a, b):
+    return [a[i] + b[i] for i in range(len(a))]
 
 
-def step1_make_c_nonpos(c, A, dminus, dplus):
-    print(
-        "\nШаг 1: Преобразование так, чтобы c <= 0 (инвертируем столбцы A и меняем d-, d+ местами со знаком)"
-    )
-    n, m = len(c), len(A)
+def vec_sub(a, b):
+    return [a[i] - b[i] for i in range(len(a))]
+
+
+def vec_dot(a, b):
+    return sum(a[i] * b[i] for i in range(len(a)))
+
+
+def build_extended_lp(A, b, c, d_minus, d_plus, verbose=True):
+    A = to_frac_mat(A)
+    b = to_frac_vec(b)
+    c = to_frac_vec(c)
+    d_minus = to_frac_vec(d_minus)
+    d_plus = to_frac_vec(d_plus)
+    m = len(A)
+    n = len(A[0])
+    if verbose:
+        print("Шаг 1. Приведение знаков стоимостей.")
     flipped = [False] * n
     for i in range(n):
         if c[i] > 0:
-            flipped[i] = True
             c[i] = -c[i]
             for r in range(m):
                 A[r][i] = -A[r][i]
-            dminus[i], dplus[i] = -dplus[i], -dminus[i]
-    print("c =", c)
-    print("A =", A)
-    print("d- =", dminus, " d+ =", dplus)
-    return c, A, dminus, dplus, flipped
-
-
-def build_augmented(c, A, b, dplus):
-    n, m = len(c), len(A)
-    rows, cols = m + n, n + m + n
-    Aaug = [[0.0] * cols for _ in range(rows)]
-    for i in range(m):
-        for j in range(n):
-            Aaug[i][j] = float(A[i][j])
-        Aaug[i][n + i] = 1.0
+            d_minus[i] = -d_minus[i]
+            d_plus[i] = -d_plus[i]
+            d_minus[i], d_plus[i] = d_plus[i], d_minus[i]
+            flipped[i] = True
+    if verbose:
+        print("  c'   =", fmt_vec(c))
+        print("  d-'  =", fmt_vec(d_minus), " d+' =", fmt_vec(d_plus))
+        print("Шаг 2. Построение расширенной задачи.")
+    A_ext = []
+    for r in range(m):
+        row = []
+        row += A[r]
+        row += [Fraction(1) if r == k else Fraction(0) for k in range(m)]
+        row += [Fraction(0) for _ in range(n)]
+        A_ext.append(row)
     for i in range(n):
-        Aaug[m + i][i] = 1.0
-        Aaug[m + i][n + m + i] = 1.0
-    baug = [float(x) for x in b] + [float(x) for x in dplus]
-    caug = [float(x) for x in c] + [0.0] * m + [0.0] * n
-    return Aaug, baug, caug
+        row = []
+        row += [Fraction(1) if i == j else Fraction(0) for j in range(n)]
+        row += [Fraction(0) for _ in range(m)]
+        row += [Fraction(1) if i == j else Fraction(0) for j in range(n)]
+        A_ext.append(row)
+    b_ext = b + d_plus
+    c_ext = c + [Fraction(0)] * (m + n)
+    dminus_ext = d_minus + [Fraction(0)] * (m + n)
+    if verbose:
+        print(f"  размерность x: {2*n+m}")
+    B0 = list(range(n, n + m + n))
+    return {
+        "A_ext": A_ext,
+        "b_ext": b_ext,
+        "c_ext": c_ext,
+        "dminus_ext": dminus_ext,
+        "flipped": flipped,
+        "m": m,
+        "n": n,
+        "B0": B0,
+    }
 
 
-def is_int(x: float) -> bool:
-    return abs(x - round(x)) <= INT_TOL
+def dual_simplex(A_ext, b_rhs, c_ext, B0, verbose=False, max_iter=1000):
+    M = len(A_ext)
+    N = len(A_ext[0])
+    Abar = to_frac_mat(A_ext)
+    bbar = to_frac_vec(b_rhs)
+    B = B0[:]
+    for k in range(M):
+        jbas = B[k]
+        piv = Abar[k][jbas]
+        if piv == 0:
+            swap = None
+            for r in range(k + 1, M):
+                if Abar[r][jbas] != 0:
+                    swap = r
+                    break
+            if swap is None:
+                return {"status": "infeasible"}
+            Abar[k], Abar[swap] = Abar[swap], Abar[k]
+            bbar[k], bbar[swap] = bbar[swap], bbar[k]
+            piv = Abar[k][jbas]
+        Abar[k] = [x / piv for x in Abar[k]]
+        bbar[k] = bbar[k] / piv
+        for r in range(M):
+            if r == k:
+                continue
+            coef = Abar[r][jbas]
+            if coef != 0:
+                Abar[r] = [Abar[r][t] - coef * Abar[k][t] for t in range(N)]
+                bbar[r] = bbar[r] - coef * bbar[k]
+
+    def compute_reduced_costs():
+        Bmat = [[A_ext[i][j] for j in B] for i in range(M)]
+        cB = [c_ext[j] for j in B]
+        Aug = [[Fraction(0)] * (M + 1) for _ in range(M)]
+        for i in range(M):
+            for j in range(M):
+                Aug[i][j] = Bmat[j][i]
+            Aug[i][M] = cB[i]
+        for i in range(M):
+            if Aug[i][i] == 0:
+                swap = None
+                for r in range(i + 1, M):
+                    if Aug[r][i] != 0:
+                        swap = r
+                        break
+                if swap is not None:
+                    Aug[i], Aug[swap] = Aug[swap], Aug[i]
+            piv = Aug[i][i]
+            if piv != 0:
+                for t in range(i, M + 1):
+                    Aug[i][t] /= piv
+                for r in range(M):
+                    if r == i:
+                        continue
+                    coef = Aug[r][i]
+                    if coef != 0:
+                        for t in range(i, M + 1):
+                            Aug[r][t] -= coef * Aug[i][t]
+        pi = [Aug[i][M] for i in range(M)]
+        cbar = [c_ext[j] - sum(pi[i] * A_ext[i][j] for i in range(M)) for j in range(N)]
+        z = sum(c_ext[B[i]] * bbar[i] for i in range(M))
+        return cbar, z
+
+    it = 0
+    while True:
+        it += 1
+        if it > max_iter:
+            return {"status": "infeasible"}
+        cbar, z = compute_reduced_costs()
+        viol_rows = [i for i in range(M) if bbar[i] < 0]
+        if not viol_rows:
+            x = [Fraction(0) for _ in range(N)]
+            for i in range(M):
+                x[B[i]] = bbar[i]
+            return {"status": "optimal", "x": x, "obj": z}
+        r = min(viol_rows, key=lambda i: (bbar[i], i))
+        candidates = []
+        for j in range(N):
+            if Abar[r][j] < 0:
+                theta = cbar[j] / Abar[r][j]
+                candidates.append((theta, j))
+        if not candidates:
+            return {"status": "infeasible"}
+        _, j_in = min(candidates, key=lambda p: (p[0], p[1]))
+        piv = Abar[r][j_in]
+        Abar[r] = [x / piv for x in Abar[r]]
+        bbar[r] = bbar[r] / piv
+        for i in range(M):
+            if i == r:
+                continue
+            coef = Abar[i][j_in]
+            if coef != 0:
+                Abar[i] = [Abar[i][t] - coef * Abar[r][t] for t in range(N)]
+                bbar[i] = bbar[i] - coef * bbar[r]
+        B[r] = j_in
 
 
-def branch_and_bound(c0, A0, b0, dminus0, dplus0, verbose=True):
-    c, A, dminus, dplus, flipped = step1_make_c_nonpos(
-        c0[:], [row[:] for row in A0], dminus0[:], dplus0[:]
+def first_n_integer(x, n):
+    for i in range(n):
+        if x[i].denominator != 1:
+            return False
+    return True
+
+
+def first_fractional_index(x, n):
+    for i in range(n):
+        if x[i].denominator != 1:
+            return i
+    return None
+
+
+def floor_frac(q):
+    return Fraction(q.numerator // q.denominator, 1)
+
+
+def ceil_frac(q):
+    return (
+        q
+        if q.denominator == 1
+        else Fraction((q.numerator + q.denominator - 1) // q.denominator, 1)
     )
-    n, m = len(c), len(A)
 
-    Aaug, baug, caug = build_augmented(c, A, b0, dplus)
-    if verbose:
-        print(
-            "\nШаг 2: Каноническая форма (Ax=b, x>=0). Переменные: x(1..n), s(1..m), u(1..n). Всего 2n+m =",
-            2 * n + m,
-        )
-        for i in range(m + n):
-            print(f"  row {i+1} :", Aaug[i], " | ", baug[i])
-        print("c_aug =", caug, "(последние m+n нулевые)")
 
-    tot_vars = len(caug)
-    basis0 = list(range(n, n + m + n))
-    delta0 = [float(x) for x in dminus] + [0.0] * m + [0.0] * n
-    alpha0 = vec_dot(caug, delta0)
-    bprime0 = vec_sub(baug, mat_mul(Aaug, delta0))
-    if verbose:
-        print("\nШаг 3: Δ =", delta0)
-        print("α' = α + c^T Δ =", alpha0)
-        print("b' = b - AΔ =", bprime0)
-        print("Начальный базис B =", [i + 1 for i in basis0], "(1-based)")
-
-    stack = [(Aaug, bprime0, caug, alpha0, basis0, delta0)]
-    best = None
-
-    iter_no = 0
-    while stack:
-        Acur, bcur, ccur, alpha_cur, Bcur, Dcur = stack.pop()
-        iter_no += 1
-        if verbose:
-            print(
-                f"\nШаг 4 (итерация {iter_no}). Решаем LP (двойственный симплекс). α'={alpha_cur}, Δ={Dcur[:n]}"
-            )
-        sol = dual_simplex(Acur, bcur, ccur, Bcur)
-        if sol.status != "optimal" or sol.x is None:
-            if verbose:
-                print("  -> Ветвь даёт LP: ", sol.status)
+def branch_and_bound():
+    A, b, c, d_minus, d_plus = example_data()
+    data = build_extended_lp(A, b, c, d_minus, d_plus, verbose=True)
+    A_ext = data["A_ext"]
+    b_ext = data["b_ext"]
+    c_ext = data["c_ext"]
+    dminus_ext = data["dminus_ext"]
+    flipped = data["flipped"]
+    m = data["m"]
+    n = data["n"]
+    B0 = data["B0"]
+    N = n + m + n
+    print("Шаг 3. Инициализация стека.")
+    x_star = None
+    r_best = None
+    S = [(Fraction(0), b_ext[:], dminus_ext[:], dminus_ext[:])]
+    print("  добавлена исходная вершина.")
+    k = 0
+    while S:
+        k += 1
+        alpha_base, b_base, Delta_total, d_delta = S.pop()
+        alpha_cur = alpha_base + vec_dot(c_ext, d_delta)
+        b_cur = vec_sub(b_base, matmul_vec(A_ext, d_delta))
+        print(f"\nШаг 4. Итерация {k}")
+        print("  α' =", alpha_cur)
+        res = dual_simplex(A_ext, b_cur, c_ext, B0, verbose=False)
+        if res["status"] != "optimal":
+            print("  несовместно — отсечение")
             continue
-
-        x_can = sol.x[:]
-        obj_can = sol.obj + alpha_cur
-        if verbose:
-            print("  Опт. план LP:", x_can, "  c^T x + α' =", obj_can)
-
-        frac = next((i for i in range(n) if not is_int(x_can[i])), None)
-        if frac is None:
-            x_hat = [x_can[i] + Dcur[i] for i in range(tot_vars)]
-            val = vec_dot(ccur, x_can) + alpha_cur
-            if best is None or val > best[1] + 1e-12:
-                best = (x_hat, val)
-                if verbose:
-                    print(
-                        "  ЦЕЛОЕ решение в этой ветви. x_hat[:n] =",
-                        x_hat[:n],
-                        " r =",
-                        val,
-                    )
+        xe = res["x"]
+        value_node = res["obj"] + alpha_cur
+        print("  значение узла =", value_node, "; x_e[1..n] =", fmt_vec(xe[:n]))
+        if first_n_integer(xe, n):
+            xhat = vec_add(xe, Delta_total)
+            if x_star is None or value_node > r_best:
+                x_star = xhat
+                r_best = value_node
+                print("  целочисленно ⇒ обновление лучшего решения: r =", r_best)
+            else:
+                print("  целочисленно, но без улучшения")
             continue
-
-        xi = x_can[frac]
-        floor_i, ceil_i = math.floor(xi + 1e-12), math.ceil(xi - 1e-12)
-
-        ub = math.floor(vec_dot(ccur, x_can) + alpha_cur + 1e-12)
-        if best is not None and ub <= math.floor(best[1] + 1e-12):
-            if verbose:
-                print(
-                    f"  Отсечение по границе: ⌊c^T x + α'⌋={ub} ≤ ⌊r_best⌋={math.floor(best[1])}"
-                )
-            continue
-
-        bL = bcur[:]
-        bL[m + frac] = float(floor_i)
-        if verbose:
-            print(
-                f"  → Левая ветвь: поставить b'[{m+frac+1}] = ⌊x[{frac+1}]⌋ = {floor_i}"
-            )
-        stack.append((Acur, bL, ccur, alpha_cur, Bcur[:], Dcur[:]))
-
-        dminus2 = [0.0] * tot_vars
-        dminus2[frac] = float(ceil_i)
-        D2 = [Dcur[k] + dminus2[k] for k in range(tot_vars)]
-        alpha2 = alpha_cur + vec_dot(ccur, dminus2)
-        b2 = vec_sub(bcur, mat_mul(Acur, dminus2))
-        if verbose:
-            print(
-                f"  → Правая ветвь: добавить d^- = e_{frac+1} * ⌈x[{frac+1}]⌉ = {ceil_i}"
-            )
-            print(f"     Новые α''={alpha2}, Δ''[:n]={D2[:n]}")
-        stack.append((Acur, b2, ccur, alpha2, Bcur[:], D2))
-
-    if best is None:
-        return "infeasible", None, None
-
-    x_hat, r_best = best
-    x_step2 = x_hat[:n]
-    x_orig = x_step2[:]
-
-    def restore(c0_i, xi):
-        return -xi if c0_i > 0 else xi
-
-    x_orig = [int(round(restore(c0[i], x_step2[i]))) for i in range(n)]
-    obj_orig = sum(c0[i] * x_orig[i] for i in range(n))
-    if verbose:
-        print("\nШаг 5: восстановление исходного плана по правилу из методички.")
-        print("  x(после шага 2) =", [round(v, 6) for v in x_step2])
-        print("  x(исходный)     =", x_orig)
-        print("  значение цели    =", obj_orig)
-    return "optimal", x_orig, obj_orig
-
-
-def get_input():
-    n = int(input("Введите число переменных n: ").strip())
-    m = int(input("Введите число ограничений m: ").strip())
-    print("Введите коэффициенты целевой функции c (n целых):")
-    c = [int(x) for x in input().split()]
-    print("Введите матрицу A построчно (m строк по n целых):")
-    A = [[int(x) for x in input().split()] for _ in range(m)]
-    print("Введите вектор b (m целых):")
-    b = [int(x) for x in input().split()]
-    print("Введите нижние границы d- (n целых):")
-    dminus = [int(x) for x in input().split()]
-    print("Введите верхние границы d+ (n целых):")
-    dplus = [int(x) for x in input().split()]
-    return c, A, b, dminus, dplus
-
-
-def main():
-    c, A, b, dminus, dplus = get_input()
-    status, x_opt, obj = branch_and_bound(c, A, b, dminus, dplus, verbose=True)
-    print("\nРЕЗУЛЬТАТ:")
-    if status == "optimal":
-        print("Оптимальный план исходной задачи:", x_opt)
-        print("Значение цели исходной задачи:", obj)
-    else:
-        print("Задача несовместна")
+        i = first_fractional_index(xe, n)
+        floor_i = floor_frac(xe[i])
+        ceil_i = ceil_frac(xe[i])
+        print(f"  дробная компонента x[{i+1}]={xe[i]} ⇒ [{floor_i}, {ceil_i}]")
+        if (x_star is None) or (floor_frac(value_node) > r_best):
+            b_child1 = b_cur[:]
+            b_child1[m + i] = floor_i
+            S.append((alpha_cur, b_child1, Delta_total[:], [Fraction(0)] * N))
+            d2 = [Fraction(0)] * N
+            d2[i] = ceil_i
+            Delta2 = Delta_total[:]
+            Delta2[i] += ceil_i
+            S.append((alpha_cur, b_cur[:], Delta2, d2))
+            print("  ветвимся на 2 узла")
+        else:
+            print("  отсечено по оценке")
+    print("\nЗавершение.")
+    if x_star is None:
+        print("Задача несовместна.")
+        return
+    x_rec = []
+    for i in range(n):
+        xi = x_star[i]
+        x_rec.append(-xi if flipped[i] else xi)
+    c_orig = []
+    for i in range(n):
+        c_orig.append(-c_ext[i] if flipped[i] else c_ext[i])
+    val_orig = vec_dot(c_orig, x_rec)
+    print("Лучший расширенный план x* =", fmt_vec(x_star))
+    print("Оптимальный план исходной задачи x =", fmt_vec(x_rec))
+    print("c^T x =", val_orig)
 
 
 if __name__ == "__main__":
-    main()
+    branch_and_bound()
