@@ -1,321 +1,226 @@
-from typing import List, Tuple, Optional
-import math
-
-TOL = 1e-9
+from fractions import Fraction
 
 
-def mat_copy(M: List[List[float]]) -> List[List[float]]:
-    return [row[:] for row in M]
+def example_data():
+    c = [0, 1, 0, 0]
+    A = [
+        [3, 2, 1, 0],
+        [-3, 2, 0, 1],
+    ]
+    b = [6, 0]
+    return A, b, c
 
 
-def eye(n: int) -> List[List[float]]:
-    return [[1.0 if i == j else 0.0 for j in range(n)] for i in range(n)]
+def fmt_q(q):
+    return str(q) if q.denominator != 1 else str(q.numerator)
 
 
-def mat_vec(A: List[List[float]], x: List[float]) -> List[float]:
-    m, n = len(A), len(A[0])
-    assert len(x) == n
-    return [sum(A[i][j] * x[j] for j in range(n)) for i in range(m)]
+def fmt_vec(v):
+    return "[" + "; ".join(fmt_q(x) for x in v) + "]"
 
 
-def vec_add(a: List[float], b: List[float]) -> List[float]:
-    return [ai + bi for ai, bi in zip(a, b)]
+def fmt_mat(M):
+    return "[\n  " + "\n  ".join(fmt_vec(r) for r in M) + "\n]"
 
 
-def vec_sub(a: List[float], b: List[float]) -> List[float]:
-    return [ai - bi for ai, bi in zip(a, b)]
+def toF_vec(v):
+    return [Fraction(int(x)) for x in v]
 
 
-def vec_dot(a: List[float], b: List[float]) -> float:
-    return sum(ai * bi for ai, bi in zip(a, b))
+def toF_mat(M):
+    return [[Fraction(int(x)) for x in row] for row in M]
 
 
-def mat_cols(A: List[List[float]], idxs: List[int]) -> List[List[float]]:
-    return [[A[i][j] for j in idxs] for i in range(len(A))]
+def matmul(A, B):
+    m, k, n = len(A), len(A[0]), len(B[0])
+    R = [[Fraction(0) for _ in range(n)] for _ in range(m)]
+    for i in range(m):
+        for j in range(n):
+            s = Fraction(0)
+            for t in range(k):
+                s += A[i][t] * B[t][j]
+            R[i][j] = s
+    return R
 
 
-def gauss_jordan_inverse(A: List[List[float]]) -> Optional[List[List[float]]]:
+def matvec(A, v):
+    return [sum(A[i][j] * v[j] for j in range(len(v))) for i in range(len(A))]
+
+
+def inv_mat(A):
     n = len(A)
-    assert all(len(row) == n for row in A)
-    M = [row[:] + e[:] for row, e in zip(A, eye(n))]
-    r = 0
-    for c in range(n):
-        pivot = None
-        for i in range(r, n):
-            if abs(M[i][c]) > TOL:
-                pivot = i
-                break
-        if pivot is None:
-            return None
-        if pivot != r:
-            M[r], M[pivot] = M[pivot], M[r]
-        div = M[r][c]
-        for j in range(2 * n):
-            M[r][j] /= div
-        for i in range(n):
-            if i == r:
+    M = [A[i][:] + [Fraction(1 if i == j else 0) for j in range(n)] for i in range(n)]
+    for i in range(n):
+        if M[i][i] == 0:
+            sw = None
+            for r in range(i + 1, n):
+                if M[r][i] != 0:
+                    sw = r
+                    break
+            if sw is None:
+                raise ValueError("Matrix not invertible")
+            M[i], M[sw] = M[sw], M[i]
+        piv = M[i][i]
+        M[i] = [x / piv for x in M[i]]
+        for r in range(n):
+            if r == i:
                 continue
-            f = M[i][c]
-            if abs(f) > TOL:
-                for j in range(2 * n):
-                    M[i][j] -= f * M[r][j]
-        r += 1
+            coef = M[r][i]
+            if coef != 0:
+                M[r] = [M[r][t] - coef * M[i][t] for t in range(2 * n)]
     return [row[n:] for row in M]
 
 
-def fractional_part(x: float) -> float:
-    return x - math.floor(x + 1e-12)
+def fractional_part(q):
+    return q - Fraction(q.numerator // q.denominator, 1)
 
 
-def is_integer(x: float) -> bool:
-    return abs(x - round(x)) <= 1e-9
-
-
-class SimplexResult:
-    def __init__(
-        self,
-        status: str,
-        x: Optional[List[float]] = None,
-        B: Optional[List[int]] = None,
-        obj: float = 0.0,
-    ):
-        self.status = status
-        self.x = x
-        self.B = B
-        self.obj = obj
-
-
-def primal_simplex(
-    A: List[List[float]],
-    b: List[float],
-    c: List[float],
-    B_init: List[int],
-    var_costs: List[float],
-) -> SimplexResult:
-
+def simplex_solve(A_in, b_in, c_in):
+    A = toF_mat(A_in)
+    b = toF_vec(b_in)
+    c = toF_vec(c_in)
     m, n = len(A), len(A[0])
-    B = B_init[:]
-    N = [j for j in range(n) if j not in B]
+    A1 = [
+        A[i] + [Fraction(1) if i == k else Fraction(0) for k in range(m)]
+        for i in range(m)
+    ]
+    c1 = [Fraction(0) for _ in range(n)] + [Fraction(-1) for _ in range(m)]
+    B = list(range(n, n + m))
+    Binv = inv_mat([[A1[i][j] for j in B] for i in range(m)])
+    Abar = matmul(Binv, A1)
+    bbar = matvec(Binv, b)
 
+    def phase(cvec, cols):
+        nonlocal Abar, bbar, B
+        while True:
+            cB = [cvec[j] for j in B]
+            cbar = [cvec[j] - sum(cB[i] * Abar[i][j] for i in range(m)) for j in cols]
+            enter = None
+            for j in cols:
+                if j in B:
+                    continue
+                if cbar[j - cols[0]] > 0:
+                    enter = j
+                    break
+            if enter is None:
+                return sum(cB[i] * bbar[i] for i in range(m))
+            col = [Abar[i][enter] for i in range(m)]
+            pos = [(bbar[i] / col[i], i) for i in range(m) if col[i] > 0]
+            if not pos:
+                return None
+            _, r = min(pos, key=lambda p: (p[0], p[1]))
+            piv = Abar[r][enter]
+            Abar[r] = [x / piv for x in Abar[r]]
+            bbar[r] = bbar[r] / piv
+            for i in range(m):
+                if i == r:
+                    continue
+                coef = Abar[i][enter]
+                if coef != 0:
+                    Abar[i] = [
+                        Abar[i][t] - coef * Abar[r][t] for t in range(len(Abar[i]))
+                    ]
+                    bbar[i] = bbar[i] - coef * bbar[r]
+            B[r] = enter
+
+    phase(c1, list(range(n + m)))
+    Abar = [row[:n] for row in Abar]
     while True:
-        AB = mat_cols(A, B)
-        invAB = gauss_jordan_inverse(AB)
-        if invAB is None:
-            return SimplexResult("infeasible")
-        xB = mat_vec(invAB, b)
-        if min(xB) < -1e-8:
-            return SimplexResult("infeasible")
-
-        cB = [var_costs[j] for j in B]
-        y = [sum(cB[i] * invAB[i][r] for i in range(m)) for r in range(m)]
-        rN = []
-        for j in N:
-            col = [A[i][j] for i in range(m)]
-            rj = var_costs[j] - sum(y[i] * col[i] for i in range(m))
-            rN.append((j, rj))
-        if all(rj <= 1e-12 for (_, rj) in rN):
-            x = [0.0] * n
-            for k, idx in enumerate(B):
-                x[idx] = max(0.0, xB[k])
-            obj = vec_dot(var_costs, x)
-            return SimplexResult("optimal", x=x, B=B, obj=obj)
-        enter_candidates = [(j, rj) for (j, rj) in rN if rj > 1e-12]
-        enter_candidates.sort(key=lambda t: (-t[1], t[0]))
-        j_enter = enter_candidates[0][0]
-
-        Aj = [A[i][j_enter] for i in range(m)]
-        dB = mat_vec(invAB, Aj)
-        if all(di <= 1e-12 for di in dB):
-            return SimplexResult("unbounded")
-
-        theta = float("inf")
-        leave_pos = None
+        cB = [c[j] for j in B]
+        cbar = [c[j] - sum(cB[i] * Abar[i][j] for i in range(m)) for j in range(n)]
+        enter = None
+        for j in range(n):
+            if j in B:
+                continue
+            if cbar[j] > 0:
+                enter = j
+                break
+        if enter is None:
+            x = [Fraction(0) for _ in range(n)]
+            for i in range(m):
+                x[B[i]] = bbar[i]
+            print(
+                "  оптимальный план LP найден:",
+                fmt_vec(x),
+                "; значение =",
+                fmt_q(sum(cB[i] * bbar[i] for i in range(m))),
+            )
+            print("  базис B =", [j + 1 for j in B])
+            return {"x": x, "B": B}
+        col = [Abar[i][enter] for i in range(m)]
+        pos = [(bbar[i] / col[i], i) for i in range(m) if col[i] > 0]
+        if not pos:
+            return {"x": None, "B": B}
+        _, r = min(pos, key=lambda p: (p[0], p[1]))
+        piv = Abar[r][enter]
+        Abar[r] = [x / piv for x in Abar[r]]
+        bbar[r] = bbar[r] / piv
         for i in range(m):
-            if dB[i] > 1e-12:
-                t = xB[i] / dB[i]
-                if t < theta - 1e-12 or (
-                    abs(t - theta) <= 1e-12
-                    and B[i] < (B[leave_pos] if leave_pos is not None else 1 << 60)
-                ):
-                    theta = t
-                    leave_pos = i
-        if leave_pos is None:
-            return SimplexResult("unbounded")
-
-        out = B[leave_pos]
-        B[leave_pos] = j_enter
-        N = [j for j in range(n) if j not in B]
+            if i == r:
+                continue
+            coef = Abar[i][enter]
+            if coef != 0:
+                Abar[i] = [Abar[i][t] - coef * Abar[r][t] for t in range(n)]
+                bbar[i] = bbar[i] - coef * bbar[r]
+        B[r] = enter
 
 
-def two_phase_simplex_equalities(
-    A: List[List[float]], b: List[float], c: List[float]
-) -> SimplexResult:
-    m, n = len(A), len(A[0])
-
-    A_e = [row[:] + [0.0] * m for row in A]
-    for i in range(m):
-        A_e[i][n + i] = 1.0
-    c_phase1 = [0.0] * n + [-1.0] * m
-    B0 = list(range(n, n + m))
-
-    print("\n--- Фаза I: начальный базис — искусственные переменные ---")
-    print("A_e (m x (n+m)):")
-    for i in range(m):
-        print("  ", A_e[i], "|", b[i])
-    print("Цель Фазы I: maximize -sum(a)")
-
-    res1 = primal_simplex(A_e, b, c_phase1, B0, c_phase1)
-    if res1.status == "infeasible":
-        print("Фаза I: несовместно → исходная задача несовместна.")
-        return SimplexResult("infeasible")
-    if res1.status == "unbounded":
-        print("Фаза I: неограничена (нетипично).")
-        return SimplexResult("infeasible")
-
-    if res1.obj < -1e-8:
-        print("Фаза I: optimum < 0 → несовместно.")
-        return SimplexResult("infeasible")
-
-    B_phase2 = []
-    for idx in res1.B:
-        if idx < n:
-            B_phase2.append(idx)
-        else:
-            row_idx = len(B_phase2)
-            pass
-
-    if len(B_phase2) != m:
-        B_phase2 = [i for i in range(min(n, m))]
-
-    print("\n--- Фаза II: цель исходной задачи ---")
-    print("max c^T x,   Ax = b, x>=0")
-    print("c =", c)
-
-    res2 = primal_simplex(A, b, c, B_phase2, c)
-    return res2
-
-
-def build_gomory_cut(
-    A: List[List[float]],
-    b: List[float],
-    c: List[float],
-    x_opt: List[float],
-    B: List[int],
-) -> Optional[Tuple[List[int], List[float], float, int]]:
-    m, n = len(A), len(A[0])
-    B_orig = [j for j in B if j < n]
-    N_orig = [j for j in range(n) if j not in B_orig]
-    if len(B_orig) < m:
-        return None
-
-    AB = mat_cols(A, B_orig)
-    invAB = gauss_jordan_inverse(AB)
-    if invAB is None:
-        return None
-    xB = mat_vec(invAB, b)
-
-    k = None
-    for idx, val in enumerate(xB):
-        if not is_integer(val):
-            k = idx
+def gomory_cut(A_in, b_in, c_in):
+    A = toF_mat(A_in)
+    b = toF_vec(b_in)
+    c = toF_vec(c_in)
+    print("Шаг 1. Решаем задачу LP без целочисленности")
+    lp = simplex_solve(A, b, c)
+    x = lp["x"]
+    B = lp["B"]
+    all_int = all(xi.denominator == 1 for xi in x)
+    if all_int:
+        print("\nШаг 2. Все компоненты целые ⇒ найден оптимальный целочисленный план")
+        print("  x =", fmt_vec(x))
+        print("\nЗавершение")
+        return
+    print("\nШаг 2. План дробный ⇒ строим отсек Гомори")
+    for k, j in enumerate(B):
+        if x[j].denominator != 1:
+            idx_frac = j
+            k_pos = k
             break
-    if k is None:
-        return None
-
-    basic_i = B_orig[k]
-    AN = mat_cols(A, N_orig)
-    rows, cols = len(invAB), len(AN[0]) if AN else 0
-    Q = [[0.0] * cols for _ in range(rows)]
-    for i in range(rows):
-        for j in range(cols):
-            s = 0.0
-            for t in range(m):
-                s += invAB[i][t] * AN[t][j]
-            Q[i][j] = s
-    l_row = Q[k] if cols > 0 else []
-
-    coeffs_frac = [fractional_part(v) for v in l_row]
-    rhs_frac = fractional_part(xB[k])
-    return (N_orig, coeffs_frac, rhs_frac, basic_i)
-
-
-def read_input() -> Tuple[int, int, List[float], List[List[float]], List[float]]:
-    n = int(input("Введите число переменных n: ").strip())
-    m = int(input("Введите число ограничений m: ").strip())
-    print("Введите коэффициенты целевой функции c (n чисел):")
-    c = [float(x) for x in input().split()]
-    if len(c) != n:
-        raise ValueError("Ожидалось n чисел в c")
-    print("Введите матрицу A построчно (m строк по n чисел):")
-    A = []
-    for i in range(m):
-        row = [float(x) for x in input(f"Строка {i+1}: ").split()]
-        if len(row) != n:
-            raise ValueError("Неверное число значений в строке A")
-        A.append(row)
-    print("Введите вектор b (m чисел):")
-    b = [float(x) for x in input().split()]
-    if len(b) != m:
-        raise ValueError("Ожидалось m чисел в b")
-    return n, m, c, A, b
+    print(
+        f"  дробная базисная компонента: x[{idx_frac+1}] = {fmt_q(x[idx_frac])}, позиция в B: k = {k_pos+1}"
+    )
+    m, n = len(A), len(A[0])
+    Nidx = [j for j in range(n) if j not in B]
+    AB = [[A[i][j] for j in B] for i in range(m)]
+    AN = [[A[i][j] for j in Nidx] for i in range(m)]
+    print("\nШаг 3. Формируем матрицы")
+    print("  AB =", fmt_mat(AB))
+    print("  AN =", fmt_mat(AN))
+    AB_inv = inv_mat(AB)
+    print("\nШаг 4. Находим A_B^{-1} =", fmt_mat(AB_inv))
+    Q = matmul(AB_inv, AN)
+    print("\nШаг 5. Находим Q = A_B^{-1} * A_N =", fmt_mat(Q))
+    ell = Q[k_pos]
+    print(f"\nШаг 6. Берём k-ю строку ℓ (k = {k_pos+1}) =", fmt_vec(ell))
+    frac_ell = [fractional_part(v) for v in ell]
+    rhs = fractional_part(x[idx_frac])
+    print("\nШаг 7. Дробные части коэффициентов {ℓ} =", fmt_vec(frac_ell))
+    print("  дробная часть {x_i} =", fmt_q(rhs))
+    coeff = [Fraction(0) for _ in range(n + 1)]
+    for p, j in enumerate(Nidx):
+        coeff[j] = frac_ell[p]
+    coeff[-1] = Fraction(-1)
+    terms = [f"{fmt_q(coeff[j])}*x{j+1}" for j in range(n) if coeff[j] != 0]
+    left = " + ".join(terms) + " - s"
+    print("\nШаг 8. Отсекающее ограничение Гомори")
+    print(f"  {left} = {fmt_q(rhs)}")
+    print("  вектор коэффициентов:", fmt_vec(coeff))
+    print("  свободный член:", fmt_q(rhs))
+    print("\nЗавершение")
 
 
 def main():
-    n, m, c, A, b = read_input()
-
-    print("\n--- Шаг 1. Решаем LP-расслабление (двухфазный симплекс) ---")
-    res = two_phase_simplex_equalities(A, b, c)
-
-    if res.status == "infeasible":
-        print("\nШаг 2. Итог: задача (DP) несовместна.")
-        return
-    if res.status == "unbounded":
-        print("\nШаг 2. Итог: целевая функция неограничена сверху.")
-        return
-
-    x = res.x
-    B = res.B
-    print("\nШаг 1 (результат): оптимальный план LP:")
-    print("x* =", [round(v, 6) for v in x])
-    print("Базис B =", [j + 1 for j in B], "(1-based)")
-    print(f"Значение цели c^T x = {round(res.obj,6)}")
-
-    if all(is_integer(xi) for xi in x[:n]):
-        print("\nШаг 3. Все компоненты x целые → это оптимальный план задачи (DP).")
-        print("Оптимальный план:", [int(round(xi)) for xi in x[:n]])
-        print("Значение цели:", int(round(res.obj)))
-        return
-
-    print("\nШаг 4–11. Строим одно отсекающее ограничение Гомори.")
-    cut = build_gomory_cut(A, b, c, x, B)
-    if cut is None:
-        print(
-            "Не удалось построить отсечение (нет дробной базисной оригинальной переменной)."
-        )
-        return
-    N_idx, coeffs, rhs, basic_i = cut
-
-    print(f"Дробная базисная переменная: x{basic_i+1}")
-    print("Небазисные переменные x_N:", [f"x{j+1}" for j in N_idx])
-
-    terms = []
-    for coef, j in zip(coeffs, N_idx):
-        if abs(coef) > 1e-12:
-            terms.append(f"{{{coef}}}*x{j+1}")
-    left = " + ".join(terms) if terms else "0"
-    print("Отсекающее ограничение Гомори:")
-    print(f"{left} - s = {{{rhs}}}")
-
-    print("\nКоэффициенты в виде вектора (по x1..xn, затем s):")
-    coeffs_full = [0.0] * n
-    for coef, j in zip(coeffs, N_idx):
-        coeffs_full[j] = coef
-    print(
-        " ",
-        [round(v, 6) for v in coeffs_full],
-        "  и  -1 при s;  правая часть =",
-        round(rhs, 6),
-    )
+    A, b, c = example_data()
+    gomory_cut(A, b, c)
 
 
 if __name__ == "__main__":

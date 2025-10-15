@@ -55,7 +55,7 @@ def build_extended_lp(A, b, c, d_minus, d_plus, verbose=True):
     m = len(A)
     n = len(A[0])
     if verbose:
-        print("Шаг 1. Приведение знаков стоимостей.")
+        print("Шаг 1. Приведение знаков стоимостей")
     flipped = [False] * n
     for i in range(n):
         if c[i] > 0:
@@ -69,7 +69,7 @@ def build_extended_lp(A, b, c, d_minus, d_plus, verbose=True):
     if verbose:
         print("  c'   =", fmt_vec(c))
         print("  d-'  =", fmt_vec(d_minus), " d+' =", fmt_vec(d_plus))
-        print("Шаг 2. Построение расширенной задачи.")
+        print("Шаг 2. Построение расширенной задачи")
     A_ext = []
     for r in range(m):
         row = []
@@ -236,11 +236,11 @@ def branch_and_bound():
     n = data["n"]
     B0 = data["B0"]
     N = n + m + n
-    print("Шаг 3. Инициализация стека.")
+    print("Шаг 3. Инициализация стека")
     x_star = None
     r_best = None
     S = [(Fraction(0), b_ext[:], dminus_ext[:], dminus_ext[:])]
-    print("  добавлена исходная вершина.")
+    print("  добавлена исходная вершина")
     k = 0
     while S:
         k += 1
@@ -281,9 +281,9 @@ def branch_and_bound():
             print("  ветвимся на 2 узла")
         else:
             print("  отсечено по оценке")
-    print("\nЗавершение.")
+    print("\nЗавершение")
     if x_star is None:
-        print("Задача несовместна.")
+        print("Задача несовместна")
         return
     x_rec = []
     for i in range(n):
