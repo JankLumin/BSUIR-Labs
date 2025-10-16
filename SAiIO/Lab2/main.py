@@ -177,7 +177,6 @@ def gomory_cut(A_in, b_in, c_in):
     if all_int:
         print("\nШаг 2. Все компоненты целые ⇒ найден оптимальный целочисленный план")
         print("  x =", fmt_vec(x))
-        print("\nЗавершение")
         return
     print("\nШаг 2. План дробный ⇒ строим отсек Гомори")
     for k, j in enumerate(B):
@@ -215,7 +214,6 @@ def gomory_cut(A_in, b_in, c_in):
     print(f"  {left} = {fmt_q(rhs)}")
     print("  вектор коэффициентов:", fmt_vec(coeff))
     print("  свободный член:", fmt_q(rhs))
-    print("\nЗавершение")
 
 
 def main():

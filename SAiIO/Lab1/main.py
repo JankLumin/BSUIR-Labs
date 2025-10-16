@@ -281,7 +281,6 @@ def branch_and_bound():
             print("  ветвимся на 2 узла")
         else:
             print("  отсечено по оценке")
-    print("\nЗавершение")
     if x_star is None:
         print("Задача несовместна")
         return
