@@ -1,0 +1,162 @@
+/* src/pages/BankPage.css */
+.page-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.page-container h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.modal-content {
+  background: rgba(255,255,255,0.05);
+  padding: 1.5rem;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.modal-content h4 {
+  margin: 0 0 1rem;
+  color: #60a5fa;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: white;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.modal-content input::placeholder {
+  color: #94a3b8;
+}
+
+.modal-content button {
+  margin: 0.5rem 0.5rem 0 0;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.modal-content button:first-of-type {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+}
+
+.modal-content button:last-of-type {
+  background: linear-gradient(to right, #10b981, #34d399);
+}
+
+.modal-content button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modal-content button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.log-section {
+  margin-top: 2rem;
+}
+
+.log-section h4 {
+  margin: 0 0 0.5rem;
+  color: #60a5fa;
+}
+
+.log-box {
+  background: rgba(0,0,0,0.3);
+  padding: 1rem;
+  border-radius: 12px;
+  max-height: 200px;
+  overflow: auto;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  font-family: monospace;
+}
+
+.get-bank-btn {
+  display: block;                   
+  width: fit-content;              
+  margin: 1.5rem auto 0;         
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  background: linear-gradient(to right, #10b981, #34d399);
+  color: white;
+  transition: all 0.3s;
+}
+
+.get-bank-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+
+
+.card-type-selector {
+  margin: 1rem 0;
+}
+
+.selector-label {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.type-buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.type-buttons button {
+  padding: 0.75rem 1.4rem;
+  border-radius: 12px;
+  border: 2px solid rgba(99, 102, 241, 0.4); 
+  background: rgba(99, 102, 241, 0.15);      
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 100px;
+  backdrop-filter: blur(4px);
+}
+
+.type-buttons button:hover {
+  background: rgba(99, 102, 241, 0.3);
+  border-color: #8b5cf6;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+}
+
+.type-buttons button.active {
+  background: #8b5cf6;                   
+  border-color: #c4b5fd;
+  color: white;
+  font-weight: 900;
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.7);
+  transform: scale(1.05);
+}

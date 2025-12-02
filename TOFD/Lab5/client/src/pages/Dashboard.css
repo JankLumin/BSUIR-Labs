@@ -1,0 +1,130 @@
+/* src/pages/Dashboard.css */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.quick-actions, .stats-panel {
+  background: rgba(255,255,255,0.05);
+  padding: 1.5rem;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.quick-actions h3, .stats-panel h3, .match-carousel h3 {
+  margin-top: 0;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #60a5fa;
+}
+
+.action-btn {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.bank-btn {
+  background: linear-gradient(to right, #10b981, #34d399);
+}
+
+.lobby-btn {
+  background: linear-gradient(to right, #f59e0b, #fbbf24);
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.match-carousel {
+  text-align: center;
+}
+
+.carousel {
+  position: relative;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.2);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.carousel-arrow.left { left: 10px; }
+.carousel-arrow.right { right: 10px; }
+
+.carousel-item {
+  width: 100%;
+  max-width: 300px;
+}
+
+.match-card {
+  background: rgba(255,255,255,0.1);
+  padding: 1.5rem;
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
+}
+
+.outcome-win { border-left: 4px solid #10b981; }
+.outcome-loss { border-left: 4px solid #ef4444; }
+.outcome-draw { border-left: 4px solid #f59e0b; }
+
+.match-card h4 { margin: 0 0 0.5rem; }
+.match-card p { margin: 0.5rem 0; color: #94a3b8; }
+.outcome { font-weight: bold; font-size: 1.2rem; }
+.outcome.win { color: #10b981; }
+.outcome.loss { color: #ef4444; }
+.outcome.draw { color: #f59e0b; }
+
+.winrate-circle {
+  width: 120px;
+  height: 120px;
+  margin: 1rem auto;
+  background: conic-gradient(#10b981 0% 70%, #ef4444 70% 90%, #f59e0b 90% 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+}
+
+.stats-numbers {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
